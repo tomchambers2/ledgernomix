@@ -1,46 +1,51 @@
-import logo from "./logo.svg";
-import "./App.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Game from "./contracts/Game.json";
 const Web3 = require("web3");
 
+const web3 = new Web3(window.ethereum);
+
 function App() {
-  const [numPlayers, setNumPlayers] = useState();
+  const [game, setGame] = useState(null);
+  const [playerAccount, setPlayerAccount] = useState(null);
+  const [numPlayers, setNumPlayers] = useState(-1);
 
   useEffect(() => {
-    const web3 = new Web3(
-      new Web3.providers.HttpProvider("http://localhost:7545")
-    );
-
     const game = new web3.eth.Contract(
       Game.abi,
       "0x3D7e9e25449CCC13AbcaDD2CC1A4B986C8f88578"
     );
 
-    game.methods
-      .getNumPlayers()
-      .call({ from: "0x2a0Bd73D9489b7b90209AaC5cE6783E5Eb4681cc" })
-      .then(console.log);
+    setGame(game);
 
-    web3.eth.getBlock("latest").then(console.log);
+    const getAccounts = async () => {
+      let accounts;
+      try {
+        accounts = await web3.eth.requestAccounts();
+      } catch (e) {
+        console.log(e);
+        // handle user rejecting accounts
+      }
+
+      console.log(accounts);
+      setPlayerAccount(accounts[0]);
+    };
+    getAccounts();
+
+    game.methods.getNumPlayers().call().then(setNumPlayers);
+  }, [setNumPlayers]);
+
+  const joinGame = useCallback(() => {
+    try {
+      game.methods.joinGame().send({ from: playerAccount, value: 1000 });
+    } catch (e) {
+      console.log(e);
+    }
   });
 
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Num players: {numPlayers}</h1>
+      <button onClick={joinGame}>Join game</button>
     </div>
   );
 }
