@@ -65,14 +65,18 @@ contract Game {
     valueQuorum
     mutableQuorum
     immutableQuorum
-    taxPercentage 
-    taxPercentageApplication - for richest y players
+    proportionalTax 
+    proportionalTaxEligibility - for richest y players
+    proportionalTaxAllowance
     benefitAmount 
-    benefitApplication - for poorest y players
-    polltaxAmount
-    benefitApplication - for richest y players
+    benefitEligibility - for poorest y players
+    pollTaxAmount 
+    pollTaxEligibility - for richest y players
     proposalTimeout (upper bound)
     concurrenctProposals
+    chargeToPropose
+    chargeToForceVote / chargeToBumpProposal
+    
 
 
     a game where...
