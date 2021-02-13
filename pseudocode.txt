@@ -7,26 +7,159 @@ contract GameFactory {
         game.gameEndTime = now + 2 hours
         games.push(game)
     }
+
+    joinGame(gameId) {
+        games[gameId].players.push(msg.sender)
+    }
 }
 
 contract Game {
     players[]
     mapping(address => uint) balances
 
+    struct Player {
+        address address;
+        balance balance;
+    }
+
     equalityScore = 1
 
-    reward = 50
-    gameEndTime = 9999
+    struct Rule {
+        string name;
+        bool mutability;
+        uint256 quantity;
+        uint256 lowerBound;
+        uint256 upperBound;
+    }
+    Rule[] rules;
+
+    struct Proposal {
+        address proposer;
+        uint256 proposalType;
+        uint256 quantity;
+        bool complete;
+        bool successful;
+        uint256 ruleIndex;
+        Vote[] votes;
+        bool mutabilityChange;
+        bool proposedMutability;
+    }
+
+    struct Vote {
+        address voter;
+        bool vote;
+    }
+
+
+    valueMajority
+    mutabilityMajority
+    successfulStakeMultiplier
+    failedStakeMultiplier
+    voteShare (needs alternative)
+    votingReward
+    variableReward    
+    fixedReward
+    unanimousRejectionPenalty
+    playDirection
+    turnIncrement
+    valueQuorum
+    mutableQuorum
+    immutableQuorum
+    taxPercentage 
+    taxPercentageApplication - for richest y players
+    benefitAmount 
+    benefitApplication - for poorest y players
+    polltaxAmount
+    benefitApplication - for richest y players
+    proposalTimeout (upper bound)
+    concurrenctProposals
+
+
+    a game where...
+    you can change the rules of the game to win
+
+    your group is competing against other groups to be the most equal, you can change the rules 
+
+    
+    a game where you compete to have the highest score by making proposals about distribution of points, you're also competing with other groups to distribute the points most equally
+
+
+    a DAO where you can change the rules to move money around the game.
+
+    a game where you compete to have the most, but everybody loses if the scores are too unequal.
+
 
     proposals[]
 
-    joinGame()
+    joinGame() {
+        players.add(msg.sender)
+    }
 
-    exitGame()
+    exitGame() {}
 
-    createProposal()
+    cashOut() {
+        require(now > endGameTime);
 
-    voteOnProposal()
+        balances.sortAsc
+        equalityScore = bottomPlayer / topPlayer; // lower value is higher inequality
 
-    enactProposal()
+        partnerScore = partner.getEqualityScore();
+        if (equalityScore > partnerScore) {
+            foreach (p in players) {
+                balance = balances(p.address)
+                totalBalance += balance;
+            }
+            
+            // shares should be calculated once then paid out
+            share = balances[msg.sender] / totalBalance
+            send(msg.sender, share * contractBalance)
+            // prevent user from cashing out again
+        } else {
+            send(charityAddress)
+        }
+    }
+
+    createProposal(uint value, uint rule) {
+        lowerBound = rules[rule]
+        upperBound = rules[rule]
+        require(value >= lowerBound && value <= upperBound, "New value is not within rule constraints");
+
+        proposal = proposals.push()
+
+        proposal.value = value;
+        proposal.proposer = msg.address;
+    }
+
+    createMutabilityProposal(uint rule, bool mutable) {
+        require(mutable !== rule.mutable, "Proposal must change mutability");
+
+        proposal.mutabilityChange = true;
+    }
+
+    voteOnProposal() {
+        // check user is in game
+        // check proposal active
+        // check if user already voted
+
+        // record vote
+
+        if (votes.length > quorum) {
+
+        }
+    }
+
+    enactProposal() {
+        uint majority = proposal.proposedMutability ? mutabilityMajority : valueMajority
+        if (yesVotes >= majority) {
+            if (proposal.mutabilityChange) {
+                rule[ruleIndex] = proposal.proposedMutability
+            } else {
+                rules[ruleIndex].value = proposal.value
+            }
+            // reward proposer
+        }
+        if (noVotes >= majority) {
+            // punish proposer
+        }
+    }
 }
