@@ -1,0 +1,32 @@
+contract GameFactory {
+    games[fakeGame]
+
+    createGame() {
+        game = new Game()
+        game.partner = games[games.length - 1]
+        game.gameEndTime = now + 2 hours
+        games.push(game)
+    }
+}
+
+contract Game {
+    players[]
+    mapping(address => uint) balances
+
+    equalityScore = 1
+
+    reward = 50
+    gameEndTime = 9999
+
+    proposals[]
+
+    joinGame()
+
+    exitGame()
+
+    createProposal()
+
+    voteOnProposal()
+
+    enactProposal()
+}

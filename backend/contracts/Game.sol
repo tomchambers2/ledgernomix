@@ -12,7 +12,7 @@ contract Game {
     mapping(address => uint256) public balances;
     uint256 public numPlayers; // use EnumerableMapping?
 
-    uint8 public constant maxPlayers = 1;
+    uint8 public constant maxPlayers = 2;
 
     // initial rules
     uint256 public playDirection = 1;
@@ -100,9 +100,13 @@ contract Game {
     }
 
     function voteOnProposal(uint256 proposalIndex, bool vote) public {
-        require(proposals[proposalIndex].complete == false);
+        require(
+            proposals[proposalIndex].complete == false,
+            "Proposal is complete"
+        );
         // FIXME: prevent users voting twice
         // FIXME: prevent users from voting who are not in the game
+
         Vote memory v = Vote({voter: msg.sender, vote: vote});
         proposals[proposalIndex].votes.push(v);
 
@@ -110,8 +114,7 @@ contract Game {
             proposals[proposalIndex].complete = true;
             bool successful = countVotes(proposalIndex);
             proposals[proposalIndex].successful = successful;
-            // emit ProposalComplete(proposalIndex, successful);
-            // proposals[proposalIndex].successful = countVotes();
+
             if (successful) {
                 rewardPlayer(proposals[proposalIndex].proposer);
                 reward = proposals[proposalIndex].quantity;
