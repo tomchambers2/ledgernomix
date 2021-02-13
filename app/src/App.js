@@ -213,7 +213,7 @@ function App() {
         <ol>
           {balances.map((balance) => (
             <li>
-              {balance.player} - {balance.balance}gi
+              {balance.player} - {balance.balance}
             </li>
           ))}
         </ol>
