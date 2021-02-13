@@ -11,8 +11,6 @@ const useContractData = (contract, name) => {
     console.log(contract);
     async function fetchData() {
       try {
-        console.log("get name", name);
-        // const result = contract.methods[name]().call();
         const result = await contract.methods.getNumPlayers().call();
         setData(result);
       } catch (e) {
@@ -215,7 +213,7 @@ function App() {
         <ol>
           {balances.map((balance) => (
             <li>
-              {balance.player} - {balance.balance}
+              {balance.player} - {balance.balance}gi
             </li>
           ))}
         </ol>
