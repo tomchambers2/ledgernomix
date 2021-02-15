@@ -3,149 +3,151 @@ pragma solidity 0.8.1;
 
 import "hardhat/console.sol";
 
-// import "@openzeppelin/contracts/utils/EnumerableSet.sol";
-
 contract Game {
-    address owner;
-    string public name = "blahdtown";
-    address[] public players;
-    mapping(address => uint256) public balances;
-    uint256 public numPlayers; // use EnumerableMapping?
+    uint256 constant entryFee = 5 ether;
+    uint256 constant maxProposals = 30;
+    uint256 constant startingBalance = 100;
 
-    uint8 public constant maxPlayers = 2;
+    struct Player {
+        address playerAddress;
+        uint256 balance;
+    }
+    Player[] public players;
 
-    // initial rules
-    uint256 public playDirection = 1;
-    uint256 public quorum = maxPlayers / 2;
-    mapping(address => uint256) public vote_share;
-    uint256 public reward = 10;
-
-    uint256 public constant entranceFee = 1000 wei;
-
-    event NewPlayer(address player);
-    event NewProposal(address proposer, uint256 quantity);
+    struct Rule {
+        string name;
+        uint256 value;
+        uint256 lowerBound;
+        uint256 upperBound;
+    }
+    Rule[] public rules;
 
     struct Proposal {
         address proposer;
-        uint256 proposalType;
-        uint256 quantity;
+        uint256 value;
+        uint256 ruleIndex;
+        Vote[] votes;
+        // mutability
+        bool mutabilityChange;
+        bool proposedMutability;
+        // state
         bool complete;
         bool successful;
-        Vote[] votes;
     }
-
-    struct Vote {
-        address voter;
-        bool vote;
-    }
-
-    // enum ProposalTypes {Quorum, PlayDirection, VoteShare}
-
     Proposal[] public proposals;
 
-    function getProposalsLength() external view returns (uint256) {
-        return proposals.length;
+    struct Vote {
+        // uint256 voterIndex;
+        address player;
+        bool vote; // TODO: add abstentions
     }
 
-    function getPlayersLength() external view returns (uint256) {
-        return players.length;
+    constructor() {
+        rules.push(Rule("Proposal reward", 10, 0, 1000)); // FIXME: is there a better way to add rules initially?
+        rules.push(Rule("Majority", 50, 0, 100));
+        rules.push(Rule("Quorum", 50, 0, 100));
     }
 
-    constructor() {}
-
-    function gameSetup(address _owner, string memory _name) public {
-        owner = _owner;
-        name = _name;
+    modifier gameActive() {
+        require(
+            proposals.length < maxProposals,
+            "You cannot join this game because it has ended"
+        );
+        _;
     }
 
-    function joinGame() public payable {
-        require(numPlayers < maxPlayers, "Game is full");
-        require(msg.value > entranceFee, "The stake is 1000 wei");
-        numPlayers++;
-        players.push(msg.sender);
-        balances[msg.sender] = 100;
-        emit NewPlayer(msg.sender);
+    function joinGame() public payable gameActive {
+        require(msg.value == entryFee, "You must send 5 xDai to join the game");
+        Player storage p = players.push();
+        p.playerAddress = msg.sender;
+        p.balance = startingBalance;
     }
 
-    function getNumPlayers() external view returns (uint256) {
-        return numPlayers;
+    modifier isPlayer() {
+        bool valid;
+        for (uint256 index = 0; index < players.length; index++) {
+            // FIXME: should we pass in index to avoid O(n) time
+            if (msg.sender == players[index].playerAddress) {
+                valid = true;
+                break;
+            }
+        }
+        require(valid, "You must have joined the game to call this function");
+        _;
     }
 
-    function createProposal(uint256 quantity) public {
-        require(numPlayers == maxPlayers, "Not enough people in game yet");
-        // require that user is a member of this game
-        emit NewProposal(msg.sender, quantity);
-        Proposal storage nextProposal = proposals.push();
-        nextProposal.proposer = msg.sender;
-        nextProposal.quantity = quantity;
-        // nextProposal.proposalType = proposalType;
+    function createProposal(uint256 ruleIndex, uint256 value)
+        public
+        gameActive
+        isPlayer
+    {
+        require(
+            ruleIndex < rules.length,
+            "Proposal must apply to an existing rule"
+        );
+        require(
+            value <= rules[ruleIndex].upperBound &&
+                value >= rules[ruleIndex].lowerBound,
+            "Proposal value must be within rule bounds"
+        );
+
+        Proposal storage p = proposals.push(); // TODO: does this need to be storage, or can it be memory?
+        p.proposer = msg.sender;
+        p.ruleIndex = ruleIndex;
+        p.value = value;
     }
 
-    function countVotes(uint256 proposalIndex) internal view returns (bool) {
-        uint256 votesFor;
+    function getVote(uint256 proposalIndex, uint256 voteIndex)
+        public
+        view
+        returns (address, bool)
+    {
+        require(
+            proposalIndex < proposals.length,
+            "Proposal index must be in range"
+        );
+        require(
+            voteIndex < proposals[proposalIndex].votes.length,
+            "Vote index must be in range"
+        );
+        // FIXME: feels wrong - why expose this just for tests
+        return (
+            proposals[proposalIndex].votes[voteIndex].player,
+            proposals[proposalIndex].votes[voteIndex].vote
+        );
+    }
+
+    // endgame
+
+    function calculateQuorum(uint256 quorum, uint256 numPlayers)
+        public
+        returns (uint256)
+    {
+        return (quorum * numPlayers) / 100;
+    }
+
+    // function calculateQuorum() public returns (uint256) {
+    //     return rules[2].value * players.length / 100;
+    // }
+
+    function voteOnProposal(uint256 proposalIndex, bool vote) public isPlayer {
         for (
             uint256 index = 0;
             index < proposals[proposalIndex].votes.length;
             index++
         ) {
-            // console.log(proposals[proposalIndex].votes[index]);
-            console.log(proposals[proposalIndex].votes[index].vote);
-            if (proposals[proposalIndex].votes[index].vote) {
-                votesFor++;
-            }
+            require(
+                proposals[proposalIndex].votes[index].player != msg.sender,
+                "You have already voted on this proposal"
+            );
         }
-        console.log(votesFor);
-        // FIXME: quorum is total voters
-        return votesFor >= quorum;
-    }
+        proposals[proposalIndex].votes.push(Vote(msg.sender, vote));
 
-    function voteOnProposal(uint256 proposalIndex, bool vote) public {
-        require(
-            proposals[proposalIndex].complete == false,
-            "Proposal is complete"
-        );
-        // FIXME: prevent users voting twice
-        // FIXME: prevent users from voting who are not in the game
-
-        Vote memory v = Vote({voter: msg.sender, vote: vote});
-        proposals[proposalIndex].votes.push(v);
-
-        if (proposals[proposalIndex].votes.length >= quorum) {
-            proposals[proposalIndex].complete = true;
-            bool successful = countVotes(proposalIndex);
-            proposals[proposalIndex].successful = successful;
-
-            if (successful) {
-                rewardPlayer(proposals[proposalIndex].proposer);
-                reward = proposals[proposalIndex].quantity;
-            }
-        }
-    }
-
-    function rewardPlayer(address player) private {
-        balances[player] += reward;
-    }
-
-    function enactProposal(uint256 proposalIndex) private {
-        // if (proposals[proposalIndex].proposalType == ProposalTypes.Quorum) {
-        //     quorum = proposals[proposalIndex].quantity;
-        // } else if (
-        //     proposals[proposalIndex].proposalType == ProposalTypes.PlayDirection
-        // ) {
-        //     playDirection = proposals[proposalIndex].quantity;
-        // } else if (
-        //     proposals[proposalIndex].proposalType == ProposalTypes.VoteShare
-        // ) {
-        //     // needs extra data to assign vote share to specific users
+        // if (proposals[proposalIndex].votes.length >= )
+        // if (voteShare > majority) {
+        //     enactProposal();
         // }
     }
 
-    function withdraw() external {
-        // allow withdraw if game hasn't started
-        // return stake to user
-        // remove from balances
-        // set num players
-    }
-
-    function endTheGame() public {}
+    // enactproposal
 }
