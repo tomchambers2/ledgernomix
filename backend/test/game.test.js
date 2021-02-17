@@ -262,7 +262,7 @@ describe("Game", () => {
       await expect(proposal.successful).to.equal(true);
     });
 
-    it.only("should reward the proposer of a successful proposer", async () => {
+    it("should reward the proposer of a successful proposer", async () => {
       await startAndProposal(4);
       await game.connect(players[0]).voteOnProposal(0, true);
       await game.connect(players[1]).voteOnProposal(0, true);
@@ -338,7 +338,7 @@ describe("Game", () => {
   });
 
   describe("endGame", async () => {
-    it("should return deposits in proportion to players", async () => {
+    it.only("should return deposits in proportion to players", async () => {
       await game.connect(players[0]).joinGame({
         value: "5000000000000000000",
         gasPrice: 0,
@@ -348,21 +348,21 @@ describe("Game", () => {
         gasPrice: 0,
       });
       const player1Balance = await players[0].getBalance();
-      console.log(player1Balance.toString());
+      // console.log(player1Balance.toString());
       const player2Balance = await players[1].getBalance();
 
       for (let i = 0; i < 3; i++) {
-        await game.createProposal(0, 1, { gasPrice: 0 });
+        await game.createProposal(0, 500, { gasPrice: 0 });
         await game.connect(players[0]).voteOnProposal(i, true, { gasPrice: 0 });
       }
 
       const player1 = await game.players(0);
-      console.log(player1.balance.toString());
+      // console.log("p1 in game balance after game", player1.balance.toString());
 
       const player1BalanceEnd = await players[0].getBalance();
       const player2BalanceEnd = await players[1].getBalance();
 
-      console.log(player1BalanceEnd.toString());
+      // console.log("p1 end balance", player1BalanceEnd.toString());
 
       expect(Math.abs(player1Balance - player1BalanceEnd)).to.equal(1);
       expect(Math.abs(player2Balance - player2BalanceEnd)).to.equal(1);

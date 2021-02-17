@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.1;
+pragma experimental ABIEncoderV2;
 
 import "hardhat/console.sol";
 
@@ -35,6 +36,18 @@ contract Game {
     }
     Player[] public players;
 
+    function getPlayersLength() external view returns (uint256) {
+        return players.length;
+    }
+
+    function getPlayers(uint256 index)
+        external
+        view
+        returns (address, uint256)
+    {
+        return (players[index].playerAddress, players[index].balance);
+    }
+
     struct Rule {
         string name;
         uint256 value;
@@ -42,6 +55,28 @@ contract Game {
         uint256 upperBound;
     }
     Rule[] public rules;
+
+    function getRulesLength() external view returns (uint256) {
+        return rules.length;
+    }
+
+    function getRules(uint256 index)
+        external
+        view
+        returns (
+            string memory,
+            uint256,
+            uint256,
+            uint256
+        )
+    {
+        return (
+            rules[index].name,
+            rules[index].value,
+            rules[index].lowerBound,
+            rules[index].upperBound
+        );
+    }
 
     struct Proposal {
         address proposer;
@@ -56,6 +91,49 @@ contract Game {
         bool successful;
     }
     Proposal[] public proposals;
+
+    function getProposalsLength() external view returns (uint256) {
+        return proposals.length;
+    }
+
+    function getProposals(uint256 index)
+        external
+        view
+        returns (
+            address,
+            uint256,
+            uint256,
+            bool,
+            bool
+        )
+    {
+        return (
+            proposals[index].proposer,
+            proposals[index].ruleIndex,
+            proposals[index].value,
+            proposals[index].complete,
+            proposals[index].successful,
+
+        );
+    }
+
+    // function getVotes(uint256 proposalIndex)
+    //     external
+    //     view
+    //     returns (address[] memory, uint256[] memory)
+    // {
+    //     address[] storage playerAddresses; // FIXME: still confused, calldata, storage, memory?
+    //     bool[] storage votes;
+    //     for (
+    //         uint256 index = 0;
+    //         index < proposals[proposalIndex].votes.length;
+    //         index++
+    //     ) {
+    //         playerAddresses.push(proposals[proposalIndex].votes[index].player);
+    //         votes.push(proposals[proposalIndex].votes[index].vote);
+    //     }
+    //     return (playerAddresses, votes);
+    // }
 
     struct Vote {
         // uint256 voterIndex;
@@ -83,7 +161,7 @@ contract Game {
         _;
     }
 
-    function joinGame() public payable gameActive {
+    function joinGame() external payable gameActive {
         require(msg.value == entryFee, "You must send 5 xDai to join the game");
         for (uint256 index = 0; index < players.length; index++) {
             require(
@@ -110,7 +188,7 @@ contract Game {
     }
 
     function createProposal(uint256 ruleIndex, uint256 value)
-        public
+        external
         gameActive
         isPlayer
     {
@@ -131,7 +209,7 @@ contract Game {
     }
 
     function getVote(uint256 proposalIndex, uint256 voteIndex)
-        public
+        external
         view
         returns (address, bool)
     {
@@ -151,7 +229,7 @@ contract Game {
     }
 
     function voteOnProposal(uint256 proposalIndex, bool vote)
-        public
+        external
         isPlayer
         gameActive
     {
@@ -218,11 +296,13 @@ contract Game {
             for (uint256 index = 0; index < players.length; index++) {
                 balancesSum += players[index].balance;
             }
+            console.log("balance sum", balancesSum);
             for (uint256 index = 0; index < players.length; index++) {
                 uint256 share =
-                    (players[index].balance / balancesSum) *
-                        (entryFee * players.length);
-                // players[index].playerAddress.send(share);
+                    (players[index].balance * entryFee * players.length) /
+                        balancesSum;
+
+                payable(players[index].playerAddress).send(share); //FIXME: error here
             }
         }
     }

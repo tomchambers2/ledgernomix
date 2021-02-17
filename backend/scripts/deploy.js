@@ -18,7 +18,16 @@ async function main() {
   // await hre.run('compile');
 
   // We get the contract to deploy
-  const Game = await hre.ethers.getContractFactory("Game");
+
+  const Calculations = await hre.ethers.getContractFactory("Calculations");
+  const calculations = await Calculations.deploy();
+  await calculations.deployed();
+
+  const Game = await hre.ethers.getContractFactory("Game", {
+    libraries: {
+      Calculations: calculations.address,
+    },
+  });
   const game = await Game.deploy();
 
   await game.deployed();

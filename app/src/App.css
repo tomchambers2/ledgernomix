@@ -1,38 +1,66 @@
-.App {
+.container {
+  display: flex;
+}
+
+.panel {
+  /* border: 3px solid black; */
+  margin: 10px;
+  box-sizing: content-box;
+  background: lightblue;
+  /* box-shadow: 0px 0px 3px black inset; */
+  outline-offset: -13px;
+  outline: 4px solid black;
+  padding: 30px;
+}
+
+h1 {
+  font-size: 60px;
+}
+
+h1,
+h2 {
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.join {
+  text-align: center;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.leftPanel {
+  width: 30%;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+li::marker {
+  content: "- ";
+}
+
+.rightPanel {
+  width: 70%;
+  /* display: flex; */
+  /* justify-content: space-around; */
+}
+
+.rules {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  justify-content: space-around;
 }
 
-.App-link {
-  color: #61dafb;
+.rules div {
+  width: 50%;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.proposals {
+}
+
+button {
+  border: 3px solid black;
+  background: none;
+  padding: 8px 39px;
+  font-size: 25px;
+  font-weight: bold;
+}
+
+button:hover {
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.1);
 }
