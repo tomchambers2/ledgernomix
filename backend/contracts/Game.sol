@@ -3,10 +3,31 @@ pragma solidity 0.8.1;
 
 import "hardhat/console.sol";
 
+library Calculations {
+    // FIXME: should be a library but ethers doesn't like that
+    function calculateQuorum(uint256 quorum, uint256 numPlayers)
+        public
+        pure
+        returns (uint256)
+    {
+        uint8 remainder = uint8((quorum * numPlayers) % 100);
+
+        if (remainder == 0) return (quorum * numPlayers) / 100;
+        else return ((quorum * numPlayers) / 100) + 1;
+    }
+
+    function calculateMajority(uint256 majority, uint256 numVotes)
+        public
+        pure
+        returns (uint256)
+    {
+        if (majority == 100) majority = 99;
+        return (majority * numVotes) / 100;
+    }
+}
+
 contract Game {
     uint256 constant entryFee = 5 ether;
-    uint256 constant maxProposals = 30;
-    uint256 constant startingBalance = 100;
 
     struct Player {
         address playerAddress;
@@ -43,24 +64,36 @@ contract Game {
     }
 
     constructor() {
+        // TODO: use an enum to add/reference rules instead of indices
         rules.push(Rule("Proposal reward", 10, 0, 1000)); // FIXME: is there a better way to add rules initially?
         rules.push(Rule("Majority", 50, 0, 100));
         rules.push(Rule("Quorum", 50, 0, 100));
+        rules.push(Rule("Max proposals", 3, 1, 100));
     }
 
     modifier gameActive() {
+        uint8 completedProposals;
+        for (uint256 index = 0; index < proposals.length; index++) {
+            if (proposals[index].complete) completedProposals++;
+        }
         require(
-            proposals.length < maxProposals,
-            "You cannot join this game because it has ended"
+            completedProposals < rules[3].value,
+            "You cannot interact with this game because it has ended"
         );
         _;
     }
 
     function joinGame() public payable gameActive {
         require(msg.value == entryFee, "You must send 5 xDai to join the game");
+        for (uint256 index = 0; index < players.length; index++) {
+            require(
+                msg.sender != players[index].playerAddress,
+                "You have already joined this game"
+            );
+        }
         Player storage p = players.push();
         p.playerAddress = msg.sender;
-        p.balance = startingBalance;
+        p.balance = entryFee;
     }
 
     modifier isPlayer() {
@@ -102,6 +135,7 @@ contract Game {
         view
         returns (address, bool)
     {
+        // FIXME: feels wrong - why expose this just for tests
         require(
             proposalIndex < proposals.length,
             "Proposal index must be in range"
@@ -110,27 +144,21 @@ contract Game {
             voteIndex < proposals[proposalIndex].votes.length,
             "Vote index must be in range"
         );
-        // FIXME: feels wrong - why expose this just for tests
         return (
             proposals[proposalIndex].votes[voteIndex].player,
             proposals[proposalIndex].votes[voteIndex].vote
         );
     }
 
-    // endgame
-
-    function calculateQuorum(uint256 quorum, uint256 numPlayers)
+    function voteOnProposal(uint256 proposalIndex, bool vote)
         public
-        returns (uint256)
+        isPlayer
+        gameActive
     {
-        return (quorum * numPlayers) / 100;
-    }
-
-    // function calculateQuorum() public returns (uint256) {
-    //     return rules[2].value * players.length / 100;
-    // }
-
-    function voteOnProposal(uint256 proposalIndex, bool vote) public isPlayer {
+        require(
+            !proposals[proposalIndex].complete,
+            "You may not vote on completed proposal"
+        );
         for (
             uint256 index = 0;
             index < proposals[proposalIndex].votes.length;
@@ -142,12 +170,60 @@ contract Game {
             );
         }
         proposals[proposalIndex].votes.push(Vote(msg.sender, vote));
-
-        // if (proposals[proposalIndex].votes.length >= )
-        // if (voteShare > majority) {
-        //     enactProposal();
-        // }
+        countVotes(proposalIndex);
     }
 
-    // enactproposal
+    function countVotes(uint256 proposalIndex) private {
+        uint256 quorum =
+            Calculations.calculateQuorum(rules[2].value, players.length);
+
+        if (proposals[proposalIndex].votes.length >= quorum) {
+            proposals[proposalIndex].complete = true;
+            endGame();
+            uint256 yesVotes;
+            for (
+                uint256 index = 0;
+                index < proposals[proposalIndex].votes.length;
+                index++
+            ) {
+                if (proposals[proposalIndex].votes[index].vote) yesVotes++;
+            }
+            uint256 majority =
+                Calculations.calculateMajority(
+                    rules[1].value,
+                    proposals[proposalIndex].votes.length
+                );
+            if (yesVotes > majority) {
+                enactProposal(proposalIndex);
+            }
+        }
+    }
+
+    function getPlayer(address playerAddress) private returns (uint256) {
+        for (uint256 index = 0; index < players.length; index++) {
+            if (players[index].playerAddress == playerAddress) return index;
+        }
+    }
+
+    function enactProposal(uint256 proposalIndex) private {
+        proposals[proposalIndex].successful = true;
+        Proposal memory p = proposals[proposalIndex]; // FIXME: does using memory here use up gas?
+        rules[p.ruleIndex].value = p.value;
+        players[getPlayer(p.proposer)].balance += rules[0].value; // FIXME: is there a better way to retrieve players other than looping?
+    }
+
+    function endGame() private {
+        if (proposals.length >= rules[3].value) {
+            uint256 balancesSum;
+            for (uint256 index = 0; index < players.length; index++) {
+                balancesSum += players[index].balance;
+            }
+            for (uint256 index = 0; index < players.length; index++) {
+                uint256 share =
+                    (players[index].balance / balancesSum) *
+                        (entryFee * players.length);
+                // players[index].playerAddress.send(share);
+            }
+        }
+    }
 }
