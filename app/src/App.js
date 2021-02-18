@@ -2,10 +2,11 @@ import { useState, useEffect, useCallback } from "react";
 import Game from "./contracts/Game.json";
 import { config } from "./config";
 import "./App.css";
-import { ruleConfig } from "./ruleConfig";
-import Select from "react-select";
 import { Scores } from "./Scores";
 import { Rules } from "./Rules";
+import { Proposals } from "./Proposals";
+import { Propose } from "./Propose";
+import { Loader } from "./Loader";
 const Web3 = require("web3");
 
 const useContractData = (contract, name) => {
@@ -31,7 +32,7 @@ const useContractData = (contract, name) => {
 };
 
 const useContractArray = (contract, name) => {
-  const [array, setArray] = useState([]);
+  const [array, setArray] = useState(null);
 
   useEffect(() => {
     if (!contract) return;
@@ -122,10 +123,6 @@ const useContractFn = (contract, name, options) => {
 };
 
 function App() {
-  const [proposedRuleOption, setProposedRuleOption] = useState(null);
-  const [proposedValue, setProposedValue] = useState(0);
-  const [proposedValueValid, setProposedValueValid] = useState(true);
-
   const [web3, setWeb3] = useState(null);
   useEffect(() => {
     // TODO: check if metamask installed
@@ -148,42 +145,12 @@ function App() {
   const voteOnProposal = useContractFn(game, "voteOnProposal", {
     from: account,
   });
-  //const createProposal = useContractFn(game, "createProposal");
+  const createProposal = useContractFn(game, "createProposal");
 
   const getPlayerName = (address) => {
     const index = players.findIndex((p) => p.playerAddress === address);
     return `PLAYER ${String.fromCharCode(index + "A".charCodeAt(0))}`;
   };
-
-  const createProposal = useCallback(async () => {
-    try {
-      await game.methods
-        .createProposal(proposedRuleOption.value, proposedValue)
-        .send({ from: account });
-      setProposedValue(0);
-      setProposedRuleOption(null);
-    } catch (e) {
-      // FIXME: HANDLE ERROR BETTER: NOTY?
-      console.log(e);
-    }
-  }, [account, proposedValue, proposedRuleOption, game]);
-
-  const ruleOptions = rules.map((rule, i) => ({ value: i, label: rule.name }));
-
-  useEffect(() => {
-    if (!proposedRuleOption) return setProposedValueValid(true);
-    console.log(rules, rules[proposedRuleOption.value]);
-    if (
-      parseInt(proposedValue) >=
-        parseInt(rules[proposedRuleOption.value].lowerBound) &&
-      parseInt(proposedValue) <=
-        parseInt(rules[proposedRuleOption.value].upperBound)
-    ) {
-      console.log(proposedValue);
-      return setProposedValueValid(true);
-    }
-    return setProposedValueValid(false);
-  }, [rules, proposedValue, proposedRuleOption]);
 
   // TODO: wait for everything to be ready before loading the page
 
@@ -195,61 +162,33 @@ function App() {
       </div>
       <div className="container">
         <div className="leftPanel panel">
-          <Scores players={players} getPlayerName={getPlayerName}></Scores>
+          {(players && (
+            <Scores players={players} getPlayerName={getPlayerName}></Scores>
+          )) || <Loader></Loader>}
         </div>
 
         <div className="rightPanel">
           <div className="rules panel">
             <div className="subpanel">
-              <Rules rules={rules}></Rules>
+              {(rules && (
+                <Rules rules={rules} createProposal={createProposal}></Rules>
+              )) || <Loader></Loader>}
             </div>
           </div>
           <div className="propose panel">
-            <h2>Propose</h2>I propose that{" "}
-            <Select
-              options={ruleOptions}
-              value={proposedRuleOption}
-              onChange={(option) => setProposedRuleOption(option)}
-            ></Select>{" "}
-            be changed to{" "}
-            <input
-              onChange={({ target: { value } }) => setProposedValue(value)}
-              type="text"
-              value={proposedValue}
-            ></input>
-            <button
-              onClick={createProposal}
-              disabled={!proposedValueValid || !proposedRuleOption}
-            >
-              Create proposal
-            </button>
-            {!proposedValueValid &&
-              `${rules[proposedRuleOption.value].name} must be between ${
-                rules[proposedRuleOption.value].lowerBound
-              } and ${rules[proposedRuleOption.value].upperBound}`}
+            {(rules && (
+              <Propose rules={rules} createProposal={createProposal}></Propose>
+            )) || <Loader></Loader>}
           </div>
           <div className="proposals panel">
-            <h2>Proposals</h2>
-            {(!rules.length && "LOADING...") || (
-              <ol>
-                {!proposals.length &&
-                  "No rule changes have been proposed so far. Use the 'Create Proposal' form to start the game"}
-                {proposals.map((proposal, i) => (
-                  <li key={i}>
-                    {getPlayerName(proposal.proposer)} proposes{" "}
-                    {rules[proposal.ruleIndex].name} should be {proposal.value}.
-                    Complete: {proposal.complete.toString()}. Success:{" "}
-                    {proposal.successful.toString()}
-                    <button onClick={() => voteOnProposal(i, true)}>
-                      Vote for
-                    </button>{" "}
-                    <button onClick={() => voteOnProposal(i, false)}>
-                      Vote against
-                    </button>
-                  </li>
-                ))}
-              </ol>
-            )}
+            {(rules && proposals && (
+              <Proposals
+                proposals={proposals}
+                rules={rules}
+                getPlayerName={getPlayerName}
+                voteOnProposal={voteOnProposal}
+              ></Proposals>
+            )) || <Loader></Loader>}
           </div>
         </div>
       </div>
