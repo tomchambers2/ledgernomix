@@ -13,6 +13,10 @@
   padding: 30px;
 }
 
+.subpanel {
+  padding: 20px;
+}
+
 h1 {
   font-size: 60px;
 }
@@ -36,8 +40,6 @@ li::marker {
 
 .rightPanel {
   width: 70%;
-  /* display: flex; */
-  /* justify-content: space-around; */
 }
 
 .rules {
@@ -58,6 +60,13 @@ button {
   padding: 8px 39px;
   font-size: 25px;
   font-weight: bold;
+}
+
+button:disabled {
+  border-color: grey;
+}
+button:disabled:hover {
+  cursor: auto;
 }
 
 button:hover {

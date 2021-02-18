@@ -40,14 +40,6 @@ contract Game {
         return players.length;
     }
 
-    function getPlayers(uint256 index)
-        external
-        view
-        returns (address, uint256)
-    {
-        return (players[index].playerAddress, players[index].balance);
-    }
-
     struct Rule {
         string name;
         uint256 value;
@@ -58,24 +50,6 @@ contract Game {
 
     function getRulesLength() external view returns (uint256) {
         return rules.length;
-    }
-
-    function getRules(uint256 index)
-        external
-        view
-        returns (
-            string memory,
-            uint256,
-            uint256,
-            uint256
-        )
-    {
-        return (
-            rules[index].name,
-            rules[index].value,
-            rules[index].lowerBound,
-            rules[index].upperBound
-        );
     }
 
     struct Proposal {
@@ -94,27 +68,6 @@ contract Game {
 
     function getProposalsLength() external view returns (uint256) {
         return proposals.length;
-    }
-
-    function getProposals(uint256 index)
-        external
-        view
-        returns (
-            address,
-            uint256,
-            uint256,
-            bool,
-            bool
-        )
-    {
-        return (
-            proposals[index].proposer,
-            proposals[index].ruleIndex,
-            proposals[index].value,
-            proposals[index].complete,
-            proposals[index].successful,
-
-        );
     }
 
     // function getVotes(uint256 proposalIndex)

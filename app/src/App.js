@@ -4,6 +4,8 @@ import { config } from "./config";
 import "./App.css";
 import { ruleConfig } from "./ruleConfig";
 import Select from "react-select";
+import { Scores } from "./Scores";
+import { Rules } from "./Rules";
 const Web3 = require("web3");
 
 const useContractData = (contract, name) => {
@@ -102,23 +104,27 @@ const useContract = (web3, abi, address) => {
 };
 
 const useContractFn = (contract, name, options) => {
-  const fn = useCallback(async () => {
-    console.log("call with", contract, name, options);
-    try {
-      await contract.methods[name]().send(options);
-      console.log(`Executed ${name} successfully`);
-    } catch (e) {
-      // TODO: show err to user in useful way
-      console.log(`Error when sending ${name}: ${e.message}`);
-    }
-  }, [contract, name, options]);
+  const fn = useCallback(
+    async (...args) => {
+      console.log("call with", contract, name, options);
+      try {
+        await contract.methods[name](...args).send(options);
+        console.log(`Executed ${name} successfully`);
+      } catch (e) {
+        // TODO: show err to user in useful way
+        console.log(`Error when sending ${name}: ${e.message}`);
+      }
+    },
+    [contract, name, options]
+  );
 
   return fn;
 };
 
 function App() {
+  const [proposedRuleOption, setProposedRuleOption] = useState(null);
   const [proposedValue, setProposedValue] = useState(0);
-  const [balances, setBalances] = useState([]);
+  const [proposedValueValid, setProposedValueValid] = useState(true);
 
   const [web3, setWeb3] = useState(null);
   useEffect(() => {
@@ -134,26 +140,6 @@ function App() {
   const players = useContractArray(game, "players");
   const rules = useContractArray(game, "rules");
 
-  // useEffect(() => {
-  //   if (!players) return;
-
-  //   const getData = async () => {
-  //     const balancesResult = await Promise.all(
-  //       players.map(async (player) => {
-  //         try {
-  //           const balance = await game.methods.balances(player).call();
-  //           return Promise.resolve({ player, balance });
-  //         } catch (e) {
-  //           // FIXME: handle err better
-  //           console.log(e);
-  //         }
-  //       })
-  //     );
-  //     setBalances(balancesResult);
-  //   };
-  //   getData();
-  // }, [players, game]);
-
   const joinGame = useContractFn(game, "joinGame", {
     from: account,
     value: Web3.utils.toWei("5"),
@@ -162,15 +148,42 @@ function App() {
   const voteOnProposal = useContractFn(game, "voteOnProposal", {
     from: account,
   });
+  //const createProposal = useContractFn(game, "createProposal");
+
+  const getPlayerName = (address) => {
+    const index = players.findIndex((p) => p.playerAddress === address);
+    return `PLAYER ${String.fromCharCode(index + "A".charCodeAt(0))}`;
+  };
 
   const createProposal = useCallback(async () => {
     try {
-      await game.methods.createProposal(proposedValue).send({ from: account });
-      setProposedValue(17);
+      await game.methods
+        .createProposal(proposedRuleOption.value, proposedValue)
+        .send({ from: account });
+      setProposedValue(0);
+      setProposedRuleOption(null);
     } catch (e) {
+      // FIXME: HANDLE ERROR BETTER: NOTY?
       console.log(e);
     }
-  }, [account, proposedValue, game]);
+  }, [account, proposedValue, proposedRuleOption, game]);
+
+  const ruleOptions = rules.map((rule, i) => ({ value: i, label: rule.name }));
+
+  useEffect(() => {
+    if (!proposedRuleOption) return setProposedValueValid(true);
+    console.log(rules, rules[proposedRuleOption.value]);
+    if (
+      parseInt(proposedValue) >=
+        parseInt(rules[proposedRuleOption.value].lowerBound) &&
+      parseInt(proposedValue) <=
+        parseInt(rules[proposedRuleOption.value].upperBound)
+    ) {
+      console.log(proposedValue);
+      return setProposedValueValid(true);
+    }
+    return setProposedValueValid(false);
+  }, [rules, proposedValue, proposedRuleOption]);
 
   // TODO: wait for everything to be ready before loading the page
 
@@ -182,74 +195,61 @@ function App() {
       </div>
       <div className="container">
         <div className="leftPanel panel">
-          <h2>Scores</h2>
-          <ol>
-            {players.map((player, i) => (
-              <li>
-                <span>
-                  PLAYER {String.fromCharCode(i + "A".charCodeAt(0))} -{" "}
-                  {Web3.utils.fromWei(player[1])} LED
-                </span>
-                <br></br>
-                <span>
-                  <small>{player[0]}</small>
-                </span>
-              </li>
-            ))}
-          </ol>
+          <Scores players={players} getPlayerName={getPlayerName}></Scores>
         </div>
 
         <div className="rightPanel">
           <div className="rules panel">
-            <div>
-              <h2>Immutable rules</h2>
-              <ul>
-                {rules.length}
-                {rules
-                  .map((rule) => ({ rule, ruleConfig: ruleConfig[rule[0]] }))
-                  .map(({ rule, ruleConfig }) => (
-                    <li>
-                      <strong>{rule.name}</strong> {ruleConfig.description} -{" "}
-                      {rule.value}
-                      {ruleConfig.unit}
-                    </li>
-                  ))}
-              </ul>
-            </div>
-            <div>
-              <h2>Mutable rules</h2>
-              tbd
+            <div className="subpanel">
+              <Rules rules={rules}></Rules>
             </div>
           </div>
           <div className="propose panel">
-            <h2>Propose</h2>I propose that <Select></Select> be changed to{" "}
+            <h2>Propose</h2>I propose that{" "}
+            <Select
+              options={ruleOptions}
+              value={proposedRuleOption}
+              onChange={(option) => setProposedRuleOption(option)}
+            ></Select>{" "}
+            be changed to{" "}
             <input
               onChange={({ target: { value } }) => setProposedValue(value)}
               type="text"
               value={proposedValue}
             ></input>
-            <button onClick={createProposal}>Create proposal</button>
+            <button
+              onClick={createProposal}
+              disabled={!proposedValueValid || !proposedRuleOption}
+            >
+              Create proposal
+            </button>
+            {!proposedValueValid &&
+              `${rules[proposedRuleOption.value].name} must be between ${
+                rules[proposedRuleOption.value].lowerBound
+              } and ${rules[proposedRuleOption.value].upperBound}`}
           </div>
           <div className="proposals panel">
             <h2>Proposals</h2>
-            <ol>
-              {!proposals.length &&
-                "No rule changes have been proposed so far. Use the 'Create Proposal' form to start the game"}
-              {proposals.map((proposal, i) => (
-                <li key={i}>
-                  {proposal.proposer} proposes {rules[proposal.ruleIndex].name}{" "}
-                  should be {proposal.value}. Complete:{" "}
-                  {proposal.complete.toString()}. Success:{" "}
-                  {proposal.successful.toString()}
-                  <button onClick={voteOnProposal(i, true)}>
-                    Vote for
-                  </button>{" "}
-                  <button onClick={voteOnProposal(i, false)}>
-                    Vote against
-                  </button>
-                </li>
-              ))}
-            </ol>
+            {(!rules.length && "LOADING...") || (
+              <ol>
+                {!proposals.length &&
+                  "No rule changes have been proposed so far. Use the 'Create Proposal' form to start the game"}
+                {proposals.map((proposal, i) => (
+                  <li key={i}>
+                    {getPlayerName(proposal.proposer)} proposes{" "}
+                    {rules[proposal.ruleIndex].name} should be {proposal.value}.
+                    Complete: {proposal.complete.toString()}. Success:{" "}
+                    {proposal.successful.toString()}
+                    <button onClick={() => voteOnProposal(i, true)}>
+                      Vote for
+                    </button>{" "}
+                    <button onClick={() => voteOnProposal(i, false)}>
+                      Vote against
+                    </button>
+                  </li>
+                ))}
+              </ol>
+            )}
           </div>
         </div>
       </div>
