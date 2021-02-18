@@ -11,10 +11,7 @@
   outline-offset: -13px;
   outline: 4px solid black;
   padding: 30px;
-}
-
-.subpanel {
-  padding: 20px;
+  position: relative;
 }
 
 h1 {
@@ -67,6 +64,22 @@ button:disabled {
 }
 button:disabled:hover {
   cursor: auto;
+}
+
+.disabled-panel {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(1, 1, 1, 0.3);
+  backdrop-filter: blur(2px);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  color: white;
 }
 
 button:hover {

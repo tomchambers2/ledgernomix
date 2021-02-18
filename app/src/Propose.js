@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Select from "react-select";
 
-export const Propose = ({ rules, createProposal }) => {
+export const Propose = ({ rules, createProposal, enabled }) => {
   const [proposedRuleOption, setProposedRuleOption] = useState(null);
   const [proposedValue, setProposedValue] = useState(0);
   const [proposedValueValid, setProposedValueValid] = useState(true);
@@ -31,6 +31,9 @@ export const Propose = ({ rules, createProposal }) => {
 
   return (
     <>
+      {!enabled && (
+        <div className="disabled-panel">Join the game to make proposals</div>
+      )}
       <h2>Propose</h2>I propose that{" "}
       <Select
         options={ruleOptions}
@@ -44,7 +47,7 @@ export const Propose = ({ rules, createProposal }) => {
         value={proposedValue}
       ></input>
       <button
-        onClick={createProposal}
+        onClick={createProposalHandler}
         disabled={!proposedValueValid || !proposedRuleOption}
       >
         Create proposal

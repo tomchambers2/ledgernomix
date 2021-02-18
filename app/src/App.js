@@ -7,29 +7,10 @@ import { Rules } from "./Rules";
 import { Proposals } from "./Proposals";
 import { Propose } from "./Propose";
 import { Loader } from "./Loader";
+import Noty from "noty";
+import "noty/lib/noty.css";
+import "noty/lib/themes/mint.css";
 const Web3 = require("web3");
-
-const useContractData = (contract, name) => {
-  const [data, setData] = useState(null);
-
-  useEffect(() => {
-    if (!contract) return;
-    console.log(contract);
-    async function fetchData() {
-      try {
-        const result = await contract.methods[name]().call();
-        setData(result);
-      } catch (e) {
-        console.error(`Failed retrieving ${name} data: ${e}`);
-      }
-    }
-    fetchData();
-  }, [contract, name]);
-
-  // setup subscriber to listen for new data
-
-  return data;
-};
 
 const useContractArray = (contract, name) => {
   const [array, setArray] = useState(null);
@@ -49,9 +30,6 @@ const useContractArray = (contract, name) => {
       }
       try {
         for (let index = 0; index < length; index++) {
-          // const element = await contract.methods[
-          //   `get${name.slice(0, 1).toUpperCase()}${name.slice(1)}`
-          // ](index).call();
           const element = await contract.methods[name](index).call();
           elements = [...elements, element];
         }
@@ -86,9 +64,6 @@ const useAccount = (web3) => {
     }
     fetchAccounts();
   }, [web3]);
-
-  // TODO: setup subscriber to listen for new data
-
   return account;
 };
 
@@ -122,30 +97,53 @@ const useContractFn = (contract, name, options) => {
   return fn;
 };
 
+const fireNotification = function (text, type) {
+  new Noty({
+    text,
+    type,
+  }).show();
+};
+
 function App() {
   const [web3, setWeb3] = useState(null);
+  const [isPlayer, setIsPlayer] = useState(null);
+  const game = useContract(web3, Game.abi, config.gameContract.address);
+  const account = useAccount(web3);
+  const proposals = useContractArray(game, "proposals");
+  const players = useContractArray(game, "players");
+  const rules = useContractArray(game, "rules");
+
+  useEffect(() => {
+    if (!account || !players) return;
+    const result = players.some(
+      ({ playerAddress }) => account === playerAddress
+    );
+    setIsPlayer(result);
+  }, [account, players]);
+
   useEffect(() => {
     // TODO: check if metamask installed
     const web3 = new Web3(window.ethereum);
     setWeb3(web3);
   }, []);
 
-  const game = useContract(web3, Game.abi, config.gameContract.address);
-  const account = useAccount(web3);
-
-  const proposals = useContractArray(game, "proposals");
-  const players = useContractArray(game, "players");
-  const rules = useContractArray(game, "rules");
-
   const joinGame = useContractFn(game, "joinGame", {
     from: account,
     value: Web3.utils.toWei("5"),
   });
 
+  const joinGameHandler = () => {
+    if (!account)
+      return fireNotification("You need to install Metamask first!", "warning");
+    joinGame();
+  };
+
   const voteOnProposal = useContractFn(game, "voteOnProposal", {
     from: account,
   });
-  const createProposal = useContractFn(game, "createProposal");
+  const createProposal = useContractFn(game, "createProposal", {
+    from: account,
+  });
 
   const getPlayerName = (address) => {
     const index = players.findIndex((p) => p.playerAddress === address);
@@ -158,7 +156,13 @@ function App() {
     <div className="App">
       <h1>LEDGER</h1>
       <div className="panel join">
-        <button onClick={joinGame}>Join game</button>
+        <h2>
+          blah blah blah what the game is, how you play it. how to install
+          metamask guide
+        </h2>
+        {(isPlayer && "You are playing this game") || (
+          <button onClick={joinGameHandler}>Join game</button>
+        )}
       </div>
       <div className="container">
         <div className="leftPanel panel">
@@ -170,14 +174,16 @@ function App() {
         <div className="rightPanel">
           <div className="rules panel">
             <div className="subpanel">
-              {(rules && (
-                <Rules rules={rules} createProposal={createProposal}></Rules>
-              )) || <Loader></Loader>}
+              {(rules && <Rules rules={rules}></Rules>) || <Loader></Loader>}
             </div>
           </div>
           <div className="propose panel">
             {(rules && (
-              <Propose rules={rules} createProposal={createProposal}></Propose>
+              <Propose
+                rules={rules}
+                createProposal={createProposal}
+                enabled={isPlayer}
+              ></Propose>
             )) || <Loader></Loader>}
           </div>
           <div className="proposals panel">
