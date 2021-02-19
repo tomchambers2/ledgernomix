@@ -75,13 +75,9 @@ const useContract = (web3, abi, address) => {
 };
 
 const parseError = (error) => {
-  const userMessage = error.message.match(
+  return error.message.match(
     /VM Exception while processing transaction: revert ([\w ]+)/
   )[1];
-  fireNotification(
-    `${userMessage}<br><br><em>The blockchain takes a few seconds to update, so your screen may have been out of date</em>`,
-    "error"
-  );
 };
 
 const useContractFn = (contract, name, options) => {
@@ -89,11 +85,15 @@ const useContractFn = (contract, name, options) => {
     async (...args) => {
       try {
         const result = await contract.methods[name](...args).send(options);
-        console.log(result);
+        fireNotification(`${name} request sent`, "warning");
       } catch (e) {
         // TODO: show err to user in useful way
         console.log(e);
         const msg = parseError(e);
+        fireNotification(
+          `${msg}<br><br><em>The blockchain takes a few seconds to update, so your screen may have been out of date</em>`,
+          "error"
+        );
         console.log(`Error when sending ${name}: ${e.message}`);
       }
     },
