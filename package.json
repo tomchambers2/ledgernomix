@@ -4,7 +4,10 @@
   "description": "## Frontend",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "cd app && npm start",
+    "deploy": "cd backend && npx hardhat run scripts/deploy.js --network localhost",
+    "public": "ngrok start ledgergame ledgerblockchain"
   },
   "repository": {
     "type": "git",

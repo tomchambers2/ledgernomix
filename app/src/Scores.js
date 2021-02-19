@@ -11,11 +11,11 @@ export const Scores = ({ players, getPlayerName }) => {
             <li key={i}>
               <span>
                 {getPlayerName(player.playerAddress)} -{" "}
-                {Web3.utils.fromWei(player[1])} LED
+                {Web3.utils.fromWei(player.balance)} LED
               </span>
               <br></br>
               <span>
-                <small>{player[0]}</small>
+                <small>{player.playerAddress}</small>
               </span>
             </li>
           ))}

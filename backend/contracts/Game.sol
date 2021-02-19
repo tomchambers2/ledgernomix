@@ -70,6 +70,11 @@ contract Game {
         return proposals.length;
     }
 
+    event NewPlayer(address playerAddress, uint256 balance);
+    event NewProposal(address proposer, uint256 ruleIndex, uint256 value);
+    event NewVote(uint256 proposalIndex, address player, uint256 vote);
+    event ProposalComplete(uint256 proposalIndex, bool successful);
+
     // function getVotes(uint256 proposalIndex)
     //     external
     //     view
@@ -91,7 +96,7 @@ contract Game {
     struct Vote {
         // uint256 voterIndex;
         address player;
-        bool vote; // TODO: add abstentions
+        bool vote;
     }
 
     constructor() {
@@ -125,6 +130,7 @@ contract Game {
         Player storage p = players.push();
         p.playerAddress = msg.sender;
         p.balance = entryFee;
+        emit NewPlayer(p.playerAddress, p.balance);
     }
 
     modifier isPlayer() {
@@ -159,6 +165,8 @@ contract Game {
         p.proposer = msg.sender;
         p.ruleIndex = ruleIndex;
         p.value = value;
+
+        emit NewProposal(p.proposer, p.ruleIndex, p.value);
     }
 
     function getVote(uint256 proposalIndex, uint256 voteIndex)
@@ -224,9 +232,11 @@ contract Game {
                     rules[1].value,
                     proposals[proposalIndex].votes.length
                 );
-            if (yesVotes > majority) {
+            bool successful = yesVotes > majority;
+            if (successful) {
                 enactProposal(proposalIndex);
             }
+            emit ProposalComplete(proposalIndex, successful); // TODO: write tests for events
         }
     }
 
