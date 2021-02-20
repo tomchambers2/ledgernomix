@@ -24,7 +24,7 @@ body {
 }
 
 .panel {
-  margin: 8px;
+  /* margin: 8px; */
   box-sizing: content-box;
   background: lightblue;
   outline-offset: -13px;
@@ -46,10 +46,6 @@ h2 {
 
 h2 {
   font-size: 1.3rem;
-}
-
-strong {
-  /* font-size: 100px; */
 }
 
 .leftPanel {

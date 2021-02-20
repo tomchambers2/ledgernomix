@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.1;
-pragma experimental ABIEncoderV2;
 
 import "hardhat/console.sol";
 
@@ -24,6 +23,22 @@ library Calculations {
     {
         if (majority == 100) majority = 99;
         return (majority * numVotes) / 100;
+    }
+}
+
+contract GameFactory {
+    Game[] public games;
+
+    event NewGame(uint256 gameIndex, address gameAddress);
+
+    function getGamesLength() external view returns (uint256) {
+        return games.length;
+    }
+
+    function newGame() public {
+        Game g = new Game();
+        games.push(g);
+        emit NewGame(games.length - 1, address(g));
     }
 }
 

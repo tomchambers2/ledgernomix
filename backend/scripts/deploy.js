@@ -9,6 +9,30 @@ var path = require("path");
 
 const { deployments } = require("hardhat");
 
+function copyAbi(name) {
+  var from = path.join(
+    __dirname,
+    "..",
+    "artifacts",
+    "contracts",
+    `Game.sol`,
+    `${name}.json`
+  );
+  var to = path.join(
+    __dirname,
+    "..",
+    "..",
+    "app",
+    "src",
+    "contracts",
+    `${name}.json`
+  );
+  fs.copyFileSync(from, to, (err) => {
+    if (err) throw err;
+    console.log("copied artifact");
+  });
+}
+
 async function main() {
   // Hardhat always runs the compile task when running scripts with its command
   // line interface.
@@ -23,43 +47,34 @@ async function main() {
   const calculations = await Calculations.deploy();
   await calculations.deployed();
 
-  const Game = await hre.ethers.getContractFactory("Game", {
+  // // const Game = await hre.ethers.getContractFactory("Game", {
+  // //   libraries: {
+  // //     Calculations: calculations.address,
+  // //   },
+  // // });
+  // // const game = await Game.deploy();
+
+  // await game.deployed();
+
+  const GameFactory = await hre.ethers.getContractFactory("GameFactory", {
     libraries: {
       Calculations: calculations.address,
     },
   });
-  const game = await Game.deploy();
+  const gameFactory = await GameFactory.deploy();
 
-  await game.deployed();
+  copyAbi("Game");
+  copyAbi("GameFactory");
 
-  var from = path.join(
-    __dirname,
-    "..",
-    "artifacts",
-    "contracts",
-    "Game.sol",
-    "Game.json"
-  );
-  var to = path.join(
-    __dirname,
-    "..",
-    "..",
-    "app",
-    "src",
-    "contracts",
-    "Game.json"
-  );
+  console.log("game factory deployed to:", gameFactory.address);
 
-  fs.copyFileSync(from, to, (err) => {
-    if (err) throw err;
-    console.log("copied artifact");
-  });
-
-  console.log("game deployed to:", game.address);
-
+  // fs.writeFileSync(
+  //   path.join(__dirname, "..", "..", "app", "src", "config.js"),
+  //   `export const config = { gameContract: { address: "${game.address}" } };`
+  // );
   fs.writeFileSync(
     path.join(__dirname, "..", "..", "app", "src", "config.js"),
-    `export const config = { gameContract: { address: "${game.address}" } };`
+    `export const config = { gameFactoryContract: { address: "${gameFactory.address}" } };`
   );
 
   const artifact = await deployments.getArtifact("Game");
