@@ -134,27 +134,12 @@ export const Game = ({ web3, account }) => {
       const newProposals = proposals.slice();
       newProposals[vote.proposalIndex].votes[vote.voteIndex] = vote;
       setProposals(newProposals);
-
-      fireNotification(
-        `${getPlayerName(vote.playerAddress)} voted ${
-          vote ? "yes" : "no"
-        } on proposal ${vote.proposalIndex}`,
-        "success"
-      );
     },
     [proposals, getPlayerName]
   );
 
   const updateProposal = useCallback(
     (proposal) => {
-      fireNotification(
-        `New proposal created by ${getPlayerName(
-          proposals.proposer
-        )}: change <strong>${
-          rules[proposal.ruleIndex].name
-        }</strong> to <strong>${proposal.value}</strong>`,
-        "success"
-      );
       const newProposals = proposals.slice();
       newProposals[proposal.proposalIndex] = proposal;
       setProposals(newProposals);
@@ -170,13 +155,6 @@ export const Game = ({ web3, account }) => {
         balance: player.balance.toString(),
       };
       setPlayers(newPlayers);
-
-      fireNotification(
-        `New player joined: ${getPlayerName(player.playerAddress)} (${
-          player.playerAddress
-        })`,
-        "success"
-      );
     },
     [players, getPlayerName]
   );
@@ -186,11 +164,6 @@ export const Game = ({ web3, account }) => {
       const newRules = rules.slice();
       newRules[rule.ruleIndex].value = rule.value;
       setRules(newRules);
-
-      fireNotification(
-        `Rule updated: ${rules[rule.ruleIndex].name} is now ${rule.value}`,
-        "success"
-      );
     },
     [rules]
   );
@@ -217,8 +190,17 @@ export const Game = ({ web3, account }) => {
   // FIXME: put somewhere else not in fn
   const mapEvent = useCallback(
     (event) => {
+      const data = event.returnValues;
       switch (event.event) {
         case "ProposalUpdate":
+          fireNotification(
+            `New proposal created by ${getPlayerName(
+              proposals.proposer
+            )}: change <strong>${
+              rules[data.ruleIndex].name
+            }</strong> to <strong>${data.value}</strong>`,
+            "success"
+          );
           return (
             <>
               <strong>{event.event}</strong> -{" "}
@@ -228,6 +210,12 @@ export const Game = ({ web3, account }) => {
             </>
           );
         case "PlayerUpdate":
+          fireNotification(
+            `New player joined: ${getPlayerName(data.playerAddress)} (${
+              data.playerAddress
+            })`,
+            "success"
+          );
           return (
             <>
               <strong>{event.event}</strong> -{" "}
@@ -237,6 +225,12 @@ export const Game = ({ web3, account }) => {
             </>
           );
         case "VoteUpdate":
+          fireNotification(
+            `${getPlayerName(data.playerAddress)} voted ${
+              data ? "yes" : "no"
+            } on proposal ${data.proposalIndex}`,
+            "success"
+          );
           return (
             <>
               <strong>{event.event}</strong> -{" "}
@@ -246,6 +240,10 @@ export const Game = ({ web3, account }) => {
             </>
           );
         case "RuleUpdate":
+          fireNotification(
+            `Rule updated: ${rules[data.ruleIndex].name} is now ${data.value}`,
+            "success"
+          );
           return (
             <>
               <strong>{event.event}</strong> - Rule change
@@ -304,14 +302,16 @@ export const Game = ({ web3, account }) => {
 
   return (
     <>
-      {/* {(!gameActive && "This game has ended") ||
-        (isPlayer &&
-          `You are playing
+      <div className="panel">
+        {(!gameActive && "This game has ended") ||
+          (isPlayer &&
+            `You are playing
       this game`) || (
-          <div>
-            <button onClick={joinGameHandler}>Join game</button>
-          </div>
-        )} */}
+            <div>
+              <button onClick={joinGameHandler}>Join game</button>
+            </div>
+          )}
+      </div>
 
       <div className="container">
         <div className="rules panel">
