@@ -389,12 +389,14 @@ function App() {
 
   return (
     <div className="App">
-      <h1>LEDGER</h1>
-      <div className="panel join">
-        <h2>
-          blah blah blah what the game is, how you play it. how to install
-          metamask guide
-        </h2>
+      <div className="panel intro">
+        <h1>Ledgernomix</h1>
+        <h2>The game where you make the rules</h2>
+        <div className="buttons">
+          <div>About</div>
+          <div>GAME NAME</div>
+          <div>How to play</div>
+        </div>
         {!setupStatus.metamask && (
           <div>
             <a
@@ -419,47 +421,45 @@ function App() {
           )}
       </div>
       <div className="container">
-        <div className="leftPanel">
-          <div className="panel">
-            {(players && (
-              <Scores players={players} getPlayerName={getPlayerName}></Scores>
-            )) || <Loader></Loader>}
-          </div>
-          <div className="panel">
-            <ul>
-              {events.map((event) => (
-                <li>{event}</li>
-              ))}
-            </ul>
+        <div className="rules panel">
+          <div className="subpanel rules">
+            {(rules && <Rules rules={rules}></Rules>) || <Loader></Loader>}
           </div>
         </div>
 
-        <div className="rightPanel">
-          <div className="rules panel">
-            <div className="subpanel">
-              {(rules && <Rules rules={rules}></Rules>) || <Loader></Loader>}
-            </div>
-          </div>
-          <div className="propose panel">
-            {(rules && (
-              <Propose
-                rules={rules}
-                createProposal={createProposal}
-                isPlayer={isPlayer}
-                gameActive={gameActive}
-              ></Propose>
-            )) || <Loader></Loader>}
-          </div>
-          <div className="proposals panel">
-            {(rules && proposals && (
-              <Proposals
-                proposals={proposals}
-                rules={rules}
-                getPlayerName={getPlayerName}
-                voteOnProposal={voteOnProposal}
-              ></Proposals>
-            )) || <Loader></Loader>}
-          </div>
+        <div className="proposals panel">
+          {(rules && proposals && (
+            <Proposals
+              proposals={proposals}
+              rules={rules}
+              getPlayerName={getPlayerName}
+              voteOnProposal={voteOnProposal}
+            ></Proposals>
+          )) || <Loader></Loader>}
+        </div>
+
+        <div className="panel scores">
+          {(players && (
+            <Scores players={players} getPlayerName={getPlayerName}></Scores>
+          )) || <Loader></Loader>}
+          <h2>Event log</h2>
+          <ul>
+            {events.map((event) => (
+              <li>{event}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+      <div>
+        <div className="propose panel">
+          {(rules && (
+            <Propose
+              rules={rules}
+              createProposal={createProposal}
+              isPlayer={isPlayer}
+              gameActive={gameActive}
+            ></Propose>
+          )) || <Loader></Loader>}
         </div>
       </div>
     </div>

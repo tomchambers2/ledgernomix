@@ -1,13 +1,32 @@
+html {
+  font-size: 26px;
+}
+
+body {
+  font-family: eskapade-fraktur, serif;
+  font-style: normal;
+  font-weight: bold;
+}
+
 .container {
   display: flex;
+  justify-content: space-between;
+}
+
+.container div {
+  flex-basis: 33%;
+}
+
+@media (max-width: 900px) {
+  .container {
+    flex-direction: column;
+  }
 }
 
 .panel {
-  /* border: 3px solid black; */
-  margin: 10px;
+  margin: 8px;
   box-sizing: content-box;
   background: lightblue;
-  /* box-shadow: 0px 0px 3px black inset; */
   outline-offset: -13px;
   outline: 4px solid black;
   padding: 30px;
@@ -15,7 +34,9 @@
 }
 
 h1 {
-  font-size: 60px;
+  font-size: 3.2rem;
+  font-family: "UnifrakturMaguntia", cursive;
+  font-weight: normal;
 }
 
 h1,
@@ -23,12 +44,16 @@ h2 {
   text-align: center;
 }
 
-.join {
-  text-align: center;
+h2 {
+  font-size: 1.3rem;
+}
+
+strong {
+  /* font-size: 100px; */
 }
 
 .leftPanel {
-  width: 30%;
+  flex-basis: 30%;
 }
 
 li::marker {
@@ -36,38 +61,29 @@ li::marker {
 }
 
 .rightPanel {
-  width: 70%;
-}
-
-.rules {
-  display: flex;
-  justify-content: space-around;
-}
-
-.rules div {
-  width: 50%;
-}
-
-.proposals {
+  flex-basis: 70%;
 }
 
 button,
 a.button {
-  border: 3px solid black;
+  border: 4px solid black;
   color: black;
   margin: 15px;
   background: none;
-  padding: 8px 39px;
-  font-size: 25px;
-  font-weight: bold;
+  padding: 8px 40px 18px 40px;
+  font-size: 1.5rem;
+  font-family: eskapade-fraktur, serif;
+  font-style: normal;
   display: inline-block;
   text-decoration: none;
   background: white;
+  font-weight: bold;
 }
 
 button:disabled,
 a.button:disabled {
   border-color: grey;
+  color: grey;
 }
 button:disabled:hover,
 a.button:disabled:hover {
@@ -97,4 +113,31 @@ button:hover {
 
 .input-helper.error {
   color: red;
+}
+
+.intro {
+  text-align: center;
+  background: url("backgrounds/marble.jpg");
+  background-size: 50%;
+}
+
+.intro .buttons {
+  display: flex;
+  justify-content: space-between;
+  /* text-align: center; */
+}
+
+.scores {
+  background-image: url("backgrounds/paper.jpg");
+  background-size: 50%;
+}
+
+.proposals {
+  background-image: url("backgrounds/blackboard.jpg");
+  background-size: 50%;
+}
+
+.rules {
+  background-image: url("backgrounds/paper2.jpg");
+  background-size: 50%;
 }
