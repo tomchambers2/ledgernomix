@@ -12,7 +12,7 @@ export const Propose = ({ rules, createProposal, isPlayer, gameActive }) => {
 
   useEffect(() => {
     if (!proposedRuleOption) return setProposedValueValid(true);
-    if (rules[proposedRuleOption.value].value == proposedValue) {
+    if (rules[proposedRuleOption.value].value === proposedValue) {
       setProposedValueError(
         "Proposed value must be different to current value"
       );
@@ -33,12 +33,14 @@ export const Propose = ({ rules, createProposal, isPlayer, gameActive }) => {
   useEffect(() => {
     if (!proposedRuleOption) return;
     setProposedValue(rules[proposedRuleOption.value].value);
-  }, [proposedRuleOption]);
+  }, [proposedRuleOption, rules]);
 
   const createProposalHandler = () => {
-    setProposedValue(0);
-    setProposedRuleOption(null);
-    createProposal(proposedRuleOption.value, proposedValue);
+    const result = createProposal(proposedRuleOption.value, proposedValue);
+    if (result) {
+      setProposedValue(0);
+      setProposedRuleOption(null);
+    }
   };
 
   return (
@@ -58,6 +60,7 @@ export const Propose = ({ rules, createProposal, isPlayer, gameActive }) => {
         onChange={({ target: { value } }) => setProposedValue(value)}
         type="text"
         value={proposedValue}
+        disabled={!proposedRuleOption}
       ></input>
       <button
         onClick={createProposalHandler}

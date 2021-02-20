@@ -6,6 +6,10 @@ export const Scores = ({ players, getPlayerName }) => {
       <h2>Scores</h2>
       <ol>
         {players
+          .map((p) => {
+            console.log(p);
+            return p;
+          })
           .sort((p1, p2) => p2.balance - p1.balance)
           .map((player, i) => (
             <li key={i}>

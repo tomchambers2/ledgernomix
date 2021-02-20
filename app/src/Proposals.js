@@ -3,6 +3,8 @@ export const Proposals = ({
   proposals,
   voteOnProposal,
   getPlayerName,
+  playerAddress,
+  gameActive,
 }) => (
   <>
     {(!rules.length && "LOADING...") || (
@@ -15,20 +17,35 @@ export const Proposals = ({
           .reverse()
           .map((proposal, i) => (
             <li key={i}>
+              {proposal.votes &&
+                proposal.votes.filter((v) => v).map(() => "👍🏻")}
+              {proposal.votes &&
+                proposal.votes.filter((v) => !v).map(() => "👎")}
               {getPlayerName(proposal.proposer)} proposes{" "}
               {rules[proposal.ruleIndex].name} should be {proposal.value}.
               Complete: {proposal.complete.toString()}. Success:{" "}
               {proposal.successful.toString()}
-              {!proposal.complete && (
-                <>
-                  <button onClick={() => voteOnProposal(proposal.index, true)}>
-                    Vote for
-                  </button>
-                  <button onClick={() => voteOnProposal(proposal.index, false)}>
-                    Vote against
-                  </button>
-                </>
-              )}
+              {proposal.pending && "PENDING"}
+              {gameActive &&
+                proposal.votes &&
+                !proposal.votes.some(
+                  ({ playerAddress: voter }) => voter !== playerAddress
+                ) &&
+                !proposal.complete &&
+                !proposal.pending && (
+                  <>
+                    <button
+                      onClick={() => voteOnProposal(proposal.index, true)}
+                    >
+                      Vote for
+                    </button>
+                    <button
+                      onClick={() => voteOnProposal(proposal.index, false)}
+                    >
+                      Vote against
+                    </button>
+                  </>
+                )}
             </li>
           ))}
       </ol>

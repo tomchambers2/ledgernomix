@@ -10,39 +10,8 @@ import { Loader } from "./Loader";
 import Noty from "noty";
 import "noty/lib/noty.css";
 import "noty/lib/themes/mint.css";
+import useInterval from "./useInterval";
 const Web3 = require("web3");
-
-const useContractArray = (contract, name, setArray) => {
-  useEffect(() => {
-    if (!contract) return;
-    const getArray = async () => {
-      let elements = [];
-      let length = 0;
-      try {
-        length = await contract.methods[
-          `get${name.slice(0, 1).toUpperCase()}${name.slice(1)}Length`
-        ]().call();
-      } catch (e) {
-        console.log(`contract array ${name} error 1`, e);
-      }
-      try {
-        for (let index = 0; index < length; index++) {
-          const element = await contract.methods[name](index).call();
-          elements = [...elements, element];
-        }
-        setArray(elements);
-      } catch (e) {
-        console.log(
-          `contract array ${`get${name.slice(0, 1).toUpperCase()}${name.slice(
-            1
-          )}`} error 2`,
-          e
-        );
-      }
-    };
-    getArray();
-  }, [name, contract, setArray]);
-};
 
 const useAccount = (web3) => {
   const [account, setAccount] = useState(null);
@@ -75,9 +44,11 @@ const useContract = (web3, abi, address) => {
 };
 
 const parseError = (error) => {
-  return error.message.match(
+  const err = error.message.match(
     /VM Exception while processing transaction: revert ([\w ]+)/
-  )[1];
+  );
+  if (err) return err[1];
+  return "You cancelled the transaction";
 };
 
 const useContractFn = (contract, name, options) => {
@@ -86,15 +57,15 @@ const useContractFn = (contract, name, options) => {
       try {
         const result = await contract.methods[name](...args).send(options);
         fireNotification(`${name} request sent`, "warning");
+        return result;
       } catch (e) {
         // TODO: show err to user in useful way
-        console.log(e);
         const msg = parseError(e);
         fireNotification(
-          `${msg}<br><br><em>The blockchain takes a few seconds to update, so your screen may have been out of date</em>`,
+          `${msg}<br><br><em>The blockchain takes a few seconds to update, so your screen may be out of date</em>`,
           "error"
         );
-        console.log(`Error when sending ${name}: ${e.message}`);
+        return false;
       }
     },
     [contract, name, options]
@@ -106,7 +77,7 @@ const useContractFn = (contract, name, options) => {
 const fireNotification = function (text, type) {
   new Noty({
     text,
-    type,
+    type: type || "info",
     timeout: 10000,
   }).show();
 };
@@ -134,14 +105,78 @@ function App() {
   const [rules, setRules] = useState(null);
   const [players, setPlayers] = useState(null);
   const [proposals, setProposals] = useState(null);
-  useContractArray(game, "proposals", setProposals);
-  useContractArray(game, "players", setPlayers);
-  useContractArray(game, "rules", setRules);
   const [receivedPastEvents, setReceivedPastEvents] = useState(false);
   const [setupStatus, setSetupStatus] = useState({
     metamask: false,
     network: false,
   });
+
+  const getArray = useCallback(
+    async (name, setArray) => {
+      if (!game) {
+        return;
+      }
+      let elements = [];
+      let length = 0;
+      try {
+        length = await game.methods[
+          `get${name.slice(0, 1).toUpperCase()}${name.slice(1)}Length`
+        ]().call();
+      } catch (e) {
+        fireNotification(`Failed to get ${name}s`);
+      }
+      try {
+        for (let index = 0; index < length; index++) {
+          const element = await game.methods[name](index).call();
+          elements = [...elements, element];
+        }
+        setArray(elements);
+        return elements;
+      } catch (e) {
+        fireNotification(`Failed to get ${name}s`);
+        console.log(`Failed to get ${name}: ${e.message}`);
+      }
+    },
+    [game]
+  );
+
+  const fetchVotes = useCallback(
+    async (proposals) => {
+      const updatedProposals = await Promise.all(
+        proposals.slice().map(async (proposal, i) => {
+          const votesLength = await game.methods.getVotesLength(i).call();
+          console.log(votesLength);
+          proposal.votes = [];
+          for (let voteIndex = 0; voteIndex < votesLength; voteIndex++) {
+            const { playerAddress, vote } = game.methods
+              .getVote(i, voteIndex)
+              .call();
+            proposal.votes.push({ playerAddress, vote });
+          }
+          return proposal;
+        })
+      );
+      console.log(updatedProposals);
+      setProposals(updatedProposals);
+    },
+    [game]
+  );
+
+  const fetchRules = useCallback(() => {
+    getArray("rules", setRules);
+  }, [getArray]);
+  useInterval(fetchRules, 10000);
+
+  const fetchProposals = useCallback(async () => {
+    const proposals = await getArray("proposals", setProposals);
+    if (proposals) fetchVotes(proposals);
+  }, [getArray, fetchVotes]);
+  useInterval(fetchProposals, 10000);
+
+  const fetchPlayers = useCallback(() => {
+    getArray("players", setPlayers);
+  }, [getArray]);
+  useInterval(fetchPlayers, 10000);
 
   useEffect(() => {
     if (!account || !players) return;
@@ -152,214 +187,169 @@ function App() {
   }, [account, players]);
 
   useEffect(() => {
-    // TODO: check if metamask installed
-    if (!window.ethereum)
-      return setSetupStatus({ metamask: false, network: false });
-    setSetupStatus({ metamask: true, network: false });
-    const web3 = new Web3(window.ethereum);
-    setWeb3(web3);
+    const fn = async () => {
+      // TODO: check if metamask installed
+      if (!window.ethereum)
+        return setSetupStatus({ metamask: false, network: false });
+      const web3 = new Web3(window.ethereum);
+      const network = await web3.eth.net.getNetworkType();
+      if (network !== "private")
+        return setSetupStatus({ metamask: true, network: false });
+      setSetupStatus({ metamask: true, network: true });
+      setWeb3(web3);
+    };
+    fn();
   }, []);
 
-  // useEffect(() => {
-  //   if (!game) return;
-  //   const subscription = game.events
-  //     .NewPlayer()
-  //     .on("data", ({ returnValues: { balance, playerAddress } }) => {
-  //       const newPlayer = { playerAddress, balance: balance.toString() };
-  //       const newPlayers = (players && [...players, newPlayer]) || [newPlayer];
-  //       setPlayers(newPlayers);
+  const getPlayerName = useCallback(
+    (address) => {
+      const index = players.findIndex((p) => p.playerAddress === address);
+      return `PLAYER ${String.fromCharCode(index + "A".charCodeAt(0))}`;
+    },
+    [players]
+  );
 
-  // fireNotification(
-  //   `New player joined: ${getPlayerName(playerAddress)} (${playerAddress})`,
-  //   "success"
-  // );
-  //     });
+  const updateVote = useCallback(
+    (vote) => {
+      const newProposals = proposals.slice();
+      newProposals[vote.proposalIndex].votes[vote.voteIndex] = vote;
+      setProposals(newProposals);
 
-  //   // TODO: remove event listener
-  //   // TODO: error handler
-  //   return () =>
-  //     subscription.unsubscribe((err) => {
-  //       if (err) console.log(err);
-  //     }); // FIXME: handle error better
-  // }, [game, players]);
-
-  const newProposalCallback = useCallback(
-    (data) => {
-      console.log("NEW PROPOSAL CREATED EVENT", data);
-      const {
-        returnValues: { proposer, ruleIndex, value },
-      } = data;
-      const newProposal = {
-        proposer,
-        ruleIndex,
-        value,
-        complete: false,
-        successful: false,
-      };
       fireNotification(
-        `New proposal created by ${getPlayerName(proposer)}: change <strong>${
-          rules[ruleIndex].name
-        }</strong> to <strong>${value}</strong>`,
+        `${getPlayerName(vote.playerAddress)} voted ${
+          vote ? "yes" : "no"
+        } on proposal ${vote.proposalIndex}`,
         "success"
       );
-      const newProposals = (proposals && [...proposals, newProposal]) || [
-        newProposal,
-      ];
+    },
+    [proposals, getPlayerName]
+  );
+
+  const updateProposal = useCallback(
+    (proposal) => {
+      fireNotification(
+        `New proposal created by ${getPlayerName(
+          proposals.proposer
+        )}: change <strong>${
+          rules[proposal.ruleIndex].name
+        }</strong> to <strong>${proposal.value}</strong>`,
+        "success"
+      );
+      const newProposals = proposals.slice();
+      newProposals[proposal.proposalIndex] = proposal;
       setProposals(newProposals);
     },
-    [proposals]
+    [proposals, rules, getPlayerName]
+  );
+
+  const updatePlayer = useCallback(
+    (player) => {
+      const newPlayers = players.slice();
+      newPlayers[player.playerIndex] = {
+        playerAddress: player.playerAddress,
+        balance: player.balance.toString(),
+      };
+      setPlayers(newPlayers);
+
+      fireNotification(
+        `New player joined: ${getPlayerName(player.playerAddress)} (${
+          player.playerAddress
+        })`,
+        "success"
+      );
+    },
+    [players, getPlayerName]
+  );
+
+  const updateRule = useCallback(
+    (rule) => {
+      const newRules = rules.slice();
+      newRules[rule.ruleIndex].value = rule.value;
+      setRules(newRules);
+
+      fireNotification(
+        `Rule updated: ${rules[rule.ruleIndex].name} is now ${rule.value}`,
+        "success"
+      );
+    },
+    [rules]
+  );
+
+  // FIXME: put somewhere else not in fn
+  const mapEvent = useCallback(
+    (event) => {
+      const data = event.returnValues;
+      switch (event.event) {
+        case "ProposalUpdate":
+          updateProposal(data);
+          console.log("prop", data);
+          return (
+            <>
+              <strong>{event.event}</strong> -{" "}
+              {getPlayerName(event.returnValues.proposer)} proposed to change{" "}
+              {rules[event.returnValues.ruleIndex].name} to{" "}
+              {event.returnValues.value}
+            </>
+          );
+        case "PlayerUpdate":
+          console.log("PLAYER EVENT", event);
+          updatePlayer(data);
+          return (
+            <>
+              <strong>{event.event}</strong> -{" "}
+              <strong>{getPlayerName(event.returnValues.playerAddress)}</strong>{" "}
+              joined the game with balance{" "}
+              {Web3.utils.fromWei(event.returnValues.balance)}
+            </>
+          );
+        case "VoteUpdate":
+          updateVote(data);
+          return (
+            <>
+              <strong>{event.event}</strong> -{" "}
+              <strong>{getPlayerName(event.returnValues.playerAddress)}</strong>{" "}
+              joined the game with balance{" "}
+              {Web3.utils.fromWei(event.returnValues.balance)}
+            </>
+          );
+        case "RuleUpdate":
+          updateRule(data);
+          return (
+            <>
+              <strong>{event.event}</strong> - Rule change
+            </>
+          );
+        default:
+          return "UNKNOWN EVENT";
+      }
+    },
+    [rules, updateRule, updateProposal, updatePlayer, updateVote, getPlayerName]
   );
 
   useEffect(() => {
-    if (!game) return;
-    console.log("SUB CREATED +++");
-    const subscription = game.events
-      .NewProposal()
-      .on("data", newProposalCallback);
+    const fn = async () => {
+      if (receivedPastEvents) return;
+      if (!game || !rules || !players || !proposals) return;
+      setReceivedPastEvents(true);
+      const pastEvents = await game.getPastEvents("allEvents", {
+        fromBlock: "earliest",
+      });
+      setEvents([...pastEvents.reverse().map(mapEvent), ...events]);
+    };
+    fn();
+  }, [game, rules, players, proposals, events, mapEvent, receivedPastEvents]);
 
-    return () => {
-      console.log("SUB REMOVED ---");
+  useEffect(() => {
+    if (!game || !rules || !players || !proposals) return;
+    const subscription = game.events.allEvents().on("data", (data) => {
+      setEvents([...events, mapEvent(data)]);
+    });
+
+    return () =>
       subscription.unsubscribe((err) => {
         if (err) console.error(err);
       });
-    };
-  }, [game, newProposalCallback]);
-
-  // useEffect(() => {
-  //   if (!game || !proposals) return;
-  //   const subscription = game.events
-  //     .NewVote()
-  //     .on(
-  //       "data",
-  //       ({
-  //         returnValues: { proposalIndex: proposalIndexString, voter, vote },
-  //       }) => {
-  //         const proposalIndex = parseInt(proposalIndexString);
-  //         const newVote = { voter, vote };
-  //         const newProposals = proposals.slice();
-  //         newProposals[proposalIndex].votes.push(newVote);
-  //         setProposals(newProposals);
-
-  // fireNotification(
-  //   `${getPlayerName(playerAddress)} voted ${vote ? "yes" : "no"} on proposal ${proposalIndex}`,
-  //   "success"
-  // );
-  //       }
-  //     );
-
-  //   return () =>
-  //     subscription.unsubscribe((err) => {
-  //       if (err) console.error(err);
-  //     });
-  // }, [game, proposals]);
-
-  // useEffect(() => {
-  //   if (!game || !proposals || !rules || !players) return;
-  //   const subscription = game.events
-  //     .ProposalComplete()
-  //     .on("data", ({ returnValues: { proposalIndex, successful } }) => {
-  //       const newProposals = proposals.slice();
-  //       newProposals[proposalIndex].complete = true;
-  //       newProposals[proposalIndex].successful = successful;
-  //       setProposals(newProposals);
-  //       if (successful) {
-  //         const newPlayers = players.slice();
-  //         const winningPlayer = players.findIndex(
-  //           ({ playerAddress }) =>
-  //             proposals[proposalIndex].proposer === playerAddress
-  //         );
-  //         const newBalance =
-  //           BigInt(newPlayers[winningPlayer].balance) +
-  //           BigInt(rules[proposals[proposalIndex].ruleIndex].value);
-  //         newPlayers[winningPlayer].balance = newBalance.toString();
-  //         setPlayers(newPlayers);
-  // fireNotification(
-  //   `Proposal ${proposalIndex} ${
-  //     successful ? "succeeded" : "failed"
-  //   }: ${getPlayerName(playerAddress)} received ${
-  //     rules[proposals[proposalIndex].ruleIndex].value
-  //   } reward`,
-  //   "success"
-  // );
-  //       }
-  //       // rule applied after reward is granted using old reward value
-  //       const newRules = rules.slice();
-  //       newRules[proposals[proposalIndex].ruleIndex].value =
-  //         proposals[proposalIndex].value;
-  //     });
-
-  //   return () =>
-  //     subscription.unsubscribe((err) => {
-  //       if (err) console.error(err);
-  //     });
-  // }, [game, rules, proposals, players]);
-
-  // FIXME: put somewhere else not in fn
-  const mapEvent = (event) => {
-    switch (event.event) {
-      case "NewProposal":
-        return (
-          <>
-            <strong>{event.event}</strong> -{" "}
-            {getPlayerName(event.returnValues.proposer)} proposed to change{" "}
-            {rules[event.returnValues.ruleIndex].name} to{" "}
-            {event.returnValues.value}
-          </>
-        );
-      case "ProposalComplete":
-        return (
-          <>
-            <strong>{event.event}</strong> - Proposal{" "}
-            {event.returnValues.proposalIndex} to change{" "}
-            {event.returnValues.ruleIndex}
-            {rules[proposals[event.returnValues.proposalIndex].ruleIndex].name}
-            {(event.returnValues.successful && " was successful") || " failed"}
-          </>
-        );
-      case "NewPlayer":
-        return (
-          <>
-            <strong>{event.event}</strong> -{" "}
-            <strong>{getPlayerName(event.returnValues.playerAddress)}</strong>{" "}
-            joined the game with balance{" "}
-            {Web3.utils.fromWei(event.returnValues.balance)}
-          </>
-        );
-      default:
-        return "UNKNOWN EVENT";
-    }
-
-    // return (
-    //   <>
-    //     {/* {JSON.stringify(event)} */}
-    //     <strong>{event.event}</strong> - {JSON.stringify(event.returnValues)}
-    //   </>
-    // );
-  };
-
-  // useEffect(async () => {
-  //   if (receivedPastEvents) return;
-  //   if (!game || !rules || !players || !proposals) return;
-  //   setReceivedPastEvents(true);
-  //   const pastEvents = await game.getPastEvents("allEvents", {
-  //     fromBlock: "earliest",
-  //   });
-  //   console.log({ pastEvents });
-  //   setEvents([...pastEvents.reverse().map(mapEvent), ...events]);
-  // }, [game, rules, players, proposals]);
-
-  // useEffect(() => {
-  //   if (!game || !rules || !players || !proposals) return;
-  //   const subscription = game.events.allEvents().on("data", (data) => {
-  //     console.log({ data });
-  //     setEvents([...events, mapEvent(data)]);
-  //   });
-
-  //   return () =>
-  //     subscription.unsubscribe((err) => {
-  //       if (err) console.error(err);
-  //     });
-  // }, [game, players, proposals, rules]);
+  }, [game, players, proposals, rules, events, mapEvent]);
 
   const joinGame = useContractFn(game, "joinGame", {
     from: account,
@@ -375,15 +365,18 @@ function App() {
   const voteOnProposal = useContractFn(game, "voteOnProposal", {
     from: account,
   });
+  const voteOnProposalHandler = async (proposalIndex, vote) => {
+    const result = await voteOnProposal(proposalIndex, vote);
+    if (result) {
+      const updatedProposals = proposals.slice();
+      updatedProposals[proposalIndex].pending = true;
+      setProposals(updatedProposals);
+    }
+  };
 
   const createProposal = useContractFn(game, "createProposal", {
     from: account,
   });
-
-  const getPlayerName = (address) => {
-    const index = players.findIndex((p) => p.playerAddress === address);
-    return `PLAYER ${String.fromCharCode(index + "A".charCodeAt(0))}`;
-  };
 
   const gameActive = useGameActive(proposals, rules);
 
@@ -403,12 +396,14 @@ function App() {
               className="button"
               target="_blank"
               href="https://metamask.io/download.html"
+              rel="noreferrer"
             >
               Install Metamask browser extension
             </a>
           </div>
         )}
-        {(!gameActive && "This game has ended") ||
+        {(!setupStatus.network && "Wrong network") ||
+          (!gameActive && "This game has ended") ||
           (isPlayer && "You are playing this game") || (
             <div>
               <button
@@ -433,7 +428,8 @@ function App() {
               proposals={proposals}
               rules={rules}
               getPlayerName={getPlayerName}
-              voteOnProposal={voteOnProposal}
+              voteOnProposal={voteOnProposalHandler}
+              gameActive={gameActive}
             ></Proposals>
           )) || <Loader></Loader>}
         </div>

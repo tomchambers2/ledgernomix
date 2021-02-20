@@ -124,7 +124,6 @@ button:hover {
 .intro .buttons {
   display: flex;
   justify-content: space-between;
-  /* text-align: center; */
 }
 
 .scores {

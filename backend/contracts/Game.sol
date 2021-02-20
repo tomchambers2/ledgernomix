@@ -70,28 +70,26 @@ contract Game {
         return proposals.length;
     }
 
-    event NewPlayer(address playerAddress, uint256 balance);
-    event NewProposal(address proposer, uint256 ruleIndex, uint256 value);
-    event NewVote(uint256 proposalIndex, address player, uint256 vote);
-    event ProposalComplete(uint256 proposalIndex, bool successful);
-
-    // function getVotes(uint256 proposalIndex)
-    //     external
-    //     view
-    //     returns (address[] memory, uint256[] memory)
-    // {
-    //     address[] storage playerAddresses; // FIXME: still confused, calldata, storage, memory?
-    //     bool[] storage votes;
-    //     for (
-    //         uint256 index = 0;
-    //         index < proposals[proposalIndex].votes.length;
-    //         index++
-    //     ) {
-    //         playerAddresses.push(proposals[proposalIndex].votes[index].player);
-    //         votes.push(proposals[proposalIndex].votes[index].vote);
-    //     }
-    //     return (playerAddresses, votes);
-    // }
+    event PlayerUpdate(
+        uint256 playerIndex,
+        address playerAddress,
+        uint256 balance
+    );
+    event ProposalUpdate(
+        uint256 proposalIndex,
+        address proposer,
+        uint256 ruleIndex,
+        uint256 value,
+        bool complete,
+        bool successful
+    );
+    event RuleUpdate(uint256 ruleIndex, uint256 value);
+    event VoteUpdate(
+        uint256 proposalIndex,
+        uint256 voteIndex,
+        address player,
+        uint256 vote
+    );
 
     struct Vote {
         // uint256 voterIndex;
@@ -130,7 +128,7 @@ contract Game {
         Player storage p = players.push();
         p.playerAddress = msg.sender;
         p.balance = entryFee;
-        emit NewPlayer(p.playerAddress, p.balance);
+        emit PlayerUpdate(players.length - 1, p.playerAddress, p.balance);
     }
 
     modifier isPlayer() {
@@ -166,15 +164,27 @@ contract Game {
         p.ruleIndex = ruleIndex;
         p.value = value;
 
-        emit NewProposal(p.proposer, p.ruleIndex, p.value);
+        emit ProposalUpdate(
+            proposals.length - 1,
+            p.proposer,
+            p.ruleIndex,
+            p.value,
+            false,
+            false
+        );
+    }
+
+    function getVotesLength(
+        uint256 proposalIndex // TODO: test
+    ) external view returns (uint256) {
+        return proposals[proposalIndex].votes.length;
     }
 
     function getVote(uint256 proposalIndex, uint256 voteIndex)
         external
         view
-        returns (address, bool)
+        returns (address playerAddress, bool vote)
     {
-        // FIXME: feels wrong - why expose this just for tests
         require(
             proposalIndex < proposals.length,
             "Proposal index must be in range"
@@ -194,6 +204,10 @@ contract Game {
         isPlayer
         gameActive
     {
+        require(
+            proposalIndex < proposals.length,
+            "Voted on non-existent proposal"
+        );
         require(
             !proposals[proposalIndex].complete,
             "You may not vote on completed proposal"
@@ -236,7 +250,14 @@ contract Game {
             if (successful) {
                 enactProposal(proposalIndex);
             }
-            emit ProposalComplete(proposalIndex, successful); // TODO: write tests for events
+            emit ProposalUpdate( // TODO: write tests for events
+                proposalIndex,
+                proposals[proposalIndex].proposer,
+                proposals[proposalIndex].ruleIndex,
+                proposals[proposalIndex].value,
+                true,
+                successful
+            );
         }
     }
 
@@ -250,7 +271,14 @@ contract Game {
         proposals[proposalIndex].successful = true;
         Proposal memory p = proposals[proposalIndex]; // FIXME: does using memory here use up gas?
         rules[p.ruleIndex].value = p.value;
-        players[getPlayer(p.proposer)].balance += rules[0].value; // FIXME: is there a better way to retrieve players other than looping?
+        uint256 playerIndex = getPlayer(p.proposer);
+        players[playerIndex].balance += rules[0].value; // FIXME: is there a better way to retrieve players other than looping?
+        emit PlayerUpdate(
+            playerIndex,
+            p.proposer,
+            players[playerIndex].balance
+        );
+        emit RuleUpdate(p.ruleIndex, p.value);
     }
 
     function endGame() private {

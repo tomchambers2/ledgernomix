@@ -203,6 +203,15 @@ describe("Game", () => {
       ).to.eventually.be.rejectedWith("You may not vote on completed proposal");
     });
 
+    it("should reject if the proposal does not exist", async () => {
+      await game.joinGame({
+        value: "5000000000000000000",
+      });
+      await expect(
+        game.connect(players[0]).voteOnProposal(99, true)
+      ).to.eventually.be.rejectedWith("Voted on non-existent proposal");
+    });
+
     it("should reject the call if the player has already voted", async () => {
       await startAndProposal(4);
       await game.voteOnProposal(0, true);
