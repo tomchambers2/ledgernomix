@@ -51,18 +51,26 @@ li::marker {
 .proposals {
 }
 
-button {
+button,
+a.button {
   border: 3px solid black;
+  color: black;
+  margin: 15px;
   background: none;
   padding: 8px 39px;
   font-size: 25px;
   font-weight: bold;
+  display: inline-block;
+  text-decoration: none;
+  background: white;
 }
 
-button:disabled {
+button:disabled,
+a.button:disabled {
   border-color: grey;
 }
-button:disabled:hover {
+button:disabled:hover,
+a.button:disabled:hover {
   cursor: auto;
 }
 

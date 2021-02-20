@@ -107,6 +107,7 @@ const fireNotification = function (text, type) {
   new Noty({
     text,
     type,
+    timeout: 10000,
   }).show();
 };
 
@@ -152,7 +153,9 @@ function App() {
 
   useEffect(() => {
     // TODO: check if metamask installed
-    if (!window.ethereum) return;
+    if (!window.ethereum)
+      return setSetupStatus({ metamask: false, network: false });
+    setSetupStatus({ metamask: true, network: false });
     const web3 = new Web3(window.ethereum);
     setWeb3(web3);
   }, []);
@@ -165,6 +168,11 @@ function App() {
   //       const newPlayer = { playerAddress, balance: balance.toString() };
   //       const newPlayers = (players && [...players, newPlayer]) || [newPlayer];
   //       setPlayers(newPlayers);
+
+  // fireNotification(
+  //   `New player joined: ${getPlayerName(playerAddress)} (${playerAddress})`,
+  //   "success"
+  // );
   //     });
 
   //   // TODO: remove event listener
@@ -188,6 +196,12 @@ function App() {
         complete: false,
         successful: false,
       };
+      fireNotification(
+        `New proposal created by ${getPlayerName(proposer)}: change <strong>${
+          rules[ruleIndex].name
+        }</strong> to <strong>${value}</strong>`,
+        "success"
+      );
       const newProposals = (proposals && [...proposals, newProposal]) || [
         newProposal,
       ];
@@ -225,6 +239,11 @@ function App() {
   //         const newProposals = proposals.slice();
   //         newProposals[proposalIndex].votes.push(newVote);
   //         setProposals(newProposals);
+
+  // fireNotification(
+  //   `${getPlayerName(playerAddress)} voted ${vote ? "yes" : "no"} on proposal ${proposalIndex}`,
+  //   "success"
+  // );
   //       }
   //     );
 
@@ -254,6 +273,14 @@ function App() {
   //           BigInt(rules[proposals[proposalIndex].ruleIndex].value);
   //         newPlayers[winningPlayer].balance = newBalance.toString();
   //         setPlayers(newPlayers);
+  // fireNotification(
+  //   `Proposal ${proposalIndex} ${
+  //     successful ? "succeeded" : "failed"
+  //   }: ${getPlayerName(playerAddress)} received ${
+  //     rules[proposals[proposalIndex].ruleIndex].value
+  //   } reward`,
+  //   "success"
+  // );
   //       }
   //       // rule applied after reward is granted using old reward value
   //       const newRules = rules.slice();
@@ -368,9 +395,27 @@ function App() {
           blah blah blah what the game is, how you play it. how to install
           metamask guide
         </h2>
+        {!setupStatus.metamask && (
+          <div>
+            <a
+              className="button"
+              target="_blank"
+              href="https://metamask.io/download.html"
+            >
+              Install Metamask browser extension
+            </a>
+          </div>
+        )}
         {(!gameActive && "This game has ended") ||
           (isPlayer && "You are playing this game") || (
-            <button onClick={joinGameHandler}>Join game</button>
+            <div>
+              <button
+                onClick={joinGameHandler}
+                disabled={!setupStatus.metamask || !setupStatus.network}
+              >
+                Join game
+              </button>
+            </div>
           )}
       </div>
       <div className="container">
