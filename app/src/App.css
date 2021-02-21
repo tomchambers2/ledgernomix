@@ -36,12 +36,14 @@ body {
 
 .panel {
   /* margin: 8px; */
+  margin: 30px;
   box-sizing: content-box;
-  background: lightblue;
+  /* background: lightblue; */
   outline-offset: -13px;
   outline: 4px solid black;
   padding: 30px;
   position: relative;
+  text-align: center;
 }
 
 h1 {
@@ -59,6 +61,7 @@ h2 {
   font-size: 1.3rem;
   margin-block-start: 0.05rem;
   margin-block-end: 0.05rem;
+  margin-bottom: 1.3rem;
 }
 
 .leftPanel {
@@ -130,21 +133,9 @@ button:hover {
   background-size: 50%;
 }
 
-.intro .buttons {
+.join {
   display: flex;
   justify-content: space-between;
-}
-
-.intro .buttons div {
-  width: 33%;
-}
-
-.leftButton {
-  text-align: left;
-}
-
-.rightButton {
-  text-align: right;
 }
 
 .scores {
@@ -162,6 +153,31 @@ button:hover {
   background-size: 50%;
 }
 
+.propose {
+  text-align: center;
+}
+
 .playerLetter {
   --eskapade-fraktur-salt: "salt" on;
+}
+
+.proposal-form {
+  margin: 30px;
+  text-align: center;
+}
+
+.proposal-form .select-box {
+  width: 300px;
+  display: inline-block;
+  margin: 0 10px;
+}
+
+input {
+  height: 40px;
+  font-size: 30px;
+  width: 80px;
+  border: 1px solid grey;
+  padding: 4px;
+  border-radius: 3px;
+  margin: 0 10px;
 }

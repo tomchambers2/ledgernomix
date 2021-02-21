@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Select from "react-select";
 import classNames from "classnames";
+import { ruleConfig } from "./ruleConfig";
 
 export const Propose = ({ rules, createProposal, isPlayer, gameActive }) => {
   const [proposedRuleOption, setProposedRuleOption] = useState(null);
@@ -49,27 +50,34 @@ export const Propose = ({ rules, createProposal, isPlayer, gameActive }) => {
         (!isPlayer && (
           <div className="disabled-panel">Join the game to make proposals</div>
         ))}
-      <h2>Propose</h2>I propose that{" "}
-      <Select
-        options={ruleOptions}
-        value={proposedRuleOption}
-        onChange={(option) => setProposedRuleOption(option)}
-      ></Select>{" "}
-      be changed to{" "}
-      <input
-        onChange={({ target: { value } }) => setProposedValue(value)}
-        type="text"
-        value={proposedValue}
-        disabled={!proposedRuleOption}
-      ></input>
-      <button
-        onClick={createProposalHandler}
-        disabled={
-          !proposedValueValid || !proposedRuleOption || proposedValueError
-        }
-      >
-        Create proposal
-      </button>
+      <h2>Propose rule change</h2>
+      <div className="proposal-form">
+        I propose that{" "}
+        <Select
+          className="select-box"
+          options={ruleOptions}
+          value={proposedRuleOption}
+          onChange={(option) => setProposedRuleOption(option)}
+        ></Select>{" "}
+        be changed to{" "}
+        <input
+          onChange={({ target: { value } }) => setProposedValue(value)}
+          type="text"
+          value={proposedValue}
+          disabled={!proposedRuleOption}
+        ></input>
+        {proposedRuleOption && ruleConfig[proposedRuleOption.label].unit}
+      </div>
+      <div>
+        <button
+          onClick={createProposalHandler}
+          disabled={
+            !proposedValueValid || !proposedRuleOption || proposedValueError
+          }
+        >
+          Create proposal
+        </button>
+      </div>
       <p>{proposedValueError}</p>
       <p className={classNames("input-helper", !proposedValueValid && "error")}>
         {proposedRuleOption &&

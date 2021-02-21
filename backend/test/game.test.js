@@ -6,6 +6,7 @@ const chaiAsPromised = require("chai-as-promised");
 chai.use(chaiAsPromised);
 
 describe("Game", () => {
+  let Game;
   let game;
   let calculations;
   let players;
@@ -18,18 +19,18 @@ describe("Game", () => {
     calculations = await Calculations.deploy();
     await calculations.deployed();
 
-    const Game = await ethers.getContractFactory("Game", {
+    Game = await ethers.getContractFactory("Game", {
       libraries: {
         Calculations: calculations.address,
       },
     });
-    game = await Game.deploy();
+    game = await Game.deploy(5, 10, 50, 50, 3, 1);
     await game.deployed();
 
     players = await ethers.getSigners();
     [owner, addr1, addr2] = players;
 
-    startAndProposal = async (numPlayers) => {
+    startAndProposal = async (numPlayers, game) => {
       for (let index = 0; index < numPlayers; index++) {
         await game.connect(players[index]).joinGame({
           value: "5000000000000000000",
@@ -82,7 +83,7 @@ describe("Game", () => {
         });
       } catch (e) {
         await expect(e.message).to.equal(
-          "VM Exception while processing transaction: revert You must send 5 xDai to join the game"
+          "VM Exception while processing transaction: revert You must send required entry fee to join the game"
         );
       }
     });
@@ -213,7 +214,7 @@ describe("Game", () => {
     });
 
     it("should reject the call if the player has already voted", async () => {
-      await startAndProposal(4);
+      await startAndProposal(4, game);
       await game.voteOnProposal(0, true);
 
       await expect(game.voteOnProposal(0, true)).to.eventually.be.rejectedWith(
@@ -263,7 +264,7 @@ describe("Game", () => {
     });
 
     it("should mark the proposal successful if sufficient yes votes", async () => {
-      await startAndProposal(4);
+      await startAndProposal(4, game);
       await game.connect(players[0]).voteOnProposal(0, true);
       await game.connect(players[1]).voteOnProposal(0, true);
       const proposal = await game.proposals(0);
@@ -272,15 +273,34 @@ describe("Game", () => {
     });
 
     it("should reward the proposer of a successful proposer", async () => {
-      await startAndProposal(4);
+      await startAndProposal(4, game);
       await game.connect(players[0]).voteOnProposal(0, true);
       await game.connect(players[1]).voteOnProposal(0, true);
       const player = await game.players(0);
-      expect(player.balance.toString()).to.equal("17000000000000000000");
+      expect(player.balance.toString()).to.equal("14000000000000000000");
+    });
+
+    it("should apply a poll tax to all players on complete proposal", async () => {
+      await startAndProposal(4, game);
+      await game.connect(players[0]).voteOnProposal(0, false);
+      await game.connect(players[1]).voteOnProposal(0, false);
+      const player = await game.players(0);
+      expect(player.balance.toString()).to.equal("4000000000000000000");
+    });
+
+    it("should not reduce balance to less than zero", async () => {
+      game = await Game.deploy(5, 0, 50, 50, 3, 100);
+      await game.deployed();
+
+      await startAndProposal(4, game);
+      await game.connect(players[0]).voteOnProposal(0, false);
+      await game.connect(players[1]).voteOnProposal(0, false);
+      const player = await game.players(0);
+      expect(player.balance.toString()).to.equal("0");
     });
 
     it("should mark the proposal successful if sufficient yes votes", async () => {
-      await startAndProposal(10);
+      await startAndProposal(10, game);
       for (let index = 0; index < 3; index++) {
         await game.connect(players[index]).voteOnProposal(0, true);
       }
@@ -293,7 +313,7 @@ describe("Game", () => {
     });
 
     it("should not mark the proposal successful if yes votes come after no votes", async () => {
-      await startAndProposal(10);
+      await startAndProposal(10, game);
       for (let index = 0; index < 3; index++) {
         await game.connect(players[index]).voteOnProposal(0, false);
       }
@@ -306,7 +326,7 @@ describe("Game", () => {
     });
 
     it("should apply the proposal if successful", async () => {
-      await startAndProposal(4);
+      await startAndProposal(4, game);
       await game.connect(players[0]).voteOnProposal(0, true);
       await game.connect(players[1]).voteOnProposal(0, true);
       const rule = await game.rules(0);
@@ -314,7 +334,7 @@ describe("Game", () => {
     });
 
     it("should leave the proposal not successful if insufficient yes votes", async () => {
-      await startAndProposal(4);
+      await startAndProposal(4, game);
       await game.connect(players[0]).voteOnProposal(0, true);
       await game.connect(players[1]).voteOnProposal(0, false);
       const proposal = await game.proposals(0);
@@ -347,7 +367,7 @@ describe("Game", () => {
   });
 
   describe("endGame", async () => {
-    it("should return deposits in proportion to players", async () => {
+    it.only("should return deposits in proportion to players", async () => {
       await game.connect(players[0]).joinGame({
         value: "5000000000000000000",
         gasPrice: 0,

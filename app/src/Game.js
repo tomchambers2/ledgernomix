@@ -17,8 +17,6 @@ import { useParams } from "react-router-dom";
 
 export const Game = ({ web3, account }) => {
   const { gameAddress } = useParams();
-  console.log("params", useParams());
-  console.log(gameAddress);
   const game = useContract(web3, GameContract.abi, gameAddress);
   const [events, setEvents] = useState([]);
   const [rules, setRules] = useState(null);
@@ -37,7 +35,7 @@ export const Game = ({ web3, account }) => {
 
   const joinGame = useContractFn(game, "joinGame", {
     from: account,
-    value: Web3.utils.toWei("5"),
+    value: rules && Web3.utils.toWei(rules[0].value),
   });
 
   const joinGameHandler = () => {
@@ -82,7 +80,7 @@ export const Game = ({ web3, account }) => {
           console.log(votesLength);
           proposal.votes = [];
           for (let voteIndex = 0; voteIndex < votesLength; voteIndex++) {
-            const { playerAddress, vote } = game.methods
+            const { playerAddress, vote } = await game.methods
               .getVote(i, voteIndex)
               .call();
             proposal.votes.push({ playerAddress, vote });
@@ -119,9 +117,14 @@ export const Game = ({ web3, account }) => {
   const getPlayerName = useCallback(
     (address) => {
       const index = players.findIndex((p) => p.playerAddress === address);
-      return `PLAYER <span className="playerLetter">${String.fromCharCode(
-        index + "A".charCodeAt(0)
-      )}</span>`;
+      return (
+        <>
+          PLAYER{" "}
+          <span className="playerLetter">
+            {String.fromCharCode(index + "A".charCodeAt(0))}
+          </span>
+        </>
+      );
     },
     [players]
   );
@@ -298,15 +301,20 @@ export const Game = ({ web3, account }) => {
 
   return (
     <>
-      <div className="panel">
+      <div className="panel join">
         {(!gameActive && "This game has ended") ||
-          (isPlayer &&
-            `You are playing
-      this game`) || (
-            <div>
-              <button onClick={joinGameHandler}>Join game</button>
-            </div>
-          )}
+          (isPlayer && <div>You are playing game {gameAddress}</div>)}
+        {gameActive && !isPlayer && (
+          <div>
+            <button onClick={joinGameHandler}>Join game</button>
+          </div>
+        )}
+        {
+          <div>
+            Progress: {(proposals && proposals.length) || 0}/
+            {(rules && rules[4].value) || "-"} completed proposals
+          </div>
+        }
       </div>
 
       <div className="container">
@@ -323,6 +331,7 @@ export const Game = ({ web3, account }) => {
               getPlayerName={getPlayerName}
               voteOnProposal={voteOnProposalHandler}
               gameActive={gameActive}
+              playerAddress={account}
             ></Proposals>
           )) || <Loader></Loader>}
         </div>

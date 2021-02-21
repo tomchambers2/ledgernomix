@@ -24,7 +24,7 @@ library Calculations {
         return (majority * numVotes) / 100;
     }
 
-    function weiToEther(uint256 etherAmount) public pure returns (uint256) {
+    function etherToWei(uint256 etherAmount) public pure returns (uint256) {
         return etherAmount * 10**18;
     }
 }
@@ -39,15 +39,13 @@ contract GameFactory {
     }
 
     function newGame() public {
-        Game g = new Game();
+        Game g = new Game(10, 10, 50, 50, 30, 1);
         games.push(g);
         emit NewGame(games.length - 1, address(g));
     }
 }
 
 contract Game {
-    uint256 constant entryFee = 5 ether;
-
     struct Player {
         address playerAddress;
         uint256 balance;
@@ -115,12 +113,22 @@ contract Game {
         bool vote;
     }
 
-    constructor() {
-        // TODO: use an enum to add/reference rules instead of indices
-        rules.push(Rule("Proposal reward", 10, 0, 1000)); // FIXME: is there a better way to add rules initially?
-        rules.push(Rule("Majority", 50, 0, 100));
-        rules.push(Rule("Quorum", 50, 0, 100));
-        rules.push(Rule("Max proposals", 3, 1, 100));
+    enum RuleIndices {EntryFee, Reward, Majority, Quorum, MaxProposals, PollTax}
+
+    constructor(
+        uint256 entryFee,
+        uint256 rewardValue,
+        uint256 majorityValue,
+        uint256 quorumValue,
+        uint256 maxProposalsValue,
+        uint256 pollTaxValue
+    ) {
+        rules.push(Rule("Entry fee", entryFee, 0, 1000));
+        rules.push(Rule("Proposal reward", rewardValue, 0, 1000));
+        rules.push(Rule("Majority", majorityValue, 0, 100));
+        rules.push(Rule("Quorum", quorumValue, 0, 100));
+        rules.push(Rule("Max proposals", maxProposalsValue, 1, 100));
+        rules.push(Rule("Poll tax", pollTaxValue, 1, 1000));
     }
 
     modifier gameActive() {
@@ -129,14 +137,18 @@ contract Game {
             if (proposals[index].complete) completedProposals++;
         }
         require(
-            completedProposals < rules[3].value,
+            completedProposals < rules[uint256(RuleIndices.MaxProposals)].value,
             "You cannot interact with this game because it has ended"
         );
         _;
     }
 
     function joinGame() external payable gameActive {
-        require(msg.value == entryFee, "You must send 5 xDai to join the game");
+        uint256 eth = 1 ether;
+        require(
+            msg.value == rules[uint256(RuleIndices.EntryFee)].value * eth,
+            "You must send required entry fee to join the game"
+        );
         for (uint256 index = 0; index < players.length; index++) {
             require(
                 msg.sender != players[index].playerAddress,
@@ -145,7 +157,7 @@ contract Game {
         }
         Player storage p = players.push();
         p.playerAddress = msg.sender;
-        p.balance = entryFee;
+        p.balance = rules[uint256(RuleIndices.EntryFee)].value * eth;
         emit PlayerUpdate(players.length - 1, p.playerAddress, p.balance);
     }
 
@@ -244,9 +256,26 @@ contract Game {
         countVotes(proposalIndex);
     }
 
+    function collectPollTax() private {
+        for (uint256 index = 0; index < players.length; index++) {
+            uint256 tax =
+                Calculations.etherToWei(
+                    rules[uint256(RuleIndices.PollTax)].value
+                );
+            if (tax > players[index].balance) {
+                players[index].balance = 0;
+            } else {
+                players[index].balance -= tax;
+            }
+        }
+    }
+
     function countVotes(uint256 proposalIndex) private {
         uint256 quorum =
-            Calculations.calculateQuorum(rules[2].value, players.length);
+            Calculations.calculateQuorum(
+                rules[uint256(RuleIndices.Quorum)].value,
+                players.length
+            );
 
         if (proposals[proposalIndex].votes.length >= quorum) {
             proposals[proposalIndex].complete = true;
@@ -261,13 +290,14 @@ contract Game {
             }
             uint256 majority =
                 Calculations.calculateMajority(
-                    rules[1].value,
+                    rules[uint256(RuleIndices.Majority)].value,
                     proposals[proposalIndex].votes.length
                 );
             bool successful = yesVotes > majority;
             if (successful) {
                 enactProposal(proposalIndex);
             }
+            collectPollTax();
             emit ProposalUpdate( // TODO: write tests for events
                 proposalIndex,
                 proposals[proposalIndex].proposer,
@@ -290,8 +320,9 @@ contract Game {
         Proposal memory p = proposals[proposalIndex]; // FIXME: does using memory here use up gas?
         rules[p.ruleIndex].value = p.value;
         uint256 playerIndex = getPlayer(p.proposer);
-        uint256 reward = Calculations.weiToEther(rules[0].value);
-        players[playerIndex].balance += reward; // FIXME: is there a better way to retrieve players other than looping?
+        uint256 reward =
+            Calculations.etherToWei(rules[uint256(RuleIndices.Reward)].value);
+        players[playerIndex].balance += reward; // FIXME: is there a better way
         emit PlayerUpdate(
             playerIndex,
             p.proposer,
@@ -303,14 +334,14 @@ contract Game {
     function endGame() private {
         if (proposals.length >= rules[3].value) {
             uint256 balancesSum;
+            uint256 finalEntryFees = address(this).balance;
             for (uint256 index = 0; index < players.length; index++) {
                 balancesSum += players[index].balance;
             }
             for (uint256 index = 0; index < players.length; index++) {
                 uint256 share =
-                    (players[index].balance * entryFee * players.length) /
-                        balancesSum;
-
+                    (players[index].balance * finalEntryFees) / balancesSum;
+                console.log("share is ", share);
                 payable(players[index].playerAddress).send(share); //FIXME: error here
             }
         }

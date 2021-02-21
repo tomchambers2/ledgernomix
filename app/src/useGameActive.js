@@ -5,7 +5,7 @@ export const useGameActive = (proposals, rules) => {
 
   useEffect(() => {
     if (!rules || !proposals || !rules.length) return;
-    const maxProposals = rules[3].value; // TODO: find a better way to identify correct rule
+    const maxProposals = rules[4].value; // TODO: find a better way to identify correct rule
     setGameActive(
       proposals.filter((proposal) => proposal.complete).length < maxProposals
     );

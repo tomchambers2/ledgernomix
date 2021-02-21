@@ -74,7 +74,6 @@ function App() {
       let elements = [];
       let length = 0;
       try {
-        console.log(gameFactory.methods);
         length = await gameFactory.methods.getGamesLength().call();
       } catch (e) {
         fireNotification(`Failed to get ${name}`);
@@ -95,7 +94,6 @@ function App() {
   );
 
   const [gamesList, setGamesList] = useState(null);
-  const [gameAddress, setGameAddress] = useState(null);
   const [newGameAddress, setNewGameAddress] = useState(false);
 
   useEffect(() => {
@@ -129,18 +127,13 @@ function App() {
       subscription.unsubscribe((err) => {
         if (err) console.error(err);
       });
-  }, [gameAddress, gameFactory, gamesList]);
+  }, [gameFactory, gamesList]);
 
   return (
     <div className="App">
       <div className="panel intro">
         <h1>Ledgernomix</h1>
-        <h2>The game where you make the rules</h2>
-        <div className="buttons">
-          <div className="leftButton">About</div>
-          <div>GAME NAME</div>
-          <div className="rightButton">How to play</div>
-        </div>
+        <h2>Change the rules, win the game</h2>
         {!setupStatus.metamask && (
           <div>
             <a

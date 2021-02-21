@@ -1,4 +1,8 @@
 export const ruleConfig = {
+  "Entry fee": {
+    name: "Entry fee",
+    description: "The amount in DAI to buy into the game",
+  },
   "Proposal reward": {
     name: "Proposal reward",
     description:
@@ -21,5 +25,9 @@ export const ruleConfig = {
     name: "Max proposals",
     description: "The game ends when this many proposals have been completed",
     unit: "",
+  },
+  "Poll tax": {
+    name: "Poll tax",
+    description: "A fixed tax collected on every completed proposal",
   },
 };

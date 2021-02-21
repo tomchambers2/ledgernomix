@@ -6,7 +6,7 @@ export const Rules = ({ rules }) => {
       <h2>Rules</h2>
       <ul>
         {rules
-          .map((rule) => ({ rule, ruleConfig: ruleConfig[rule[0]] }))
+          .map((rule) => ({ rule, ruleConfig: ruleConfig[rule.name] }))
           .map(({ rule, ruleConfig }, i) => (
             <li key={i}>
               <strong>{rule.name}</strong> {ruleConfig.description} -{" "}
