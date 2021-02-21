@@ -12,13 +12,7 @@ import { Propose } from "./Propose";
 import { Loader } from "./Loader";
 import { default as GameContract } from "./contracts/Game.json";
 import Web3 from "web3";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  useParams,
-} from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 export const Game = ({ web3, account }) => {
   const { gameAddress } = useParams();
@@ -135,16 +129,17 @@ export const Game = ({ web3, account }) => {
       newProposals[vote.proposalIndex].votes[vote.voteIndex] = vote;
       setProposals(newProposals);
     },
-    [proposals, getPlayerName]
+    [proposals]
   );
 
   const updateProposal = useCallback(
-    (proposal) => {
+    async (proposal) => {
       const newProposals = proposals.slice();
       newProposals[proposal.proposalIndex] = proposal;
-      setProposals(newProposals);
+      const newProposalsWithVotes = await fetchVotes(newProposals);
+      setProposals(newProposalsWithVotes);
     },
-    [proposals, rules, getPlayerName]
+    [proposals, fetchVotes]
   );
 
   const updatePlayer = useCallback(
@@ -156,7 +151,7 @@ export const Game = ({ web3, account }) => {
       };
       setPlayers(newPlayers);
     },
-    [players, getPlayerName]
+    [players]
   );
 
   const updateRule = useCallback(
@@ -168,7 +163,7 @@ export const Game = ({ web3, account }) => {
     [rules]
   );
 
-  const eventNotification = useCallback(
+  const updateDataOnEvent = useCallback(
     (event) => {
       const data = event.returnValues;
       switch (event.event) {
@@ -210,20 +205,18 @@ export const Game = ({ web3, account }) => {
             </>
           );
         case "PlayerUpdate":
-          fireNotification(
-            `New player joined: ${getPlayerName(data.playerAddress)} (${
+          let msg;
+          if (players[data.playerIndex]) {
+            msg = `Player ${getPlayerName(
               data.playerAddress
-            })`,
-            "success"
-          );
-          return (
-            <>
-              <strong>{event.event}</strong> -{" "}
-              <strong>{getPlayerName(event.returnValues.playerAddress)}</strong>{" "}
-              joined the game with balance{" "}
-              {Web3.utils.fromWei(event.returnValues.balance)}
-            </>
-          );
+            )} has new balance of ${Web3.utils.fromWei(data.balance)}`;
+          } else {
+            msg = `New player joined: ${getPlayerName(data.playerAddress)} (${
+              data.playerAddress
+            })`;
+          }
+          // fireNotification(msg, "success");
+          return msg;
         case "VoteUpdate":
           fireNotification(
             `${getPlayerName(data.playerAddress)} voted ${
@@ -253,7 +246,7 @@ export const Game = ({ web3, account }) => {
           return "UNKNOWN EVENT";
       }
     },
-    [rules, getPlayerName]
+    [rules, getPlayerName, proposals, players]
   );
 
   useEffect(() => {
@@ -272,15 +265,15 @@ export const Game = ({ web3, account }) => {
   useEffect(() => {
     if (!game || !rules || !players || !proposals) return;
     const subscription = game.events.allEvents().on("data", (data) => {
-      eventNotification(data);
       setEvents([...events, mapEvent(data)]);
+      updateDataOnEvent(data);
     });
 
     return () =>
       subscription.unsubscribe((err) => {
         if (err) console.error(err);
       });
-  }, [game, players, proposals, rules, events, mapEvent, eventNotification]);
+  }, [game, players, proposals, rules, events, mapEvent, updateDataOnEvent]);
 
   const voteOnProposal = useContractFn(game, "voteOnProposal", {
     from: account,
@@ -336,9 +329,12 @@ export const Game = ({ web3, account }) => {
           )) || <Loader></Loader>}
           <h2>Event log</h2>
           <ul>
-            {events.map((event) => (
-              <li>{event}</li>
-            ))}
+            {events
+              .slice()
+              .reverse()
+              .map((event) => (
+                <li>{event}</li>
+              ))}
           </ul>
         </div>
       </div>

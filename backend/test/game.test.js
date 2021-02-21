@@ -276,7 +276,7 @@ describe("Game", () => {
       await game.connect(players[0]).voteOnProposal(0, true);
       await game.connect(players[1]).voteOnProposal(0, true);
       const player = await game.players(0);
-      expect(player.balance.toString()).to.equal("5000000000000000012");
+      expect(player.balance.toString()).to.equal("17000000000000000000");
     });
 
     it("should mark the proposal successful if sufficient yes votes", async () => {
@@ -347,7 +347,7 @@ describe("Game", () => {
   });
 
   describe("endGame", async () => {
-    it.only("should return deposits in proportion to players", async () => {
+    it("should return deposits in proportion to players", async () => {
       await game.connect(players[0]).joinGame({
         value: "5000000000000000000",
         gasPrice: 0,

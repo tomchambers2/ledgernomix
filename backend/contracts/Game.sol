@@ -24,6 +24,10 @@ library Calculations {
         if (majority == 100) majority = 99;
         return (majority * numVotes) / 100;
     }
+
+    function weiToEther(uint256 etherAmount) public pure returns (uint256) {
+        return etherAmount * 10**18;
+    }
 }
 
 contract GameFactory {
@@ -287,7 +291,8 @@ contract Game {
         Proposal memory p = proposals[proposalIndex]; // FIXME: does using memory here use up gas?
         rules[p.ruleIndex].value = p.value;
         uint256 playerIndex = getPlayer(p.proposer);
-        players[playerIndex].balance += rules[0].value; // FIXME: is there a better way to retrieve players other than looping?
+        uint256 reward = Calculations.weiToEther(rules[0].value);
+        players[playerIndex].balance += reward; // FIXME: is there a better way to retrieve players other than looping?
         emit PlayerUpdate(
             playerIndex,
             p.proposer,
@@ -302,7 +307,6 @@ contract Game {
             for (uint256 index = 0; index < players.length; index++) {
                 balancesSum += players[index].balance;
             }
-            console.log("balance sum", balancesSum);
             for (uint256 index = 0; index < players.length; index++) {
                 uint256 share =
                     (players[index].balance * entryFee * players.length) /
