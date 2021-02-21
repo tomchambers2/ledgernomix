@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import "./App.css";
+import "./eskapade-fraktur-wakamaifondue.css";
 import "noty/lib/noty.css";
 import "noty/lib/themes/mint.css";
 import { Game } from "./Game";
@@ -13,8 +14,6 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link,
-  useParams,
   Redirect,
 } from "react-router-dom";
 
@@ -138,9 +137,9 @@ function App() {
         <h1>Ledgernomix</h1>
         <h2>The game where you make the rules</h2>
         <div className="buttons">
-          <div>About</div>
+          <div className="leftButton">About</div>
           <div>GAME NAME</div>
-          <div>How to play</div>
+          <div className="rightButton">How to play</div>
         </div>
         {!setupStatus.metamask && (
           <div>

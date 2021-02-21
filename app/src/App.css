@@ -6,11 +6,22 @@ body {
   font-family: eskapade-fraktur, serif;
   font-style: normal;
   font-weight: bold;
+  font-feature-settings: var(--eskapade-fraktur-case),
+    var(--eskapade-fraktur-dlig), var(--eskapade-fraktur-dnom),
+    var(--eskapade-fraktur-frac), var(--eskapade-fraktur-lnum),
+    var(--eskapade-fraktur-numr), var(--eskapade-fraktur-onum),
+    var(--eskapade-fraktur-ordn), var(--eskapade-fraktur-pnum),
+    var(--eskapade-fraktur-salt), var(--eskapade-fraktur-sinf),
+    var(--eskapade-fraktur-ss01), var(--eskapade-fraktur-sups),
+    var(--eskapade-fraktur-tnum);
+  /* --eskapade-fraktur-salt: "salt" on; */
 }
 
 .container {
   display: flex;
   justify-content: space-between;
+  margin-block-start: 0.1rem;
+  margin-block-end: 0.1rem;
 }
 
 .container div {
@@ -46,6 +57,8 @@ h2 {
 
 h2 {
   font-size: 1.3rem;
+  margin-block-start: 0.05rem;
+  margin-block-end: 0.05rem;
 }
 
 .leftPanel {
@@ -122,6 +135,18 @@ button:hover {
   justify-content: space-between;
 }
 
+.intro .buttons div {
+  width: 33%;
+}
+
+.leftButton {
+  text-align: left;
+}
+
+.rightButton {
+  text-align: right;
+}
+
 .scores {
   background-image: url("backgrounds/paper.jpg");
   background-size: 50%;
@@ -135,4 +160,8 @@ button:hover {
 .rules {
   background-image: url("backgrounds/paper2.jpg");
   background-size: 50%;
+}
+
+.playerLetter {
+  --eskapade-fraktur-salt: "salt" on;
 }

@@ -1,4 +1,5 @@
 import "./App.css";
+import "./eskapade-fraktur-wakamaifondue.css";
 import { useContract } from "./useContract";
 import { useContractFn } from "./useContractFn";
 import { useState, useEffect, useCallback } from "react";
@@ -118,7 +119,9 @@ export const Game = ({ web3, account }) => {
   const getPlayerName = useCallback(
     (address) => {
       const index = players.findIndex((p) => p.playerAddress === address);
-      return `PLAYER ${String.fromCharCode(index + "A".charCodeAt(0))}`;
+      return `PLAYER <span className="playerLetter">${String.fromCharCode(
+        index + "A".charCodeAt(0)
+      )}</span>`;
     },
     [players]
   );
