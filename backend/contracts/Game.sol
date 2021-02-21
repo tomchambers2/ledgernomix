@@ -4,7 +4,6 @@ pragma solidity 0.8.1;
 import "hardhat/console.sol";
 
 library Calculations {
-    // FIXME: should be a library but ethers doesn't like that
     function calculateQuorum(uint256 quorum, uint256 numPlayers)
         public
         pure
