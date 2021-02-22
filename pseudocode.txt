@@ -52,6 +52,7 @@ contract Game {
 
     WHAT RULES TO IMPLEMENT
     * gameProposalLimit
+    * quorum
     * majority
     * poll tax 
     * proportional tax
@@ -74,7 +75,7 @@ contract Game {
     immutableQuorum
     proportionalTaxEligibility - for richest y players
     proportionalTaxAllowance
-    benefitAmount 
+    benefitAmount
     benefitEligibility - for poorest y players
     pollTaxEligibility - for richest y players
     proposalTimeout (upper bound)

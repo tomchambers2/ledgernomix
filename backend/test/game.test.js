@@ -13,6 +13,8 @@ describe("Game", () => {
   let owner, addr1;
   let startAndProposal;
   let playGameToEnd;
+  let createGame;
+  const ether = 1000000000000000000;
 
   beforeEach(async () => {
     const Calculations = await ethers.getContractFactory("Calculations");
@@ -25,7 +27,34 @@ describe("Game", () => {
       },
     });
     //entry fee, proposal reward, majority, quorum, max proposals, poll tax
-    game = await Game.deploy(5, 10, 50, 50, 3, 1, 10);
+
+    createGame = async ({
+      entryFee = 5,
+      reward = 0,
+      majority = 50,
+      quorum = 50,
+      maxProposals = 3,
+      pollTax = 0,
+      wealthTax = 0,
+      wealthTaxThreshold = 0,
+      proposalCost = 0,
+    } = {}) => {
+      game = await Game.deploy(
+        entryFee,
+        reward,
+        majority,
+        quorum,
+        maxProposals,
+        pollTax,
+        wealthTax,
+        wealthTaxThreshold,
+        proposalCost
+      );
+      await game.deployed();
+      return game;
+    };
+
+    game = await createGame();
     await game.deployed();
 
     players = await ethers.getSigners();
@@ -281,33 +310,6 @@ describe("Game", () => {
       expect(player.balance.toString()).to.equal("14000000000000000000");
     });
 
-    it("should apply a poll tax to all players on complete proposal", async () => {
-      await startAndProposal(4, game);
-      await game.connect(players[0]).voteOnProposal(0, false);
-      await game.connect(players[1]).voteOnProposal(0, false);
-      const player = await game.players(0);
-      expect(player.balance.toString()).to.equal("4000000000000000000");
-    });
-
-    it.only("should apply a wealth tax to all players on complete proposal", async () => {
-      await startAndProposal(4, game);
-      await game.connect(players[0]).voteOnProposal(0, false);
-      await game.connect(players[1]).voteOnProposal(0, false);
-      const player = await game.players(0);
-      expect(player.balance.toString()).to.equal("3600000000000000000");
-    });
-
-    it("should not reduce balance to less than zero", async () => {
-      game = await Game.deploy(5, 0, 50, 50, 3, 100);
-      await game.deployed();
-
-      await startAndProposal(4, game);
-      await game.connect(players[0]).voteOnProposal(0, false);
-      await game.connect(players[1]).voteOnProposal(0, false);
-      const player = await game.players(0);
-      expect(player.balance.toString()).to.equal("0");
-    });
-
     it("should mark the proposal successful if sufficient yes votes", async () => {
       await startAndProposal(10, game);
       for (let index = 0; index < 3; index++) {
@@ -372,6 +374,67 @@ describe("Game", () => {
       ).to.eventually.be.rejectedWith(
         "You cannot interact with this game because it has ended"
       );
+    });
+  });
+
+  describe("taxes", () => {
+    it("should apply a poll tax to all players on complete proposal", async () => {
+      await startAndProposal(4, game);
+      await game.connect(players[0]).voteOnProposal(0, false);
+      await game.connect(players[1]).voteOnProposal(0, false);
+      const player = await game.players(0);
+      expect(player.balance.toString()).to.equal("4000000000000000000");
+    });
+
+    it("should apply a wealth tax to all players on complete proposal", async () => {
+      game = await Game.deploy(5, 0, 50, 50, 3, 0, 10, 4);
+      await game.deployed();
+
+      await startAndProposal(4, game);
+      await game.connect(players[0]).voteOnProposal(0, false);
+      await game.connect(players[1]).voteOnProposal(0, false);
+      const player = await game.players(0);
+      expect(player.balance.toString()).to.equal("4900000000000000000");
+    });
+
+    it("should not reduce balance to less than zero when applying poll tax", async () => {
+      game = await Game.deploy(5, 0, 50, 50, 3, 100, 0);
+      await game.deployed();
+
+      await startAndProposal(4, game);
+      await game.connect(players[0]).voteOnProposal(0, false);
+      await game.connect(players[1]).voteOnProposal(0, false);
+      const player = await game.players(0);
+      expect(player.balance.toString()).to.equal("0");
+    });
+
+    it("should reject creating a proposal when balance is less than proposal fee", async () => {
+      game = await createGame({ entryFee: 0, proposalCost: 10 });
+      await game.connect(players[0]).joinGame({
+        value: "0",
+      });
+
+      expect(
+        game.createProposal(0, 500, { gasPrice: 0 })
+      ).to.eventually.be.rejectedWith(
+        "You do not have enough game funds to pay the proposal cost"
+      );
+    });
+
+    it("should apply a proposal fee when a proposal is made", async () => {
+      game = await createGame({ proposalCost: 1 });
+      await game.connect(players[0]).joinGame({
+        value: "5000000000000000000",
+      });
+
+      let player = await game.players(0);
+      expect(player.balance.toString()).to.equal("5000000000000000000");
+      await game.createProposal(0, 500, { gasPrice: 0 });
+      player = await game.players(0);
+      expect(player.balance.toString()).to.equal("4000000000000000000");
+      await game.createProposal(0, 500, { gasPrice: 0 });
+      player = await game.players(0);
+      expect(player.balance.toString()).to.equal((3 * ether).toString());
     });
   });
 

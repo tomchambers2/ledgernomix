@@ -39,7 +39,7 @@ contract GameFactory {
     }
 
     function newGame() public {
-        Game g = new Game(10, 10, 50, 50, 30, 1, 10);
+        Game g = new Game(10, 10, 50, 50, 30, 1, 10, 3, 10);
         games.push(g);
         emit NewGame(games.length - 1, address(g));
     }
@@ -113,7 +113,17 @@ contract Game {
         bool vote;
     }
 
-    enum RuleIndices {EntryFee, Reward, Majority, Quorum, MaxProposals, PollTax, WealthTax}
+    enum RuleIndices {
+        EntryFee,
+        Reward,
+        Majority,
+        Quorum,
+        MaxProposals,
+        PollTax,
+        WealthTax,
+        WealthTaxThreshold,
+        ProposalCost
+    }
 
     constructor(
         uint256 entryFee,
@@ -122,7 +132,9 @@ contract Game {
         uint256 quorumValue,
         uint256 maxProposalsValue,
         uint256 pollTaxValue,
-        uint256 wealthTaxValue
+        uint256 wealthTaxValue,
+        uint256 wealthTaxThreshold,
+        uint256 proposalCost
     ) {
         rules.push(Rule("Entry fee", entryFee, 0, 1000));
         rules.push(Rule("Proposal reward", rewardValue, 0, 1000));
@@ -131,6 +143,8 @@ contract Game {
         rules.push(Rule("Max proposals", maxProposalsValue, 1, 100));
         rules.push(Rule("Poll tax", pollTaxValue, 1, 1000));
         rules.push(Rule("Wealth tax", wealthTaxValue, 1, 100));
+        rules.push(Rule("Wealth tax threshold", wealthTaxThreshold, 0, 1000));
+        rules.push(Rule("Proposal fee", proposalCost, 0, 1000));
     }
 
     modifier gameActive() {
@@ -176,6 +190,24 @@ contract Game {
         _;
     }
 
+    function subtractProposalFee() private {
+        uint256 proposalFee =
+            Calculations.etherToWei(
+                rules[uint256(RuleIndices.ProposalCost)].value
+            );
+        uint256 playerIndex = getPlayer(msg.sender);
+        require(
+            players[playerIndex].balance >= proposalFee,
+            "You do not have enough game funds to pay the proposal cost"
+        );
+
+        if (proposalFee > players[playerIndex].balance) {
+            players[playerIndex].balance = 0;
+        } else {
+            players[playerIndex].balance -= proposalFee;
+        }
+    }
+
     function createProposal(uint256 ruleIndex, uint256 value)
         external
         gameActive
@@ -190,6 +222,7 @@ contract Game {
                 value >= rules[ruleIndex].lowerBound,
             "Proposal value must be within rule bounds"
         );
+        subtractProposalFee();
 
         Proposal storage p = proposals.push(); // TODO: does this need to be storage, or can it be memory?
         p.proposer = msg.sender;
@@ -274,8 +307,18 @@ contract Game {
 
     function collectWealthTax() private {
         for (uint256 index = 0; index < players.length; index++) {
-            uint256 afterTaxPercentage =  100 - rules[uint256(RuleIndices.WealthTax)].value;
-            players[index].balance = (players[index].balance * afterTaxPercentage) / 100;
+            uint256 threshold =
+                Calculations.etherToWei(
+                    rules[uint256(RuleIndices.WealthTaxThreshold)].value
+                );
+
+            if (threshold < players[index].balance) {
+                uint256 taxableAmount = players[index].balance - threshold;
+                players[index].balance =
+                    players[index].balance -
+                    ((taxableAmount *
+                        rules[uint256(RuleIndices.WealthTax)].value) / 100);
+            }
         }
     }
 
@@ -288,7 +331,7 @@ contract Game {
 
         if (proposals[proposalIndex].votes.length >= quorum) {
             proposals[proposalIndex].complete = true;
-            
+
             uint256 yesVotes;
             for (
                 uint256 index = 0;
@@ -317,8 +360,7 @@ contract Game {
                 successful
             );
 
-        endGame();
-
+            endGame();
         }
     }
 
@@ -345,7 +387,9 @@ contract Game {
     }
 
     function endGame() private {
-        if (proposals.length >= rules[uint(RuleIndices.MaxProposals)].value) {
+        if (
+            proposals.length >= rules[uint256(RuleIndices.MaxProposals)].value
+        ) {
             console.log("inside if");
             uint256 balancesSum;
             uint256 finalEntryFees = address(this).balance;
