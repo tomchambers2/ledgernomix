@@ -24,7 +24,8 @@ describe("Game", () => {
         Calculations: calculations.address,
       },
     });
-    game = await Game.deploy(5, 10, 50, 50, 3, 1);
+    //entry fee, proposal reward, majority, quorum, max proposals, poll tax
+    game = await Game.deploy(5, 10, 50, 50, 3, 1, 10);
     await game.deployed();
 
     players = await ethers.getSigners();
@@ -288,6 +289,14 @@ describe("Game", () => {
       expect(player.balance.toString()).to.equal("4000000000000000000");
     });
 
+    it.only("should apply a wealth tax to all players on complete proposal", async () => {
+      await startAndProposal(4, game);
+      await game.connect(players[0]).voteOnProposal(0, false);
+      await game.connect(players[1]).voteOnProposal(0, false);
+      const player = await game.players(0);
+      expect(player.balance.toString()).to.equal("3600000000000000000");
+    });
+
     it("should not reduce balance to less than zero", async () => {
       game = await Game.deploy(5, 0, 50, 50, 3, 100);
       await game.deployed();
@@ -367,7 +376,7 @@ describe("Game", () => {
   });
 
   describe("endGame", async () => {
-    it.only("should return deposits in proportion to players", async () => {
+    it("should return deposits in proportion to players", async () => {
       await game.connect(players[0]).joinGame({
         value: "5000000000000000000",
         gasPrice: 0,
@@ -384,6 +393,8 @@ describe("Game", () => {
         await game.createProposal(0, 500, { gasPrice: 0 });
         await game.connect(players[0]).voteOnProposal(i, true, { gasPrice: 0 });
       }
+
+      console.log("blah");
 
       const player1 = await game.players(0);
       // console.log("p1 in game balance after game", player1.balance.toString());

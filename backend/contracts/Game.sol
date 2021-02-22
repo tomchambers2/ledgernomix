@@ -39,7 +39,7 @@ contract GameFactory {
     }
 
     function newGame() public {
-        Game g = new Game(10, 10, 50, 50, 30, 1);
+        Game g = new Game(10, 10, 50, 50, 30, 1, 10);
         games.push(g);
         emit NewGame(games.length - 1, address(g));
     }
@@ -113,7 +113,7 @@ contract Game {
         bool vote;
     }
 
-    enum RuleIndices {EntryFee, Reward, Majority, Quorum, MaxProposals, PollTax}
+    enum RuleIndices {EntryFee, Reward, Majority, Quorum, MaxProposals, PollTax, WealthTax}
 
     constructor(
         uint256 entryFee,
@@ -121,7 +121,8 @@ contract Game {
         uint256 majorityValue,
         uint256 quorumValue,
         uint256 maxProposalsValue,
-        uint256 pollTaxValue
+        uint256 pollTaxValue,
+        uint256 wealthTaxValue
     ) {
         rules.push(Rule("Entry fee", entryFee, 0, 1000));
         rules.push(Rule("Proposal reward", rewardValue, 0, 1000));
@@ -129,6 +130,7 @@ contract Game {
         rules.push(Rule("Quorum", quorumValue, 0, 100));
         rules.push(Rule("Max proposals", maxProposalsValue, 1, 100));
         rules.push(Rule("Poll tax", pollTaxValue, 1, 1000));
+        rules.push(Rule("Wealth tax", wealthTaxValue, 1, 100));
     }
 
     modifier gameActive() {
@@ -270,6 +272,13 @@ contract Game {
         }
     }
 
+    function collectWealthTax() private {
+        for (uint256 index = 0; index < players.length; index++) {
+            uint256 afterTaxPercentage =  100 - rules[uint256(RuleIndices.WealthTax)].value;
+            players[index].balance = (players[index].balance * afterTaxPercentage) / 100;
+        }
+    }
+
     function countVotes(uint256 proposalIndex) private {
         uint256 quorum =
             Calculations.calculateQuorum(
@@ -279,7 +288,7 @@ contract Game {
 
         if (proposals[proposalIndex].votes.length >= quorum) {
             proposals[proposalIndex].complete = true;
-            endGame();
+            
             uint256 yesVotes;
             for (
                 uint256 index = 0;
@@ -298,6 +307,7 @@ contract Game {
                 enactProposal(proposalIndex);
             }
             collectPollTax();
+            collectWealthTax();
             emit ProposalUpdate( // TODO: write tests for events
                 proposalIndex,
                 proposals[proposalIndex].proposer,
@@ -306,6 +316,9 @@ contract Game {
                 true,
                 successful
             );
+
+        endGame();
+
         }
     }
 
@@ -332,12 +345,15 @@ contract Game {
     }
 
     function endGame() private {
-        if (proposals.length >= rules[3].value) {
+        if (proposals.length >= rules[uint(RuleIndices.MaxProposals)].value) {
+            console.log("inside if");
             uint256 balancesSum;
             uint256 finalEntryFees = address(this).balance;
             for (uint256 index = 0; index < players.length; index++) {
                 balancesSum += players[index].balance;
             }
+            console.log("final entry fees", finalEntryFees);
+            console.log("total play balances", balancesSum);
             for (uint256 index = 0; index < players.length; index++) {
                 uint256 share =
                     (players[index].balance * finalEntryFees) / balancesSum;
