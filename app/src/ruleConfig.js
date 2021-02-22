@@ -30,4 +30,12 @@ export const ruleConfig = {
     name: "Poll tax",
     description: "A fixed tax collected on every completed proposal",
   },
+  "Wealth tax": {
+    name: "Wealth tax",
+    description: "A percentage tax collected on every completed proposal",
+  },
+  "Proposal fee": {
+    name: "Proposal fee",
+    description: "A fee collected on newly created proposals",
+  },
 };

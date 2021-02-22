@@ -311,8 +311,11 @@ export const Game = ({ web3, account }) => {
         )}
         {
           <div>
-            Progress: {(proposals && proposals.length) || 0}/
-            {(rules && rules[4].value) || "-"} completed proposals
+            Progress:{" "}
+            {(proposals &&
+              proposals.filter(({ complete }) => complete).length) ||
+              0}
+            /{(rules && rules[4].value) || "-"} completed proposals
           </div>
         }
       </div>
@@ -330,6 +333,7 @@ export const Game = ({ web3, account }) => {
               rules={rules}
               getPlayerName={getPlayerName}
               voteOnProposal={voteOnProposalHandler}
+              isPlayer={isPlayer}
               gameActive={gameActive}
               playerAddress={account}
             ></Proposals>

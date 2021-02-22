@@ -24,7 +24,7 @@ body {
   margin-block-end: 0.1rem;
 }
 
-.container div {
+.container > div {
   flex-basis: 33%;
 }
 
@@ -90,6 +90,14 @@ a.button {
   text-decoration: none;
   background: white;
   font-weight: bold;
+}
+
+button.small {
+  font-size: 0.7rem;
+  padding: 4px;
+  border: 2px solid black;
+  margin: 2px;
+  height: 40px;
 }
 
 button:disabled,
