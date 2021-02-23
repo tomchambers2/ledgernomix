@@ -105,10 +105,12 @@ function App() {
     fn();
   }, [gameFactory, web3, getArray]);
 
-  const newGame = useContractFn(gameFactory, "newGame", { from: account });
+  const newGame = useContractFn(gameFactory, "newGame", {
+    from: account,
+    value: Web3.utils.toWei("10"),
+  });
   const newGameHandler = async () => {
     const newGameAddress = await newGame();
-    console.log("new game", newGameAddress);
     setNewGameAddress(newGameAddress);
   };
 
@@ -119,7 +121,6 @@ function App() {
       const updatedGamesList = gamesList.slice();
       updatedGamesList[data.returnValues.gameIndex] =
         data.returnValues.gameAddress;
-      console.log(data);
       setGamesList(updatedGamesList);
     });
 

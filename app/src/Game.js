@@ -77,7 +77,6 @@ export const Game = ({ web3, account }) => {
       const updatedProposals = await Promise.all(
         proposals.slice().map(async (proposal, i) => {
           const votesLength = await game.methods.getVotesLength(i).call();
-          console.log(votesLength);
           proposal.votes = [];
           for (let voteIndex = 0; voteIndex < votesLength; voteIndex++) {
             const { playerAddress, vote } = await game.methods

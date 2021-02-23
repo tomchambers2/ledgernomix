@@ -38,8 +38,25 @@ contract GameFactory {
         return games.length;
     }
 
-    function newGame() public {
-        Game g = new Game(10, 10, 50, 50, 30, 1, 10, 3, 10);
+    function newGame() public payable {
+        uint256 eth = 1 ether;
+        require(
+            msg.value == Calculations.etherToWei(10),
+            "You must send 10 to create a game"
+        );
+        Game g =
+            new Game{value: msg.value}(
+                msg.sender,
+                10,
+                10,
+                50,
+                50,
+                30,
+                1,
+                10,
+                3,
+                10
+            );
         games.push(g);
         emit NewGame(games.length - 1, address(g));
     }
@@ -108,7 +125,6 @@ contract Game {
     );
 
     struct Vote {
-        // uint256 voterIndex;
         address player;
         bool vote;
     }
@@ -126,6 +142,7 @@ contract Game {
     }
 
     constructor(
+        address firstPlayer,
         uint256 entryFee,
         uint256 rewardValue,
         uint256 majorityValue,
@@ -135,7 +152,7 @@ contract Game {
         uint256 wealthTaxValue,
         uint256 wealthTaxThreshold,
         uint256 proposalCost
-    ) {
+    ) payable {
         rules.push(Rule("Entry fee", entryFee, 0, 1000));
         rules.push(Rule("Proposal reward", rewardValue, 0, 1000));
         rules.push(Rule("Majority", majorityValue, 0, 100));
@@ -145,6 +162,8 @@ contract Game {
         rules.push(Rule("Wealth tax", wealthTaxValue, 1, 100));
         rules.push(Rule("Wealth tax threshold", wealthTaxThreshold, 0, 1000));
         rules.push(Rule("Proposal fee", proposalCost, 0, 1000));
+        gameFee();
+        createPlayer(firstPlayer);
     }
 
     modifier gameActive() {
@@ -159,20 +178,30 @@ contract Game {
         _;
     }
 
-    function joinGame() external payable gameActive {
+    function gameFee() private view {
+        // is a function because the entry fee rule won't exist when this is called
         uint256 eth = 1 ether;
         require(
             msg.value == rules[uint256(RuleIndices.EntryFee)].value * eth,
             "You must send required entry fee to join the game"
         );
+    }
+
+    function joinGame() external payable gameActive {
+        gameFee();
         for (uint256 index = 0; index < players.length; index++) {
             require(
                 msg.sender != players[index].playerAddress,
                 "You have already joined this game"
             );
         }
+        createPlayer(msg.sender);
+    }
+
+    function createPlayer(address playerAddress) private {
+        uint256 eth = 1 ether;
         Player storage p = players.push();
-        p.playerAddress = msg.sender;
+        p.playerAddress = playerAddress;
         p.balance = rules[uint256(RuleIndices.EntryFee)].value * eth;
         emit PlayerUpdate(players.length - 1, p.playerAddress, p.balance);
     }
@@ -390,18 +419,14 @@ contract Game {
         if (
             proposals.length >= rules[uint256(RuleIndices.MaxProposals)].value
         ) {
-            console.log("inside if");
             uint256 balancesSum;
             uint256 finalEntryFees = address(this).balance;
             for (uint256 index = 0; index < players.length; index++) {
                 balancesSum += players[index].balance;
             }
-            console.log("final entry fees", finalEntryFees);
-            console.log("total play balances", balancesSum);
             for (uint256 index = 0; index < players.length; index++) {
                 uint256 share =
                     (players[index].balance * finalEntryFees) / balancesSum;
-                console.log("share is ", share);
                 payable(players[index].playerAddress).send(share); //FIXME: error here
             }
         }

@@ -17,7 +17,7 @@ export const useContractFn = (contract, name, options) => {
         fireNotification(`${name} request sent`, "warning");
         return result;
       } catch (e) {
-        // TODO: show err to user in useful way
+        console.error(e);
         const msg = parseError(e);
         fireNotification(
           `${msg}<br><br><em>The blockchain takes a few seconds to update, so your screen may be out of date</em>`,

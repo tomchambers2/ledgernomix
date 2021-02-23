@@ -5,7 +5,6 @@ export const useContract = (web3, abi, address) => {
 
   useEffect(() => {
     if (!web3) return;
-    console.log(web3);
     const result = new web3.eth.Contract(abi, address);
     setContract(result);
   }, [abi, address, web3]);

@@ -26,7 +26,6 @@ describe("Game", () => {
         Calculations: calculations.address,
       },
     });
-    //entry fee, proposal reward, majority, quorum, max proposals, poll tax
 
     createGame = async ({
       entryFee = 5,
@@ -456,8 +455,6 @@ describe("Game", () => {
         await game.createProposal(0, 500, { gasPrice: 0 });
         await game.connect(players[0]).voteOnProposal(i, true, { gasPrice: 0 });
       }
-
-      console.log("blah");
 
       const player1 = await game.players(0);
       // console.log("p1 in game balance after game", player1.balance.toString());
