@@ -1,24 +1,3 @@
 .title.complete {
   text-decoration: line-through;
 }
-
-.proposal {
-  display: flex;
-  margin-bottom: 15px;
-}
-
-.title {
-  flex-basis: 90%;
-  text-align: left;
-  flex-grow: 1;
-}
-
-.votes {
-  font-size: 0.7rem;
-  flex-grow: 1;
-}
-
-.vote-actions {
-  flex-grow: 1;
-  display: flex;
-}

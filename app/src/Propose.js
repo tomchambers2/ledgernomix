@@ -7,6 +7,7 @@ import isEqual from "lodash.isequal";
 export const Propose = ({ rules, createProposal, isPlayer, gameActive }) => {
   const [prevRules, setPrevRules] = useState([]);
   const [proposedRuleOption, setProposedRuleOption] = useState(null);
+  const [prevProposedRuleOption, setPrevProposedRuleOption] = useState(null);
   const [proposedValue, setProposedValue] = useState(0);
   const [proposedValueValid, setProposedValueValid] = useState(true);
   const [proposedValueError, setProposedValueError] = useState(null);
@@ -35,11 +36,15 @@ export const Propose = ({ rules, createProposal, isPlayer, gameActive }) => {
 
   useEffect(() => {
     if (!proposedRuleOption) return;
-    if (isEqual(prevRules, rules)) return;
-    console.log("CHECK");
+    if (
+      isEqual(prevRules, rules) &&
+      isEqual(prevProposedRuleOption, proposedRuleOption)
+    )
+      return;
     setPrevRules(rules);
+    setPrevProposedRuleOption(proposedRuleOption);
     setProposedValue(rules[proposedRuleOption.value].value);
-  }, [proposedRuleOption, rules, prevRules]);
+  }, [proposedRuleOption, rules, prevRules, prevProposedRuleOption]);
 
   const createProposalHandler = () => {
     const result = createProposal(proposedRuleOption.value, proposedValue);

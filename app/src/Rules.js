@@ -1,5 +1,5 @@
 import { ruleConfig } from "./ruleConfig";
-import "./Rule.css";
+import classNames from "classnames";
 
 export const Rules = ({ rules }) => {
   return (
@@ -9,17 +9,12 @@ export const Rules = ({ rules }) => {
       {rules
         .map((rule) => ({ rule, ruleConfig: ruleConfig[rule.name] }))
         .map(({ rule, ruleConfig }, i) => (
-          <div key={i} className="rule">
-            <div className="rule-title">
-              <div>
-                <strong>{rule.name}</strong>
-              </div>
-              <div className="rule-description">{ruleConfig.description}</div>
-            </div>
-            <div className="rule-value">
-              {rule.value}
-              {ruleConfig.unit}
-            </div>
+          <div
+            key={i}
+            className={classNames("item", rule.updated && "updated")}
+          >
+            {rule.name} is {rule.value}
+            {ruleConfig.unit}
           </div>
         ))}
     </>

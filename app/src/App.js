@@ -132,23 +132,20 @@ function App() {
 
   return (
     <div className="App">
-      <div className="panel intro">
-        <h1>Ledgernomix</h1>
-        <h2>Change the rules, win the game</h2>
-        {!setupStatus.metamask && (
-          <div>
-            <a
-              className="button"
-              target="_blank"
-              href="https://metamask.io/download.html"
-              rel="noreferrer"
-            >
-              Install Metamask browser extension
-            </a>
-          </div>
-        )}
-        {!setupStatus.network && "Wrong network"}
-      </div>
+      {!setupStatus.metamask && (
+        <div>
+          <a
+            className="button"
+            target="_blank"
+            href="https://metamask.io/download.html"
+            rel="noreferrer"
+          >
+            Install Metamask browser extension
+          </a>
+        </div>
+      )}
+      {!setupStatus.network && "Wrong network"}
+
       <Router>
         <Switch>
           <Route path="/:gameAddress">

@@ -1,5 +1,5 @@
 html {
-  font-size: 26px;
+  font-size: 20px;
 }
 
 body {
@@ -14,18 +14,19 @@ body {
     var(--eskapade-fraktur-salt), var(--eskapade-fraktur-sinf),
     var(--eskapade-fraktur-ss01), var(--eskapade-fraktur-sups),
     var(--eskapade-fraktur-tnum);
+  padding: 0px 10px 0px 10px;
   /* --eskapade-fraktur-salt: "salt" on; */
 }
 
-.container {
+.main-container {
   display: flex;
   justify-content: space-between;
   margin-block-start: 0.1rem;
   margin-block-end: 0.1rem;
 }
 
-.container > div {
-  flex-basis: 33%;
+.main-container > div {
+  width: 33%;
 }
 
 @media (max-width: 900px) {
@@ -35,82 +36,98 @@ body {
 }
 
 .panel {
-  /* margin: 8px; */
-  margin: 30px;
   box-sizing: content-box;
-  /* background: lightblue; */
-  outline-offset: -13px;
-  outline: 4px solid black;
+  /* outline-offset: -14px; */
+  /* outline: 4px solid black; */
+  border: 4px solid black;
   padding: 30px;
-  position: relative;
-  text-align: center;
-}
-
-h1 {
-  font-size: 3.2rem;
-  font-family: "UnifrakturMaguntia", cursive;
-  font-weight: normal;
+  margin: 14px;
 }
 
 h1,
 h2 {
-  text-align: center;
+  font-family: "UnifrakturMaguntia", cursive;
+  margin: 0;
+}
+
+h1 {
+  font-size: 80px;
+  font-weight: normal;
+  margin-bottom: 1rem;
 }
 
 h2 {
-  font-size: 1.3rem;
-  margin-block-start: 0.05rem;
-  margin-block-end: 0.05rem;
-  margin-bottom: 1.3rem;
+  font-size: 50px;
+  margin-bottom: 20px;
 }
 
-.leftPanel {
-  flex-basis: 30%;
+h3 {
+  font-size: 30px;
+  margin: 0;
 }
 
-li::marker {
-  content: "- ";
-}
-
-.rightPanel {
-  flex-basis: 70%;
+.join-container {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 40px;
 }
 
 button,
+.button,
 a.button {
   border: 4px solid black;
   color: black;
   margin: 15px;
   background: none;
   padding: 8px 40px 18px 40px;
-  font-size: 1.5rem;
   font-family: eskapade-fraktur, serif;
   font-style: normal;
   display: inline-block;
   text-decoration: none;
   background: white;
   font-weight: bold;
+  cursor: pointer;
 }
 
-button.small {
-  font-size: 0.7rem;
-  padding: 4px;
-  border: 2px solid black;
-  margin: 2px;
-  height: 40px;
+button:hover,
+.button:hover {
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.1) !important;
 }
 
 button:disabled,
+.button:disabled,
 a.button:disabled {
   border-color: grey;
   color: grey;
 }
 button:disabled:hover,
+.button:disabled:hover,
 a.button:disabled:hover {
   cursor: auto;
 }
 
-.disabled-panel {
+.vote-actions {
+  display: flex;
+}
+
+.vote-actions .button {
+  padding: 20px;
+  margin: 5px;
+  width: 50%;
+  background: black;
+  color: white;
+  outline: 4px solid white;
+  outline-offset: -9px;
+}
+.vote-actions .button:first-of-type {
+  margin-left: 0;
+}
+.vote-actions .button:last-of-type {
+  margin-right: 0;
+}
+
+/* .disabled-panel {
   position: absolute;
   top: 0;
   bottom: 0;
@@ -122,47 +139,52 @@ a.button:disabled:hover {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 30px;
+  /* font-size: 30px; 
   color: white;
-}
-
-button:hover {
-  cursor: pointer;
-  background: rgba(0, 0, 0, 0.1);
-}
+} */
 
 .input-helper.error {
   color: red;
 }
 
 .intro {
-  text-align: center;
-  background: url("backgrounds/marble.jpg");
-  background-size: 50%;
-}
-
-.join {
+  margin: 30px 30px;
   display: flex;
   justify-content: space-between;
 }
 
-.scores {
-  background-image: url("backgrounds/paper.jpg");
-  background-size: 50%;
+.intro > div {
+  flex-basis: 33%;
 }
 
-.proposals {
-  background-image: url("backgrounds/blackboard.jpg");
-  background-size: 50%;
+.links {
+  text-align: right;
 }
 
-.rules {
-  background-image: url("backgrounds/paper2.jpg");
-  background-size: 50%;
-}
-
-.propose {
+.join > div {
   text-align: center;
+}
+
+.join {
+  border-radius: 100%;
+  border: 4px solid black;
+  width: 100px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.item {
+  border: 4px solid black;
+  padding: 20px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.player-score {
+  display: flex;
+  justify-content: space-between;
 }
 
 .playerLetter {
@@ -180,12 +202,31 @@ button:hover {
   margin: 0 10px;
 }
 
+.player {
+  margin-bottom: 10px;
+}
+
+.player-score-bar {
+  background: black;
+  height: 25px;
+  margin-top: 5px;
+}
+
 input {
   height: 40px;
-  font-size: 30px;
+  /* font-size: 30px; */
   width: 80px;
   border: 1px solid grey;
   padding: 4px;
   border-radius: 3px;
   margin: 0 10px;
+}
+
+.updated {
+  animation: blinker 1s linear infinite;
+}
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
 }

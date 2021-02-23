@@ -21,23 +21,16 @@ export const Proposals = ({
       .slice()
       .reverse()
       .map((proposal, i) => (
-        <div key={i} className="proposal">
+        <div
+          key={i}
+          className={classNames("item", proposal.updated && "updated")}
+        >
           <div className={classNames("title", proposal.complete && "complete")}>
             {getPlayerName(proposal.proposer)}{" "}
-            {proposal.complete ? "proposed" : "proposes"}{" "}
-            {rules[proposal.ruleIndex].name} should be {proposal.value}
+            {proposal.complete ? "proposed" : "proposes"}:<br></br> "
+            {rules[proposal.ruleIndex].name} should be {proposal.value}"
           </div>
-          <div className="votes">
-            {proposal.votes &&
-              proposal.votes
-                .filter(({ vote, playerAddress }) => vote)
-                .map(() => <>{getPlayerName(playerAddress)} voted 👍🏻</>)}
-            {proposal.votes &&
-              proposal.votes
-                .filter(({ vote, playerAddress }) => !vote)
-                .map(() => <>{getPlayerName(playerAddress)} voted 👎</>)}
-          </div>
-          {/* {proposal.successful.toString()} */}
+          <div className="votes"></div>
           {proposal.pending && "PENDING"}
           <div className="vote-actions">
             {isPlayer &&
@@ -48,18 +41,30 @@ export const Proposals = ({
               !proposal.complete &&
               !proposal.pending && (
                 <>
-                  <button
-                    className="small"
+                  <div
+                    className="button"
                     onClick={() => voteOnProposal(proposal.index, true)}
                   >
-                    For
-                  </button>
-                  <button
-                    className="small"
+                    Yes
+                    {proposal.votes &&
+                      proposal.votes
+                        .filter(({ vote, playerAddress }) => vote)
+                        .map(() => (
+                          <>{getPlayerName(playerAddress)} voted 👍🏻</>
+                        ))}
+                  </div>
+                  <div
+                    className="button"
                     onClick={() => voteOnProposal(proposal.index, false)}
                   >
-                    Against
-                  </button>
+                    No
+                    {proposal.votes &&
+                      proposal.votes
+                        .filter(({ vote, playerAddress }) => !vote)
+                        .map(() => (
+                          <>{getPlayerName(playerAddress)} voted 👎</>
+                        ))}
+                  </div>
                 </>
               )}
           </div>

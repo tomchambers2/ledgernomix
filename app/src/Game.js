@@ -138,6 +138,7 @@ export const Game = ({ web3, account }) => {
   const updateVote = useCallback(
     (vote) => {
       const newProposals = proposals.slice();
+      vote.updated = true;
       newProposals[vote.proposalIndex].votes[vote.voteIndex] = vote;
       setProposals(newProposals);
     },
@@ -147,6 +148,7 @@ export const Game = ({ web3, account }) => {
   const updateProposal = useCallback(
     async (proposal) => {
       const newProposals = proposals.slice();
+      proposal.updated = true;
       newProposals[proposal.proposalIndex] = proposal;
       const newProposalsWithVotes = await fetchVotes(newProposals);
       setProposals(newProposalsWithVotes);
@@ -158,6 +160,7 @@ export const Game = ({ web3, account }) => {
     (player) => {
       const newPlayers = players.slice();
       newPlayers[player.playerIndex] = {
+        updated: true,
         playerAddress: player.playerAddress,
         balance: player.balance.toString(),
       };
@@ -169,7 +172,8 @@ export const Game = ({ web3, account }) => {
   const updateRule = useCallback(
     (rule) => {
       const newRules = rules.slice();
-      newRules[rule.ruleIndex].value = rule.value;
+      rule.updated = true;
+      newRules[rule.ruleIndex] = rule;
       setRules(newRules);
     },
     [rules]
@@ -307,27 +311,30 @@ export const Game = ({ web3, account }) => {
 
   return (
     <>
-      <div className="panel join">
-        {(!gameActive && "This game has ended") ||
-          (isPlayer && <div>You are playing game {gameAddress}</div>)}
-        {gameActive && !isPlayer && (
-          <div>
-            <button onClick={joinGameHandler}>Join game</button>
-          </div>
-        )}
-        {
-          <div>
-            Progress:{" "}
-            {(proposals &&
-              proposals.filter(({ complete }) => complete).length) ||
-              0}
-            /{(rules && getRuleValue("Max proposals").value) || "-"} completed
-            proposals
-          </div>
-        }
+      <div className="intro">
+        <div>
+          <h1>Ledgernomix</h1>
+        </div>
+
+        <div className="links">
+          <h3>How to play</h3>
+          <h3>About</h3>
+        </div>
       </div>
 
-      <div className="container">
+      <div className="join-container">
+        <div className="join">
+          <div>
+            {(!gameActive && "This game has ended") ||
+              (isPlayer && <>Game {gameAddress.substr(0, 5)}</>)}
+            {gameActive && !isPlayer && (
+              <button onClick={joinGameHandler}>Join game</button>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className="main-container">
         <div className="rules panel">
           <div className="subpanel rules">
             {(rules && <Rules rules={rules}></Rules>) || <Loader></Loader>}
@@ -350,15 +357,13 @@ export const Game = ({ web3, account }) => {
           {(players && (
             <Scores players={players} getPlayerName={getPlayerName}></Scores>
           )) || <Loader></Loader>}
-          <h2>Event log</h2>
-          <ul>
-            {events
-              .slice()
-              .reverse()
-              .map((event) => (
-                <li>{event}</li>
-              ))}
-          </ul>
+
+          {events
+            .slice()
+            .reverse()
+            .map((event) => (
+              <div className="item">{event}</div>
+            ))}
         </div>
       </div>
 
