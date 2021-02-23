@@ -2,8 +2,10 @@ import { useState, useEffect } from "react";
 import Select from "react-select";
 import classNames from "classnames";
 import { ruleConfig } from "./ruleConfig";
+import isEqual from "lodash.isequal";
 
 export const Propose = ({ rules, createProposal, isPlayer, gameActive }) => {
+  const [prevRules, setPrevRules] = useState([]);
   const [proposedRuleOption, setProposedRuleOption] = useState(null);
   const [proposedValue, setProposedValue] = useState(0);
   const [proposedValueValid, setProposedValueValid] = useState(true);
@@ -33,8 +35,11 @@ export const Propose = ({ rules, createProposal, isPlayer, gameActive }) => {
 
   useEffect(() => {
     if (!proposedRuleOption) return;
+    if (isEqual(prevRules, rules)) return;
+    console.log("CHECK");
+    setPrevRules(rules);
     setProposedValue(rules[proposedRuleOption.value].value);
-  }, [proposedRuleOption, rules]);
+  }, [proposedRuleOption, rules, prevRules]);
 
   const createProposalHandler = () => {
     const result = createProposal(proposedRuleOption.value, proposedValue);
