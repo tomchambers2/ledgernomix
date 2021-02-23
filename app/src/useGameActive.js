@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
 
-export const useGameActive = (proposals, rules) => {
+export const useGameActive = (proposals, maxProposals) => {
   const [gameActive, setGameActive] = useState(true);
 
   useEffect(() => {
-    if (!rules || !proposals || !rules.length) return;
-    const maxProposals = rules[4].value; // TODO: find a better way to identify correct rule
+    if (!maxProposals || !proposals) return;
+    console.log(maxProposals);
     setGameActive(
       proposals.filter((proposal) => proposal.complete).length < maxProposals
     );
-  }, [proposals, rules]);
+  }, [proposals, maxProposals]);
 
   return gameActive;
 };

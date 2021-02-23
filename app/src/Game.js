@@ -33,9 +33,16 @@ export const Game = ({ web3, account }) => {
     setIsPlayer(result);
   }, [account, players]);
 
+  const getRuleValue = useCallback(
+    (name) =>
+      rules &&
+      rules.find(({ name: ruleName }) => name === ruleName).value.toString(),
+    [rules]
+  );
+
   const joinGame = useContractFn(game, "joinGame", {
     from: account,
-    value: rules && Web3.utils.toWei(rules[0].value),
+    value: rules && Web3.utils.toWei(getRuleValue("Entry fee")),
   });
 
   const joinGameHandler = () => {
@@ -296,7 +303,7 @@ export const Game = ({ web3, account }) => {
     from: account,
   });
 
-  const gameActive = useGameActive(proposals, rules);
+  const gameActive = useGameActive(proposals, getRuleValue("Max proposals"));
 
   return (
     <>
@@ -314,7 +321,8 @@ export const Game = ({ web3, account }) => {
             {(proposals &&
               proposals.filter(({ complete }) => complete).length) ||
               0}
-            /{(rules && rules[4].value) || "-"} completed proposals
+            /{(rules && getRuleValue("Max proposals").value) || "-"} completed
+            proposals
           </div>
         }
       </div>
