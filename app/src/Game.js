@@ -322,9 +322,9 @@ export const Game = ({ web3, account }) => {
         </div>
       </div>
 
-      <div className="join-container">
-        <div className="join">
-          <div>
+      <div className="game-icons-container">
+        <div className="game-icon-panel">
+          <div className="game-icon">
             {(!gameActive && "This game has ended") ||
               (isPlayer && <>Game {gameAddress.substr(0, 5)}</>)}
             {gameActive && !isPlayer && (

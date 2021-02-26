@@ -1,8 +1,12 @@
 export const GameList = ({ gamesList, newGameHandler }) => {
   return (
     <>
-      <div>
-        <button onClick={newGameHandler}>Create game</button>
+      <div className="game-icons-container">
+        <div className="game-icon-panel">
+          <button className="game-button" onClick={newGameHandler}>
+            <div>Create Game</div>
+          </button>
+        </div>
       </div>
       {(!gamesList && "Loading...") || (
         <ol>

@@ -131,7 +131,7 @@ function App() {
   }, [gameFactory, gamesList]);
 
   return (
-    <div className="App">
+    <div className="app">
       {!setupStatus.metamask && (
         <div>
           <a
