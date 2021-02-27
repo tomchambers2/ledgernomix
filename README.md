@@ -8,7 +8,7 @@ Current designs
 ![image](https://user-images.githubusercontent.com/4549380/109387130-69aaf980-78f7-11eb-88a9-c149e2223c45.png)
 
 
-This is a work in progress - the app is shifting so may not run correctly
+This is a work in progress - the code is changing a lot so the instructions may become out of date.
 
 ## Frontend
 
