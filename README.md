@@ -1,4 +1,6 @@
-# nomdao
+# Ledgernomix
+
+This is a work in progress - the app is shifting so may not run correctly
 
 ## Frontend
 
