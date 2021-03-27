@@ -13,6 +13,51 @@ export const Propose = ({ rules, createProposal, isPlayer, gameActive }) => {
   const [proposedValueError, setProposedValueError] = useState(null);
 
   const ruleOptions = rules.map((rule, i) => ({ value: i, label: rule.name }));
+  const customStyles = {
+    control: (provided, state) => ({
+      ...provided,
+      borderRadius: 0,
+      borderWidth: 0,
+      backgroundColor: "black",
+      color: "white",
+      boxShadow: "none",
+    }),
+    placeholder: (provided, state) => ({
+      ...provided,
+      backgroundColor: "black",
+      color: "white",
+    }),
+    menu: (provided, state) => ({
+      ...provided,
+      backgroundColor: "black",
+      color: "white",
+    }),
+    option: (provided, state) => ({
+      ...provided,
+      backgroundColor: state.isFocused ? "white" : "black",
+      color: state.isFocused ? "black" : "white",
+    }),
+    indicatorContainer: (provided, state) => ({
+      ...provided,
+      backgroundColor: "black",
+      color: "white",
+    }),
+    indicatorsContainer: (provided, state) => ({
+      ...provided,
+      backgroundColor: "black",
+      color: "white",
+    }),
+    dropdownIndicator: (provided, state) => ({
+      ...provided,
+      backgroundColor: "black",
+      color: "white",
+    }),
+    singleValue: (provided, state) => ({
+      ...provided,
+      backgroundColor: "black",
+      color: "white",
+    }),
+  };
 
   useEffect(() => {
     if (!proposedRuleOption) return setProposedValueValid(true);
@@ -60,11 +105,11 @@ export const Propose = ({ rules, createProposal, isPlayer, gameActive }) => {
         (!isPlayer && (
           <div className="disabled-panel">Join the game to make proposals</div>
         ))}
-      <h2>Propose rule change</h2>
       <div className="proposal-form">
         I propose that{" "}
         <Select
           className="select-box"
+          styles={customStyles}
           options={ruleOptions}
           value={proposedRuleOption}
           onChange={(option) => setProposedRuleOption(option)}

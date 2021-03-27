@@ -153,12 +153,10 @@ function App() {
           </Route>
           <Route path="/">
             {newGameAddress && <Redirect to="/" />}
-            <div className="panel">
-              <GameList
-                gamesList={gamesList}
-                newGameHandler={newGameHandler}
-              ></GameList>
-            </div>
+            <GameList
+              gamesList={gamesList}
+              newGameHandler={newGameHandler}
+            ></GameList>
           </Route>
         </Switch>
       </Router>

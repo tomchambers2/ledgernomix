@@ -9,7 +9,7 @@ import useInterval from "./useInterval";
 import { Scores } from "./Scores";
 import { Rules } from "./Rules";
 import { Proposals } from "./Proposals";
-import { Propose } from "./Propose";
+// import { Propose } from "./Propose";
 import { Loader } from "./Loader";
 import { default as GameContract } from "./contracts/Game.json";
 import Web3 from "web3";
@@ -303,9 +303,9 @@ export const Game = ({ web3, account }) => {
     }
   };
 
-  const createProposal = useContractFn(game, "createProposal", {
-    from: account,
-  });
+  // const createProposal = useContractFn(game, "createProposal", {
+  //   from: account,
+  // });
 
   const gameActive = useGameActive(proposals, getRuleValue("Max proposals"));
 
@@ -350,6 +350,8 @@ export const Game = ({ web3, account }) => {
               isPlayer={isPlayer}
               gameActive={gameActive}
               playerAddress={account}
+              web3={web3}
+              account={account}
             ></Proposals>
           )) || <Loader></Loader>}
         </div>
@@ -367,7 +369,7 @@ export const Game = ({ web3, account }) => {
         </div>
       </div>
 
-      <div>
+      {/* <div>
         <div className="propose panel">
           {(rules && (
             <Propose
@@ -378,7 +380,7 @@ export const Game = ({ web3, account }) => {
             ></Propose>
           )) || <Loader></Loader>}
         </div>
-      </div>
+      </div> */}
     </>
   );
 };
