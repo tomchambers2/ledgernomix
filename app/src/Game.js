@@ -1,4 +1,5 @@
 import "./App.css";
+import "./Game.css";
 import "./eskapade-fraktur-wakamaifondue.css";
 import { useContract } from "./useContract";
 import { useContractFn } from "./useContractFn";
@@ -14,10 +15,12 @@ import { Loader } from "./Loader";
 import { default as GameContract } from "./contracts/Game.json";
 import Web3 from "web3";
 import { useParams } from "react-router-dom";
+import { useContractBalance } from "./useContractBalance";
 
 export const Game = ({ web3, account }) => {
   const { gameAddress } = useParams();
   const game = useContract(web3, GameContract.abi, gameAddress);
+  const gameBalance = useContractBalance(web3, gameAddress);
   const [events, setEvents] = useState([]);
   const [rules, setRules] = useState(null);
   const [players, setPlayers] = useState(null);
@@ -303,10 +306,6 @@ export const Game = ({ web3, account }) => {
     }
   };
 
-  // const createProposal = useContractFn(game, "createProposal", {
-  //   from: account,
-  // });
-
   const gameActive = useGameActive(proposals, getRuleValue("Max proposals"));
 
   return (
@@ -322,65 +321,61 @@ export const Game = ({ web3, account }) => {
         </div>
       </div>
 
-      <div className="game-icons-container">
-        <div className="game-icon-panel">
-          <div className="game-icon">
-            {(!gameActive && "This game has ended") ||
-              (isPlayer && <>Game {gameAddress.substr(0, 5)}</>)}
-            {gameActive && !isPlayer && (
-              <button onClick={joinGameHandler}>Join game</button>
-            )}
+      <div className="all-panels-container">
+        <div className="header-container">
+          <div className="game-details-panel panel">
+            <div className="clock"></div>
+            <div className="game-name">
+              {(!gameActive && "This game has ended") ||
+                (isPlayer && <h2>Game {gameAddress.substr(0, 5)}</h2>)}
+              {gameActive && !isPlayer && (
+                <button onClick={joinGameHandler}>Join game</button>
+              )}
+            </div>
+            <div className="game-metadata">
+              Players: {(players && players.length) || 0}
+              <br></br>
+              Pot: {gameBalance || 0}
+            </div>
+          </div>
+          <div className="player-details-panel panel"></div>
+        </div>
+
+        <div className="vertical-panels-container">
+          <div className="rules panel">
+            <div className="subpanel rules">
+              {(rules && <Rules rules={rules}></Rules>) || <Loader></Loader>}
+            </div>
+          </div>
+          <div className="proposals panel">
+            {(rules && proposals && (
+              <Proposals
+                proposals={proposals}
+                rules={rules}
+                getPlayerName={getPlayerName}
+                voteOnProposal={voteOnProposalHandler}
+                isPlayer={isPlayer}
+                gameActive={gameActive}
+                playerAddress={account}
+                web3={web3}
+                account={account}
+              ></Proposals>
+            )) || <Loader></Loader>}
+          </div>
+          <div className="panel scores">
+            {(players && (
+              <Scores players={players} getPlayerName={getPlayerName}></Scores>
+            )) || <Loader></Loader>}
+
+            {events
+              .slice()
+              .reverse()
+              .map((event) => (
+                <div className="item">{event}</div>
+              ))}
           </div>
         </div>
       </div>
-
-      <div className="main-container">
-        <div className="rules panel">
-          <div className="subpanel rules">
-            {(rules && <Rules rules={rules}></Rules>) || <Loader></Loader>}
-          </div>
-        </div>
-        <div className="proposals panel">
-          {(rules && proposals && (
-            <Proposals
-              proposals={proposals}
-              rules={rules}
-              getPlayerName={getPlayerName}
-              voteOnProposal={voteOnProposalHandler}
-              isPlayer={isPlayer}
-              gameActive={gameActive}
-              playerAddress={account}
-              web3={web3}
-              account={account}
-            ></Proposals>
-          )) || <Loader></Loader>}
-        </div>
-        <div className="panel scores">
-          {(players && (
-            <Scores players={players} getPlayerName={getPlayerName}></Scores>
-          )) || <Loader></Loader>}
-
-          {events
-            .slice()
-            .reverse()
-            .map((event) => (
-              <div className="item">{event}</div>
-            ))}
-        </div>
-      </div>
-
-      {/* <div>
-        <div className="propose panel">
-          {(rules && (
-            <Propose
-              rules={rules}
-              createProposal={createProposal}
-              isPlayer={isPlayer}
-              gameActive={gameActive}
-            ></Propose>
-          )) || <Loader></Loader>}
-        </div>
-      </div> */}
     </>
   );
 };

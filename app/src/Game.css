@@ -1,0 +1,36 @@
+:root {
+  --game-background: #f2f1e2;
+  --game-foreground: white;
+  --game-graphics-primary: black;
+  --game-graphics-accent: white;
+  --game-graphics-active: red;
+  --game-border: 14px;
+  --game-line-width: 4px;
+  --game-icon-size: 140px;
+}
+
+.header-container {
+  display: flex;
+}
+
+.game-details-panel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--game-foreground);
+  flex-grow: 1;
+}
+
+.clock {
+}
+
+.game-metadata {
+}
+
+.player-details-panel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--game-foreground);
+  width: 10%;
+}

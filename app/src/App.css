@@ -1,6 +1,4 @@
 :root {
-  /* --game-background: #fbcbd6;
-  --game-foreground: #ffe0d0; */
   --game-background: #f2f1e2;
   --game-foreground: white;
   --game-graphics-primary: black;
@@ -59,7 +57,7 @@ body {
   justify-content: center;
 }
 
-.main-container {
+.vertical-panels-container {
   display: flex;
   justify-content: center;
   /* margin-block-start: 0.1rem;
@@ -68,8 +66,12 @@ body {
   /* width: 50%; */
 }
 
-.main-container > div {
-  max-width: 250px;
+.all-panels-container {
+  max-width: 1200px;
+  margin: auto;
+}
+
+.vertical-panels-container > div {
   width: 33%;
   background: var(--game-foreground);
 }
@@ -105,7 +107,6 @@ h1 {
 h2 {
   font-size: 50px;
   font-weight: normal;
-  margin-bottom: 20px;
 }
 
 h3 {
@@ -217,7 +218,6 @@ a.button:disabled:hover {
   align-items: center;
   border-radius: 100%;
   background-color: var(--game-foreground);
-  /* background-color: red; */
   width: calc(
     var(--game-icon-size) + (var(--game-border) * 2) +
       (var(--game-line-width) * 2)
