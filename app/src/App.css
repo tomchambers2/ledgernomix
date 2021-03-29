@@ -307,7 +307,7 @@ a.button:disabled:hover {
   color: var(--game-graphics-accent);
   background-color: var(--game-graphics-accent);
   border-radius: 0px;
-  margin: 0 10px;
+  margin: 10px 0;
   font-size: 20px;
 }
 
@@ -321,9 +321,10 @@ a.button:disabled:hover {
   margin-top: 5px;
 }
 
-input {
-  height: 40px;
-  width: 80px;
+.input-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   font-family: eskapade-fraktur, serif;
   font-weight: bold;
   border: var(--game-line-width) solid var(--game-graphics-primary);
@@ -331,10 +332,27 @@ input {
   color: var(--game-graphics-accent);
   background-color: var(--game-graphics-primary);
   border-radius: 0px;
-  border: 4px solid white;
-  margin: 0 10px;
+  /* border: 4px solid var(--game-graphics-accent); */
+  margin: 10px 0;
   font-size: 20px;
-  outline: 4px solid black;
+  outline-offset: calc(var(--game-line-width) * -2);
+  outline: 4px solid var(--game-graphics-accent);
+  padding: 10px 20px;
+}
+
+input {
+  height: 40px;
+  width: 120px;
+  font-family: eskapade-fraktur, serif;
+  font-weight: bold;
+  border: var(--game-line-width) solid var(--game-graphics-primary);
+  color: var(--game-graphics-accent);
+  background-color: var(--game-graphics-primary);
+  border-radius: 0px;
+  border: 0px;
+  font-size: 20px;
+  margin: 0;
+  outline: none;
 }
 
 .updated {

@@ -115,13 +115,15 @@ export const Propose = ({ rules, createProposal, isPlayer, gameActive }) => {
           onChange={(option) => setProposedRuleOption(option)}
         ></Select>{" "}
         be changed to{" "}
-        <input
-          onChange={({ target: { value } }) => setProposedValue(value)}
-          type="text"
-          value={proposedValue}
-          disabled={!proposedRuleOption}
-        ></input>
-        {proposedRuleOption && ruleConfig[proposedRuleOption.label].unit}
+        <div className="input-container">
+          <input
+            onChange={({ target: { value } }) => setProposedValue(value)}
+            type="text"
+            value={proposedValue}
+            disabled={!proposedRuleOption}
+          ></input>
+          {proposedRuleOption && ruleConfig[proposedRuleOption.label].unit}
+        </div>
       </div>
       <div>
         <button
