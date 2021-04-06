@@ -16,6 +16,8 @@ import { default as GameContract } from "./contracts/Game.json";
 import Web3 from "web3";
 import { useParams } from "react-router-dom";
 import { useContractBalance } from "./useContractBalance";
+import { weiToEth } from "./utils.js";
+import { PlayerIcon } from "./PlayerIcon";
 
 export const Game = ({ web3, account }) => {
   const { gameAddress } = useParams();
@@ -125,6 +127,7 @@ export const Game = ({ web3, account }) => {
 
   const getPlayerName = useCallback(
     (address) => {
+      if (!address || !players) return "Waiting For Player";
       const index = players.findIndex((p) => p.playerAddress === address);
       return (
         <>
@@ -335,10 +338,13 @@ export const Game = ({ web3, account }) => {
             <div className="game-metadata">
               Players: {(players && players.length) || 0}
               <br></br>
-              Pot: {gameBalance || 0}
+              Pot: {weiToEth(gameBalance) || 0}
             </div>
           </div>
-          <div className="player-details-panel panel"></div>
+          <div className="player-details-panel panel">
+            <PlayerIcon address={account}></PlayerIcon>
+            <div className="PlayerID">{getPlayerName(account)}</div>
+          </div>
         </div>
 
         <div className="vertical-panels-container">

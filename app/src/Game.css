@@ -28,9 +28,6 @@
 }
 
 .player-details-panel {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   background-color: var(--game-foreground);
   width: 10%;
 }
