@@ -1,0 +1,11 @@
+.clock {
+  border: 4px solid black;
+  height: 30px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.inner {
+  background: black;
+  height: 100%;
+}

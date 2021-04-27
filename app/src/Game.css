@@ -21,10 +21,12 @@
   flex-grow: 1;
 }
 
-.clock {
+.clock-container {
+  flex-basis: 15%;
 }
 
 .game-metadata {
+  flex-basis: 15%;
 }
 
 .player-details-panel {

@@ -18,6 +18,8 @@ import { useParams } from "react-router-dom";
 import { useContractBalance } from "./useContractBalance";
 import { weiToEth } from "./utils.js";
 import { PlayerIcon } from "./PlayerIcon";
+import { Clock } from "./Clock";
+const FETCH_INTERVAL = 10 * 1000;
 
 export const Game = ({ web3, account }) => {
   const { gameAddress } = useParams();
@@ -141,69 +143,6 @@ export const Game = ({ web3, account }) => {
     [players]
   );
 
-  const updateVote = useCallback(
-    (vote) => {
-      const newProposals = proposals.slice();
-      vote.updated = true;
-      newProposals[vote.proposalIndex].votes[vote.voteIndex] = vote;
-      setProposals(newProposals);
-    },
-    [proposals]
-  );
-
-  const updateProposal = useCallback(
-    async (proposal) => {
-      const newProposals = proposals.slice();
-      proposal.updated = true;
-      newProposals[proposal.proposalIndex] = proposal;
-      const newProposalsWithVotes = await fetchVotes(newProposals);
-      setProposals(newProposalsWithVotes);
-    },
-    [proposals, fetchVotes]
-  );
-
-  const updatePlayer = useCallback(
-    (player) => {
-      const newPlayers = players.slice();
-      newPlayers[player.playerIndex] = {
-        updated: true,
-        playerAddress: player.playerAddress,
-        balance: player.balance.toString(),
-      };
-      setPlayers(newPlayers);
-    },
-    [players]
-  );
-
-  const updateRule = useCallback(
-    (rule) => {
-      const newRules = rules.slice();
-      rule.updated = true;
-      newRules[rule.ruleIndex] = rule;
-      setRules(newRules);
-    },
-    [rules]
-  );
-
-  const updateDataOnEvent = useCallback(
-    (event) => {
-      const data = event.returnValues;
-      switch (event.event) {
-        case "ProposalUpdate":
-          return updateProposal(data);
-        case "PlayerUpdate":
-          return updatePlayer(data);
-        case "VoteUpdate":
-          return updateVote(data);
-        case "RuleUpdate":
-          return updateRule(data);
-        default:
-          return "UNKNOWN EVENT";
-      }
-    },
-    [updateRule, updateProposal, updatePlayer, updateVote]
-  );
-
   // FIXME: put somewhere else not in fn
   const mapEvent = useCallback(
     (event) => {
@@ -284,19 +223,6 @@ export const Game = ({ web3, account }) => {
     fn();
   }, [game, rules, players, proposals, events, mapEvent, receivedPastEvents]);
 
-  useEffect(() => {
-    if (!game || !rules || !players || !proposals) return;
-    const subscription = game.events.allEvents().on("data", (data) => {
-      setEvents([...events, mapEvent(data)]);
-      updateDataOnEvent(data);
-    });
-
-    return () =>
-      subscription.unsubscribe((err) => {
-        if (err) console.error(err);
-      });
-  }, [game, players, proposals, rules, events, mapEvent, updateDataOnEvent]);
-
   const voteOnProposal = useContractFn(game, "voteOnProposal", {
     from: account,
   });
@@ -327,7 +253,9 @@ export const Game = ({ web3, account }) => {
       <div className="all-panels-container">
         <div className="header-container">
           <div className="game-details-panel panel">
-            <div className="clock"></div>
+            <div className="clock-container">
+              <Clock remainingTime={10} blockInterval={FETCH_INTERVAL} />
+            </div>
             <div className="game-name">
               {(!gameActive && "This game has ended") ||
                 (isPlayer && <h2>Game {gameAddress.substr(0, 5)}</h2>)}
