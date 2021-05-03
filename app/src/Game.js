@@ -6,7 +6,6 @@ import { useContractFn } from "./useContractFn";
 import { useState, useEffect, useCallback } from "react";
 import { useGameActive } from "./useGameActive";
 import { fireNotification } from "./fireNotification";
-import useInterval from "./useInterval";
 import { Scores } from "./Scores";
 import { Rules } from "./Rules";
 import { Proposals } from "./Proposals";
@@ -110,7 +109,6 @@ export const Game = ({ web3, account }) => {
     const rules = await getArray("rules", setRules);
     setRules(rules);
   }, [getArray]);
-  useInterval(fetchRules, 10000);
 
   const fetchProposals = useCallback(async () => {
     const proposals = await getArray("proposals", setProposals);
@@ -119,13 +117,22 @@ export const Game = ({ web3, account }) => {
       setProposals(proposalsWithVotes);
     }
   }, [getArray, fetchVotes]);
-  useInterval(fetchProposals, 10000);
 
   const fetchPlayers = useCallback(async () => {
     const players = await getArray("players", setPlayers);
     setPlayers(players);
   }, [getArray]);
-  useInterval(fetchPlayers, 10000);
+
+  const fetchData = useCallback(async () => {
+    console.log("fetching data");
+    await fetchRules();
+    await fetchProposals();
+    await fetchPlayers();
+  }, [fetchRules, fetchProposals, fetchPlayers]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   const getPlayerName = useCallback(
     (address) => {
@@ -149,14 +156,6 @@ export const Game = ({ web3, account }) => {
       const data = event.returnValues;
       switch (event.event) {
         case "ProposalUpdate":
-          fireNotification(
-            `New proposal created by ${getPlayerName(
-              proposals.proposer
-            )}: change <strong>${
-              rules[data.ruleIndex].name
-            }</strong> to <strong>${data.value}</strong>`,
-            "success"
-          );
           return (
             <>
               <strong>{event.event}</strong> -{" "}
@@ -179,12 +178,6 @@ export const Game = ({ web3, account }) => {
           // fireNotification(msg, "success");
           return msg;
         case "VoteUpdate":
-          fireNotification(
-            `${getPlayerName(data.playerAddress)} voted ${
-              data ? "yes" : "no"
-            } on proposal ${data.proposalIndex}`,
-            "success"
-          );
           return (
             <>
               <strong>{event.event}</strong> -{" "}
@@ -194,10 +187,6 @@ export const Game = ({ web3, account }) => {
             </>
           );
         case "RuleUpdate":
-          fireNotification(
-            `Rule updated: ${rules[data.ruleIndex].name} is now ${data.value}`,
-            "success"
-          );
           return (
             <>
               <strong>{event.event}</strong> - Rule change
@@ -207,7 +196,7 @@ export const Game = ({ web3, account }) => {
           return "UNKNOWN EVENT";
       }
     },
-    [rules, getPlayerName, proposals, players]
+    [rules, getPlayerName, players]
   );
 
   useEffect(() => {
@@ -254,7 +243,10 @@ export const Game = ({ web3, account }) => {
         <div className="header-container">
           <div className="game-details-panel panel">
             <div className="clock-container">
-              <Clock remainingTime={10} blockInterval={FETCH_INTERVAL} />
+              <Clock
+                blockInterval={FETCH_INTERVAL}
+                timeoutCallback={fetchData}
+              />
             </div>
             <div className="game-name">
               {(!gameActive && "This game has ended") ||

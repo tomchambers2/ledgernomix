@@ -8,12 +8,15 @@ export const Clock = ({ blockInterval, timeoutCallback }) => {
   const [remainingTime, setRemainingTime] = useState(blockInterval);
 
   const advance = useCallback(() => {
-    if (remainingTime <= 0) {
-      setRemainingTime(blockInterval);
-    } else {
-      setRemainingTime(remainingTime - tick);
-    }
-  }, [setRemainingTime, remainingTime]);
+    setRemainingTime((remainingTime) => {
+      if (remainingTime > 0) {
+        return remainingTime - tick;
+      } else {
+        timeoutCallback();
+        return blockInterval;
+      }
+    });
+  }, [setRemainingTime, blockInterval, timeoutCallback]);
 
   useInterval(advance, tick);
 
