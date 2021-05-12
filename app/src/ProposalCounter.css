@@ -1,9 +1,9 @@
-.clock-caption-container {
+.proposal-counter-caption-container {
   display: flex;
   justify-content: space-between;
 }
 
-.clock {
+.proposal-counter {
   border: 4px solid black;
   height: 30px;
   width: 100%;

@@ -7,7 +7,7 @@ export const ruleConfig = {
     name: "Proposal reward",
     description:
       "The amount given to a player when their proposal is successful",
-    unit: "LED",
+    unit: "",
   },
   Majority: {
     name: "Majority",

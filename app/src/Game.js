@@ -18,6 +18,7 @@ import { useContractBalance } from "./useContractBalance";
 import { weiToEth } from "./utils.js";
 import { PlayerIcon } from "./PlayerIcon";
 import { Clock } from "./Clock";
+import { ProposalCounter } from "./ProposalCounter";
 const FETCH_INTERVAL = 10 * 1000;
 
 export const Game = ({ web3, account }) => {
@@ -230,7 +231,9 @@ export const Game = ({ web3, account }) => {
     <>
       <div className="intro">
         <div>
-          <h1>Ledgernomix</h1>
+          <h1>
+            Ledgernomi<span style={{ fontVariant: "small-caps" }}>x</span>
+          </h1>
         </div>
 
         <div className="links">
@@ -242,15 +245,26 @@ export const Game = ({ web3, account }) => {
       <div className="all-panels-container">
         <div className="header-container">
           <div className="game-details-panel panel">
-            <div className="clock-container">
+            <div className="game-timers-container">
               <Clock
                 blockInterval={FETCH_INTERVAL}
                 timeoutCallback={fetchData}
               />
+              <ProposalCounter
+                completeProposals={proposals}
+                maxProposals={getRuleValue("Max proposals")}
+              />
             </div>
             <div className="game-name">
               {(!gameActive && "This game has ended") ||
-                (isPlayer && <h2>Game {gameAddress.substr(0, 5)}</h2>)}
+                (isPlayer && (
+                  <h2>
+                    Game{" "}
+                    <span className="game-address">
+                      {gameAddress.substr(0, 5)}
+                    </span>
+                  </h2>
+                ))}
               {gameActive && !isPlayer && (
                 <button onClick={joinGameHandler}>Join game</button>
               )}

@@ -94,19 +94,20 @@ body {
 h1,
 h2 {
   font-family: "UnifrakturMaguntia", cursive;
-  margin: 0;
   font-weight: bold;
 }
 
 h1 {
   font-size: 80px;
   font-weight: bold;
+  margin: 0;
   margin-bottom: 1rem;
 }
 
 h2 {
   font-size: 50px;
   font-weight: normal;
+  margin: 30px;
 }
 
 h3 {

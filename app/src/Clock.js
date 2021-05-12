@@ -21,13 +21,20 @@ export const Clock = ({ blockInterval, timeoutCallback }) => {
   useInterval(advance, tick);
 
   const portionRemaining = remainingTime / blockInterval;
+  const stringRemaining = String(portionRemaining * 10).padStart(2, "0");
 
   return (
-    <div className="clock">
-      <div
-        className="inner"
-        style={{ width: `${portionRemaining * 100}%` }}
-      ></div>
+    <div className="clock-container">
+      <div className="clock-caption-container">
+        <div className="clock-caption">New Block in:</div>
+        <div className="clock-number">{stringRemaining}</div>
+      </div>
+      <div className="clock">
+        <div
+          className="inner"
+          style={{ width: `${portionRemaining * 100}%` }}
+        ></div>
+      </div>
     </div>
   );
 };

@@ -10,7 +10,7 @@
   --eskapade-fraktur-dlig: "dlig" off;
   --eskapade-fraktur-dnom: "dnom" off;
   --eskapade-fraktur-frac: "frac" off;
-  --eskapade-fraktur-lnum: "lnum" off;
+  --eskapade-fraktur-lnum: "lnum" on;
   --eskapade-fraktur-numr: "numr" off;
   --eskapade-fraktur-onum: "onum" off;
   --eskapade-fraktur-ordn: "ordn" off;
@@ -19,7 +19,7 @@
   --eskapade-fraktur-sinf: "sinf" off;
   --eskapade-fraktur-ss01: "ss01" off;
   --eskapade-fraktur-sups: "sups" off;
-  --eskapade-fraktur-tnum: "tnum" off;
+  --eskapade-fraktur-tnum: "tnum" on;
 }
 
 /* If class is applied, update custom property and
