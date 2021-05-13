@@ -1,5 +1,5 @@
 :root {
-  --game-background: #f2f1e2;
+  --game-background: #daf1d5;
   --game-foreground: white;
   --game-graphics-primary: black;
   --game-graphics-accent: white;
@@ -53,8 +53,26 @@ body {
   /* --eskapade-fraktur-salt: "salt" on; */
 }
 
+.background-pattern {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url("backgrounds/RippleEngraving.gif");
+  background-size: 1200px;
+  background-repeat: repeat;
+  mix-blend-mode: darken;
+}
+
 .app {
   justify-content: center;
+}
+
+.all-panels-container {
+  max-width: 1200px;
+  margin: auto;
+  position: relative; /* this allows the background pattern to be fixed to it */
 }
 
 .vertical-panels-container {
@@ -64,11 +82,6 @@ body {
   margin-block-end: 0.1rem; */
   /* max-width: 900; */
   /* width: 50%; */
-}
-
-.all-panels-container {
-  max-width: 1200px;
-  margin: auto;
 }
 
 .vertical-panels-container > div {
@@ -150,8 +163,8 @@ button:hover,
 button:disabled,
 .button:disabled,
 a.button:disabled {
-  /* border-color: grey;
-  color: grey; */
+  /* border-color: grey;*/
+  color: var(--game-background);
 }
 button:disabled:hover,
 .button:disabled:hover,

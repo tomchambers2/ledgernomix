@@ -243,6 +243,7 @@ export const Game = ({ web3, account }) => {
       </div>
 
       <div className="all-panels-container">
+        <div className="background-pattern"></div>
         <div className="header-container">
           <div className="game-details-panel panel">
             <div className="game-timers-container">

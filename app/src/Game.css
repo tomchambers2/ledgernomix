@@ -1,4 +1,4 @@
-:root {
+/* :root {
   --game-background: #f2f1e2;
   --game-foreground: white;
   --game-graphics-primary: black;
@@ -7,7 +7,7 @@
   --game-border: 14px;
   --game-line-width: 4px;
   --game-icon-size: 140px;
-}
+} */
 
 .header-container {
   display: flex;
