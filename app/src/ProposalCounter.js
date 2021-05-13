@@ -1,7 +1,9 @@
 import "./ProposalCounter.css";
 
 export const ProposalCounter = ({ completeProposals, maxProposals }) => {
-  const proposalsRemaining = maxProposals - completeProposals.length;
+  let proposalsRemaining = maxProposals;
+  if (completeProposals)
+    proposalsRemaining = maxProposals - completeProposals.length;
   const portionRemaining = proposalsRemaining / maxProposals;
 
   console.log("completeProposals: " + completeProposals);
