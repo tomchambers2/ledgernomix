@@ -19,6 +19,7 @@ import { weiToEth } from "./utils.js";
 import { PlayerIcon } from "./PlayerIcon";
 import { Clock } from "./Clock";
 import { ProposalCounter } from "./ProposalCounter";
+import { OrnateBorder } from "./OrnateBorder";
 const FETCH_INTERVAL = 10 * 1000;
 
 export const Game = ({ web3, account }) => {
@@ -246,6 +247,7 @@ export const Game = ({ web3, account }) => {
         <div className="background-pattern"></div>
         <div className="header-container">
           <div className="game-details-panel panel">
+            <OrnateBorder></OrnateBorder>
             <div className="game-timers-container">
               <Clock
                 blockInterval={FETCH_INTERVAL}
@@ -277,18 +279,20 @@ export const Game = ({ web3, account }) => {
             </div>
           </div>
           <div className="player-details-panel panel">
+            <OrnateBorder></OrnateBorder>
             <PlayerIcon address={account}></PlayerIcon>
             <div className="PlayerID">{getPlayerName(account)}</div>
           </div>
         </div>
-
         <div className="vertical-panels-container">
           <div className="rules panel">
+            <OrnateBorder></OrnateBorder>
             <div className="subpanel rules">
               {(rules && <Rules rules={rules}></Rules>) || <Loader></Loader>}
             </div>
           </div>
           <div className="proposals panel">
+            <OrnateBorder></OrnateBorder>
             {(rules && proposals && (
               <Proposals
                 proposals={proposals}
@@ -304,6 +308,7 @@ export const Game = ({ web3, account }) => {
             )) || <Loader></Loader>}
           </div>
           <div className="panel scores">
+            <OrnateBorder></OrnateBorder>
             {(players && (
               <Scores players={players} getPlayerName={getPlayerName}></Scores>
             )) || <Loader></Loader>}

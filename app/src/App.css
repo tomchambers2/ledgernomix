@@ -97,11 +97,13 @@ body {
 
 .panel {
   box-sizing: content-box;
-  outline: var(--game-line-width) solid var(--game-graphics-primary);
+  /* outline: var(--game-line-width) solid var(--game-graphics-primary); */
   outline-offset: calc(-1 * (var(--game-line-width) + var(--game-border)));
   padding: calc((var(--game-border) * 2) + var(--game-line-width));
   margin: var(--game-border);
   text-align: center;
+  position: relative; /* this allows ornate border to be positioned absolute */
+  z-index: -1; /* this places it behind pattern */
 }
 
 h1,
@@ -376,4 +378,51 @@ input {
   50% {
     opacity: 0;
   }
+}
+
+.ornate-border-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 14px;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  /* z-index: -1; */
+}
+
+.ornate-border-row-a {
+  height: 40px;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+}
+.ornate-border-row-b {
+  flex-grow: 1;
+  display: flex;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+}
+.ornate-border-row-c {
+  height: 40px;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+}
+
+.ornate-border-col-a {
+  width: 40px;
+  height: 100%;
+}
+.ornate-border-col-b {
+  flex-grow: 1;
+  display: flex;
+  height: 100%;
+}
+.ornate-border-col-c {
+  width: 40px;
+  height: 100%;
 }
