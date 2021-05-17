@@ -63,6 +63,8 @@ body {
   background-size: 1200px;
   background-repeat: repeat;
   mix-blend-mode: darken;
+  z-index: 99;
+  pointer-events: none;
 }
 
 .app {
@@ -103,7 +105,6 @@ body {
   margin: var(--game-border);
   text-align: center;
   position: relative; /* this allows ornate border to be positioned absolute */
-  z-index: -1; /* this places it behind pattern */
 }
 
 h1,
@@ -390,7 +391,7 @@ input {
   display: flex;
   justify-content: space-between;
   flex-direction: column;
-  /* z-index: -1; */
+  pointer-events: none;
 }
 
 .ornate-border-row-a {
