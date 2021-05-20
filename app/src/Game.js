@@ -20,6 +20,8 @@ import { PlayerIcon } from "./PlayerIcon";
 import { Clock } from "./Clock";
 import { ProposalCounter } from "./ProposalCounter";
 import { OrnateBorder } from "./OrnateBorder";
+import { GameGrade } from "./GameGrade";
+import { Payout } from "./Payout";
 const FETCH_INTERVAL = 10 * 1000;
 
 export const Game = ({ web3, account }) => {

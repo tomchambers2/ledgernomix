@@ -6,7 +6,7 @@ const gameAbi = require("../artifacts/contracts/Game.sol/Game.json");
 
 chai.use(chaiAsPromised);
 
-describe.only("GameFactory", () => {
+describe("GameFactory", () => {
   let signer;
   let gameFactory;
 
