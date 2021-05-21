@@ -164,11 +164,6 @@ a.button:disabled {
   /* border-color: grey;*/
   color: var(--game-background);
 }
-button:disabled:hover,
-.button:disabled:hover,
-a.button:disabled:hover {
-  /* cursor: auto; */
-}
 
 .vote-actions {
   display: flex;
@@ -296,11 +291,6 @@ a.button:disabled:hover {
 
 .playerLetter {
   --eskapade-fraktur-salt: "salt" on;
-}
-
-.proposal-form {
-  /* margin: 30px;
-  text-align: center; */
 }
 
 .proposal-form .select-box select {

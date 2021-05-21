@@ -27,9 +27,13 @@ describe("Game", () => {
       },
     });
 
+    players = await ethers.getSigners();
+    [owner, addr1, addr2] = players;
+
     createGame = async ({
       entryFee = 5,
-      reward = 0,
+      startBalance = 10,
+      reward = 4,
       majority = 50,
       quorum = 50,
       maxProposals = 3,
@@ -39,7 +43,9 @@ describe("Game", () => {
       proposalCost = 0,
     } = {}) => {
       game = await Game.deploy(
+        owner.address,
         entryFee,
+        startBalance,
         reward,
         majority,
         quorum,
@@ -47,7 +53,10 @@ describe("Game", () => {
         pollTax,
         wealthTax,
         wealthTaxThreshold,
-        proposalCost
+        proposalCost,
+        {
+          value: "0x4563918244F40000", // 5 ether in hex
+        }
       );
       await game.deployed();
       return game;
@@ -56,28 +65,26 @@ describe("Game", () => {
     game = await createGame();
     await game.deployed();
 
-    players = await ethers.getSigners();
-    [owner, addr1, addr2] = players;
-
     startAndProposal = async (numPlayers, game) => {
-      for (let index = 0; index < numPlayers; index++) {
+      for (let index = 1; index < numPlayers; index++) {
         await game.connect(players[index]).joinGame({
           value: "5000000000000000000",
         });
       }
-      await game.createProposal(0, 12);
+      await game.connect(players[0]).createProposal(0, 12);
     };
 
     playGameToEnd = async () => {
-      await game.connect(players[0]).joinGame({
+      await game.connect(players[1]).joinGame({
         value: "5000000000000000000",
       });
-      await game.connect(players[1]).joinGame({
+      await game.connect(players[2]).joinGame({
         value: "5000000000000000000",
       });
       for (let i = 0; i < 3; i++) {
         await game.createProposal(0, 12);
         await game.connect(players[0]).voteOnProposal(i, false);
+        await game.connect(players[1]).voteOnProposal(i, false);
       }
     };
   });
@@ -86,7 +93,7 @@ describe("Game", () => {
     it("should reject the call if the game has ended", async () => {
       await playGameToEnd();
       await expect(
-        game.joinGame({
+        game.connect(players[3]).joinGame({
           value: "5000000000000000000",
         })
       ).to.eventually.be.rejectedWith(
@@ -95,11 +102,11 @@ describe("Game", () => {
     });
 
     it("should reject the call if the player is already in the game", async () => {
-      game.joinGame({
+      game.connect(players[1]).joinGame({
         value: "5000000000000000000",
       });
       await expect(
-        game.joinGame({
+        game.connect(players[1]).joinGame({
           value: "5000000000000000000",
         })
       ).to.eventually.be.rejectedWith("You have already joined this game");
@@ -107,7 +114,7 @@ describe("Game", () => {
 
     it("should reject the call if value is wrong", async () => {
       try {
-        await game.joinGame({
+        await game.connect(players[1]).joinGame({
           value: "1000000000000000000",
         });
       } catch (e) {
@@ -117,22 +124,14 @@ describe("Game", () => {
       }
     });
 
-    // it("should reject the call if there are already 100 players in game", async () => {
-    //   console.log(players);
-    //   await startAndProposal(3);
-    //   expect(joinGame.connect(players[4])).to.eventually.be.rejectedWith(
-    //     "Max limit of 100 players reached"
-    //   );
-    // });
-
     it("should allow entry the call if value is correct", async () => {
-      await game.joinGame({
+      await game.connect(players[1]).joinGame({
         value: "5000000000000000000",
       });
     });
 
     it("should create a new player", async () => {
-      await game.joinGame({
+      await game.connect(players[1]).joinGame({
         value: "5000000000000000000",
       });
       const player = await game.players(0);
@@ -149,7 +148,9 @@ describe("Game", () => {
     });
 
     it("should reject the call if the caller is not a player in the game", async () => {
-      await expect(game.createProposal(0, 0)).to.eventually.be.rejectedWith(
+      await expect(
+        game.connect(players[1]).createProposal(0, 0)
+      ).to.eventually.be.rejectedWith(
         "You must have joined the game to call this function"
       );
     });
@@ -162,7 +163,7 @@ describe("Game", () => {
     });
 
     it("should reject a proposal that does not apply to an existing rule", async () => {
-      await game.joinGame({
+      await game.connect(players[1]).joinGame({
         value: "5000000000000000000",
       });
       await expect(
@@ -173,7 +174,7 @@ describe("Game", () => {
     });
 
     it("should reject a proposal that has an out of bounds value", async () => {
-      await game.joinGame({
+      await game.connect(players[1]).joinGame({
         value: "5000000000000000000",
       });
       await expect(
@@ -184,7 +185,7 @@ describe("Game", () => {
     });
 
     it("should create a new proposal", async () => {
-      await game.joinGame({
+      await game.connect(players[1]).joinGame({
         value: "5000000000000000000",
       });
       await game.createProposal(0, 12);
@@ -197,13 +198,13 @@ describe("Game", () => {
 
   describe("vote on proposal", () => {
     it("should reject the call if the caller is not a player in the game", async () => {
-      await game.joinGame({
+      await game.connect(players[1]).joinGame({
         value: "5000000000000000000",
       });
       await game.createProposal(0, 12);
 
       await expect(
-        game.connect(addr1).voteOnProposal(0, true)
+        game.connect(players[2]).voteOnProposal(0, true)
       ).to.eventually.be.rejectedWith(
         "You must have joined the game to call this function"
       );
@@ -217,24 +218,25 @@ describe("Game", () => {
     });
 
     it("should reject the call if the proposal is complete", async () => {
-      await game.joinGame({
+      await game.connect(players[1]).joinGame({
         value: "5000000000000000000",
       });
-      await game.connect(players[1]).joinGame({
+      await game.connect(players[2]).joinGame({
         value: "5000000000000000000",
       });
 
       await game.createProposal(0, 12);
 
       await game.connect(players[0]).voteOnProposal(0, true);
+      await game.connect(players[1]).voteOnProposal(0, true);
 
       await expect(
-        game.connect(players[1]).voteOnProposal(0, true)
+        game.connect(players[2]).voteOnProposal(0, true)
       ).to.eventually.be.rejectedWith("You may not vote on completed proposal");
     });
 
     it("should reject if the proposal does not exist", async () => {
-      await game.joinGame({
+      await game.connect(players[1]).joinGame({
         value: "5000000000000000000",
       });
       await expect(
@@ -252,7 +254,7 @@ describe("Game", () => {
     });
 
     it("should record the players vote on the proposal", async () => {
-      await game.joinGame({
+      await game.connect(players[1]).joinGame({
         value: "5000000000000000000",
       });
       await game.createProposal(0, 12);
@@ -263,10 +265,7 @@ describe("Game", () => {
     });
 
     it("should mark the proposal complete if voting reaches quorum with 2 players", async () => {
-      await game.joinGame({
-        value: "5000000000000000000",
-      });
-      await game.connect(addr2).joinGame({
+      await game.connect(players[1]).joinGame({
         value: "5000000000000000000",
       });
       await game.createProposal(0, 12);
@@ -276,9 +275,6 @@ describe("Game", () => {
     });
 
     it("should mark the proposal complete if voting reaches quorum with 3 players", async () => {
-      await game.connect(players[0]).joinGame({
-        value: "5000000000000000000",
-      });
       await game.connect(players[1]).joinGame({
         value: "5000000000000000000",
       });
@@ -303,8 +299,8 @@ describe("Game", () => {
 
     it("should reward the proposer of a successful proposer", async () => {
       await startAndProposal(4, game);
-      await game.connect(players[0]).voteOnProposal(0, true);
       await game.connect(players[1]).voteOnProposal(0, true);
+      await game.connect(players[2]).voteOnProposal(0, true);
       const player = await game.players(0);
       expect(player.balance.toString()).to.equal("14000000000000000000");
     });
@@ -353,13 +349,10 @@ describe("Game", () => {
     });
 
     it("should reject the call if the game has reached the maximum number of proposals", async () => {
-      await game.connect(players[0]).joinGame({
-        value: "5000000000000000000",
-      });
       await game.connect(players[1]).joinGame({
         value: "5000000000000000000",
       });
-      await game.connect(players[2]).joinGame({
+      await game.connect(players[3]).joinGame({
         value: "5000000000000000000",
       });
       for (let i = 0; i < 3; i++) {
@@ -369,7 +362,7 @@ describe("Game", () => {
       }
       const p = await game.proposals(0);
       await expect(
-        game.connect(players[2]).voteOnProposal(0, true)
+        game.connect(players[3]).voteOnProposal(0, true)
       ).to.eventually.be.rejectedWith(
         "You cannot interact with this game because it has ended"
       );
@@ -378,6 +371,7 @@ describe("Game", () => {
 
   describe("taxes", () => {
     it("should apply a poll tax to all players on complete proposal", async () => {
+      const game = await createGame({ pollTax: 6 });
       await startAndProposal(4, game);
       await game.connect(players[0]).voteOnProposal(0, false);
       await game.connect(players[1]).voteOnProposal(0, false);
@@ -386,19 +380,18 @@ describe("Game", () => {
     });
 
     it("should apply a wealth tax to all players on complete proposal", async () => {
-      game = await Game.deploy(5, 0, 50, 50, 3, 0, 10, 4);
+      game = await createGame({ startBalance: 10, wealthTax: 50 }); //wealth tax is percentage
       await game.deployed();
 
       await startAndProposal(4, game);
       await game.connect(players[0]).voteOnProposal(0, false);
       await game.connect(players[1]).voteOnProposal(0, false);
-      const player = await game.players(0);
-      expect(player.balance.toString()).to.equal("4900000000000000000");
+      const player = await game.players(3);
+      expect(player.balance.toString()).to.equal("5000000000000000000");
     });
 
     it("should not reduce balance to less than zero when applying poll tax", async () => {
-      game = await Game.deploy(5, 0, 50, 50, 3, 100, 0);
-      await game.deployed();
+      game = await createGame({ pollTax: 100 });
 
       await startAndProposal(4, game);
       await game.connect(players[0]).voteOnProposal(0, false);
@@ -409,22 +402,19 @@ describe("Game", () => {
 
     it("should reject creating a proposal when balance is less than proposal fee", async () => {
       game = await createGame({ entryFee: 0, proposalCost: 10 });
-      await game.connect(players[0]).joinGame({
+      await game.connect(players[1]).joinGame({
         value: "0",
       });
 
       expect(
-        game.createProposal(0, 500, { gasPrice: 0 })
+        game.connect(players[1]).createProposal(0, 500, { gasPrice: 0 })
       ).to.eventually.be.rejectedWith(
         "You do not have enough game funds to pay the proposal cost"
       );
     });
 
     it("should apply a proposal fee when a proposal is made", async () => {
-      game = await createGame({ proposalCost: 1 });
-      await game.connect(players[0]).joinGame({
-        value: "5000000000000000000",
-      });
+      game = await createGame({ startBalance: 5, proposalCost: 1 });
 
       let player = await game.players(0);
       expect(player.balance.toString()).to.equal("5000000000000000000");
@@ -439,16 +429,11 @@ describe("Game", () => {
 
   describe("endGame", async () => {
     it("should return deposits in proportion to players", async () => {
-      await game.connect(players[0]).joinGame({
-        value: "5000000000000000000",
-        gasPrice: 0,
-      });
       await game.connect(players[1]).joinGame({
         value: "5000000000000000000",
         gasPrice: 0,
       });
       const player1Balance = await players[0].getBalance();
-      // console.log(player1Balance.toString());
       const player2Balance = await players[1].getBalance();
 
       for (let i = 0; i < 3; i++) {
