@@ -55,7 +55,8 @@ describe("Game", () => {
         wealthTaxThreshold,
         proposalCost,
         {
-          value: "0x4563918244F40000", // 5 ether in hex
+          value: entryFee.toHex(),
+          // "0x4563918244F40000", // 5 ether in hex
         }
       );
       await game.deployed();
