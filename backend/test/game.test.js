@@ -2,6 +2,7 @@ const chai = require("chai");
 const { expect } = require("chai");
 const { describe } = require("mocha");
 const chaiAsPromised = require("chai-as-promised");
+const { intToHex } = require("ethjs-util");
 
 chai.use(chaiAsPromised);
 
@@ -55,7 +56,7 @@ describe("Game", () => {
         wealthTaxThreshold,
         proposalCost,
         {
-          value: entryFee.toHex(),
+          value: intToHex(entryFee * 1000000000000000000),
           // "0x4563918244F40000", // 5 ether in hex
         }
       );
@@ -402,12 +403,16 @@ describe("Game", () => {
     });
 
     it("should reject creating a proposal when balance is less than proposal fee", async () => {
-      game = await createGame({ entryFee: 0, proposalCost: 10 });
+      game = await createGame({
+        entryFee: 0,
+        startBalance: 0,
+        proposalCost: 10,
+      });
       await game.connect(players[1]).joinGame({
         value: "0",
       });
 
-      expect(
+      return expect(
         game.connect(players[1]).createProposal(0, 500, { gasPrice: 0 })
       ).to.eventually.be.rejectedWith(
         "You do not have enough game funds to pay the proposal cost"
