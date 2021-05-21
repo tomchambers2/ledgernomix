@@ -32,7 +32,7 @@ describe("GameFactory", () => {
         value: "10000000000000000000",
       });
       const game = await gameFactory.games(0);
-      expect(game).to.equal("0xCafac3dD18aC6c6e92c921884f9E4176737C052c");
+      expect(game).to.equal("0x8C310F133d4906CF931F55D6574c790cD5964afd");
       const gameContract = new ethers.Contract(game, gameAbi.abi, signer);
       const player = await gameContract.players(0);
       const playersLength = await gameContract.getPlayersLength();
