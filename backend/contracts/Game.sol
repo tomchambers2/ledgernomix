@@ -131,6 +131,7 @@ contract Game {
 
     enum RuleIndices {
         EntryFee,
+        StartBalance,
         Reward,
         Majority,
         Quorum,
@@ -144,6 +145,7 @@ contract Game {
     constructor(
         address firstPlayer,
         uint256 entryFee,
+        uint256 startBalance,
         uint256 rewardValue,
         uint256 majorityValue,
         uint256 quorumValue,
@@ -154,6 +156,7 @@ contract Game {
         uint256 proposalCost
     ) payable {
         rules.push(Rule("Entry fee", entryFee, 0, 1000));
+        rules.push(Rule("Start balance", startBalance, 0, 1000));
         rules.push(Rule("Proposal reward", rewardValue, 0, 1000));
         rules.push(Rule("Majority", majorityValue, 0, 100));
         rules.push(Rule("Quorum", quorumValue, 0, 100));
@@ -202,7 +205,7 @@ contract Game {
         uint256 eth = 1 ether;
         Player storage p = players.push();
         p.playerAddress = playerAddress;
-        p.balance = rules[uint256(RuleIndices.EntryFee)].value * eth;
+        p.balance = rules[uint256(RuleIndices.StartBalance)].value * eth;
         emit PlayerUpdate(players.length - 1, p.playerAddress, p.balance);
     }
 

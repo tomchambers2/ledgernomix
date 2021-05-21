@@ -2,8 +2,10 @@ import Web3 from "web3";
 import classNames from "classnames";
 
 export const Scores = ({ players, getPlayerName }) => {
-  const totalScore = Web3.utils.fromWei(
-    players.reduce((acc, { balance }) => acc + balance, 0)
+  if (!players) return <div>LOADING...</div>;
+
+  const topScore = Web3.utils.fromWei(
+    players.slice().sort((p1, p2) => p2.balance - p1.balance)[0].balance
   );
 
   return (
@@ -25,7 +27,7 @@ export const Scores = ({ players, getPlayerName }) => {
                 className="player-score-bar"
                 style={{
                   width: `${
-                    (Web3.utils.fromWei(player.balance) / totalScore) * 100
+                    (Web3.utils.fromWei(player.balance) / topScore) * 100
                   }%`,
                 }}
               ></div>

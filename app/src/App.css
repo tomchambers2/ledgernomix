@@ -79,16 +79,10 @@ body {
 
 .vertical-panels-container {
   display: flex;
-  justify-content: center;
-  /* margin-block-start: 0.1rem;
-  margin-block-end: 0.1rem; */
-  /* max-width: 900; */
-  /* width: 50%; */
 }
 
 .vertical-panels-container > div {
   width: 33%;
-  background: var(--game-foreground);
 }
 
 @media (max-width: 900px) {
@@ -98,11 +92,12 @@ body {
 }
 
 .panel {
+  margin: var(--game-border);
+  background: var(--game-foreground);
   box-sizing: content-box;
   /* outline: var(--game-line-width) solid var(--game-graphics-primary); */
   outline-offset: calc(-1 * (var(--game-line-width) + var(--game-border)));
   padding: calc((var(--game-border) * 2) + var(--game-line-width));
-  margin: var(--game-border);
   text-align: center;
   position: relative; /* this allows ornate border to be positioned absolute */
 }
@@ -123,7 +118,7 @@ h1 {
 h2 {
   font-size: 50px;
   font-weight: normal;
-  margin: 30px;
+  margin: 30px 0;
 }
 
 h3 {

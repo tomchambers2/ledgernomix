@@ -9,7 +9,6 @@ import { fireNotification } from "./fireNotification";
 import { Scores } from "./Scores";
 import { Rules } from "./Rules";
 import { Proposals } from "./Proposals";
-// import { Propose } from "./Propose";
 import { Loader } from "./Loader";
 import { default as GameContract } from "./contracts/Game.json";
 import Web3 from "web3";
@@ -20,6 +19,8 @@ import { PlayerIcon } from "./PlayerIcon";
 import { Clock } from "./Clock";
 import { ProposalCounter } from "./ProposalCounter";
 import { OrnateBorder } from "./OrnateBorder";
+import { GameGrade } from "./GameGrade";
+import { Payout } from "./Payout";
 const FETCH_INTERVAL = 10 * 1000;
 
 export const Game = ({ web3, account }) => {
@@ -200,15 +201,12 @@ export const Game = ({ web3, account }) => {
   }, [game, mapEvent, players, proposals, rules]);
 
   const fetchData = useCallback(async () => {
+    console.log("fetching data");
     await fetchRules();
     await fetchProposals();
     await fetchPlayers();
     await fetchEvents();
   }, [fetchRules, fetchProposals, fetchPlayers, fetchEvents]);
-
-  // useEffect(() => {
-  //   fetchData();
-  // }, [fetchData]);
 
   const voteOnProposal = useContractFn(game, "voteOnProposal", {
     from: account,
@@ -281,29 +279,41 @@ export const Game = ({ web3, account }) => {
           </div>
         </div>
         <div className="vertical-panels-container">
-          <div className="rules panel">
-            <OrnateBorder></OrnateBorder>
-            <div className="subpanel rules">
-              {(rules && <Rules rules={rules}></Rules>) || <Loader></Loader>}
+          <div>
+            <div className="panel game-over">
+              <OrnateBorder></OrnateBorder>
+              <GameGrade players={players} proposals={proposals}></GameGrade>
+            </div>
+            <div className="panel rules">
+              <OrnateBorder></OrnateBorder>
+              <div className="subpanel rules">
+                {(rules && <Rules rules={rules}></Rules>) || <Loader></Loader>}
+              </div>
             </div>
           </div>
-          <div className="proposals panel">
-            <OrnateBorder></OrnateBorder>
-            {(rules && proposals && (
-              <Proposals
-                proposals={proposals}
-                rules={rules}
-                getPlayerName={getPlayerName}
-                voteOnProposal={voteOnProposalHandler}
-                isPlayer={isPlayer}
-                gameActive={gameActive}
-                playerAddress={account}
-                web3={web3}
-                account={account}
-              ></Proposals>
-            )) || <Loader></Loader>}
+          <div>
+            <div className="panel">
+              <OrnateBorder></OrnateBorder>
+              <Payout players={players} playerAddress={account}></Payout>
+            </div>
+            <div className="proposals panel">
+              <OrnateBorder></OrnateBorder>
+              {(rules && proposals && (
+                <Proposals
+                  proposals={proposals}
+                  rules={rules}
+                  getPlayerName={getPlayerName}
+                  voteOnProposal={voteOnProposalHandler}
+                  isPlayer={isPlayer}
+                  gameActive={gameActive}
+                  playerAddress={account}
+                  web3={web3}
+                  account={account}
+                ></Proposals>
+              )) || <Loader></Loader>}
+            </div>
           </div>
-          <div className="panel scores">
+          <div className="panel scores panel-container">
             <OrnateBorder></OrnateBorder>
             {(players && (
               <Scores players={players} getPlayerName={getPlayerName}></Scores>
