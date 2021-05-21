@@ -2,9 +2,7 @@ import Identicon from "identicon.js";
 import "./PlayerIcon.css";
 
 export function PlayerIcon({ address }) {
-  if (!address) return <img></img>;
-
-  console.log("address is ", address);
+  if (!address) return <img alt="No player"></img>;
 
   var options = {
     background: [0, 0, 0, 255], // rgba black

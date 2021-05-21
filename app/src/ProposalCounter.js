@@ -6,9 +6,6 @@ export const ProposalCounter = ({ completeProposals, maxProposals }) => {
     proposalsRemaining = maxProposals - completeProposals.length;
   const portionRemaining = proposalsRemaining / maxProposals;
 
-  console.log("completeProposals: " + completeProposals);
-  console.log("maxProposals: " + maxProposals);
-
   return (
     <div className="proposal-counter-container">
       <div className="proposal-counter-caption-container">

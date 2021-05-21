@@ -30,7 +30,6 @@ export const Game = ({ web3, account }) => {
   const [rules, setRules] = useState(null);
   const [players, setPlayers] = useState(null);
   const [proposals, setProposals] = useState(null);
-  const [receivedPastEvents, setReceivedPastEvents] = useState(false);
   const [isPlayer, setIsPlayer] = useState(null);
 
   useEffect(() => {
@@ -59,6 +58,22 @@ export const Game = ({ web3, account }) => {
     joinGame();
   };
 
+  const getPlayerName = useCallback(
+    (address) => {
+      if (!address || !players) return "Waiting For Player";
+      const index = players.findIndex((p) => p.playerAddress === address);
+      return (
+        <>
+          PLAYER{" "}
+          <span className="playerLetter">
+            {String.fromCharCode(index + "A".charCodeAt(0))}
+          </span>
+        </>
+      );
+    },
+    [players]
+  );
+
   const getArray = useCallback(
     async (name) => {
       if (!game) {
@@ -85,6 +100,57 @@ export const Game = ({ web3, account }) => {
       }
     },
     [game]
+  );
+
+  // FIXME: put somewhere else not in fn
+  const mapEvent = useCallback(
+    (event) => {
+      const data = event.returnValues;
+      switch (event.event) {
+        case "ProposalUpdate":
+          return (
+            <>
+              <strong>{event.event}</strong> -{" "}
+              {getPlayerName(event.returnValues.proposer)} proposed to change{" "}
+              {rules[event.returnValues.ruleIndex].name} to{" "}
+              {event.returnValues.value}
+            </>
+          );
+        case "PlayerUpdate":
+          let msg;
+          if (players[data.playerIndex]) {
+            msg = (
+              <span>
+                {getPlayerName(data.playerAddress)} has new balance of
+                {Web3.utils.fromWei(data.balance)}
+              </span>
+            );
+          } else {
+            msg = `New player joined: ${getPlayerName(data.playerAddress)} (${
+              data.playerAddress
+            })`;
+          }
+          return msg;
+        case "VoteUpdate":
+          return (
+            <>
+              <strong>{event.event}</strong> -{" "}
+              <strong>{getPlayerName(event.returnValues.playerAddress)}</strong>{" "}
+              joined the game with balance{" "}
+              {Web3.utils.fromWei(event.returnValues.balance)}
+            </>
+          );
+        case "RuleUpdate":
+          return (
+            <>
+              <strong>{event.event}</strong> - Rule change
+            </>
+          );
+        default:
+          return "UNKNOWN EVENT";
+      }
+    },
+    [rules, getPlayerName, players]
   );
 
   const fetchVotes = useCallback(
@@ -125,94 +191,24 @@ export const Game = ({ web3, account }) => {
     setPlayers(players);
   }, [getArray]);
 
+  const fetchEvents = useCallback(async () => {
+    if (!game || !players || !proposals || !rules) return;
+    const pastEvents = await game.getPastEvents("allEvents", {
+      fromBlock: "earliest",
+    });
+    setEvents([...pastEvents.map(mapEvent)]);
+  }, [game, mapEvent, players, proposals, rules]);
+
   const fetchData = useCallback(async () => {
-    console.log("fetching data");
     await fetchRules();
     await fetchProposals();
     await fetchPlayers();
-  }, [fetchRules, fetchProposals, fetchPlayers]);
+    await fetchEvents();
+  }, [fetchRules, fetchProposals, fetchPlayers, fetchEvents]);
 
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
-
-  const getPlayerName = useCallback(
-    (address) => {
-      if (!address || !players) return "Waiting For Player";
-      const index = players.findIndex((p) => p.playerAddress === address);
-      return (
-        <>
-          PLAYER{" "}
-          <span className="playerLetter">
-            {String.fromCharCode(index + "A".charCodeAt(0))}
-          </span>
-        </>
-      );
-    },
-    [players]
-  );
-
-  // FIXME: put somewhere else not in fn
-  const mapEvent = useCallback(
-    (event) => {
-      const data = event.returnValues;
-      switch (event.event) {
-        case "ProposalUpdate":
-          return (
-            <>
-              <strong>{event.event}</strong> -{" "}
-              {getPlayerName(event.returnValues.proposer)} proposed to change{" "}
-              {rules[event.returnValues.ruleIndex].name} to{" "}
-              {event.returnValues.value}
-            </>
-          );
-        case "PlayerUpdate":
-          let msg;
-          if (players[data.playerIndex]) {
-            msg = `Player ${getPlayerName(
-              data.playerAddress
-            )} has new balance of ${Web3.utils.fromWei(data.balance)}`;
-          } else {
-            msg = `New player joined: ${getPlayerName(data.playerAddress)} (${
-              data.playerAddress
-            })`;
-          }
-          // fireNotification(msg, "success");
-          return msg;
-        case "VoteUpdate":
-          return (
-            <>
-              <strong>{event.event}</strong> -{" "}
-              <strong>{getPlayerName(event.returnValues.playerAddress)}</strong>{" "}
-              joined the game with balance{" "}
-              {Web3.utils.fromWei(event.returnValues.balance)}
-            </>
-          );
-        case "RuleUpdate":
-          return (
-            <>
-              <strong>{event.event}</strong> - Rule change
-            </>
-          );
-        default:
-          return "UNKNOWN EVENT";
-      }
-    },
-    [rules, getPlayerName, players]
-  );
-
-  useEffect(() => {
-    const fn = async () => {
-      if (receivedPastEvents) return;
-      if (!game || !rules || !players || !proposals) return;
-      setReceivedPastEvents(true);
-      const pastEvents = await game.getPastEvents("allEvents", {
-        fromBlock: "earliest",
-      });
-      setEvents([...pastEvents.reverse().map(mapEvent), ...events]);
-    };
-    fn();
-  }, [game, rules, players, proposals, events, mapEvent, receivedPastEvents]);
+  // useEffect(() => {
+  //   fetchData();
+  // }, [fetchData]);
 
   const voteOnProposal = useContractFn(game, "voteOnProposal", {
     from: account,

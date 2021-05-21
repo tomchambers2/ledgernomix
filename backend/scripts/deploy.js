@@ -27,10 +27,7 @@ function copyAbi(name) {
     "contracts",
     `${name}.json`
   );
-  fs.copyFileSync(from, to, (err) => {
-    if (err) throw err;
-    console.log("copied artifact");
-  });
+  fs.copyFileSync(from, to);
 }
 
 async function main() {

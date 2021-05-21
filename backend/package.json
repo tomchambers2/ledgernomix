@@ -7,11 +7,14 @@
     "dotenv": "^8.2.0",
     "ethereum-waffle": "^3.2.2",
     "ethers": "^5.0.30",
-    "hardhat": "^2.0.9",
+    "hardhat": "^2.3.0",
     "hardhat-gas-reporter": "^1.0.4"
   },
   "dependencies": {
     "chai-as-promised": "^7.1.1",
     "hardhat-deploy": "^0.7.0-beta.44"
+  },
+  "scripts": {
+    "deploy": "hardhat run scripts/deploy.js --network localhost"
   }
 }

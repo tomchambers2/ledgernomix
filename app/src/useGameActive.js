@@ -5,7 +5,6 @@ export const useGameActive = (proposals, maxProposals) => {
 
   useEffect(() => {
     if (!maxProposals || !proposals) return;
-    console.log(maxProposals);
     setGameActive(
       proposals.filter((proposal) => proposal.complete).length < maxProposals
     );

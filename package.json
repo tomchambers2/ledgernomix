@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/tomchambers2/nomdao/issues"
   },
-  "homepage": "https://github.com/tomchambers2/nomdao#readme"
+  "homepage": "https://github.com/tomchambers2/nomdao#readme",
+  "dependencies": {
+    "hardhat": "^2.3.0"
+  }
 }
