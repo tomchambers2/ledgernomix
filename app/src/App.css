@@ -63,7 +63,7 @@ body {
   background-size: 1200px;
   background-repeat: repeat;
   mix-blend-mode: darken;
-  z-index: 99;
+  z-index: 1;
   pointer-events: none;
 }
 
