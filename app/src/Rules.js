@@ -8,6 +8,9 @@ export const Rules = ({ rules }) => {
 
       {rules
         .map((rule) => ({ rule, ruleConfig: ruleConfig[rule.name] }))
+        .filter(
+          ({ rule, ruleConfig }) => parseInt(rule.value) !== ruleConfig.inactive
+        )
         .map(({ rule, ruleConfig }, i) => (
           <div
             key={i}
