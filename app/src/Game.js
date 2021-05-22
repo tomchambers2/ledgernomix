@@ -79,9 +79,8 @@ export const Game = ({ web3, account }) => {
   const getArray = useCallback(
     async (name) => {
       if (!game) {
-        return console.log("no game");
+        return;
       }
-      console.log("getting");
       let elements = [];
       let length = 0;
       try {
