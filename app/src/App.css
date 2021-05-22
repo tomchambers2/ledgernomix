@@ -100,6 +100,7 @@ body {
   padding: calc((var(--game-border) * 2) + var(--game-line-width));
   text-align: center;
   position: relative; /* this allows ornate border to be positioned absolute */
+  min-height: 200px;
 }
 
 h1,

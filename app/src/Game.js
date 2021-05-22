@@ -32,6 +32,7 @@ export const Game = ({ web3, account }) => {
   const [players, setPlayers] = useState(null);
   const [proposals, setProposals] = useState(null);
   const [isPlayer, setIsPlayer] = useState(null);
+  const [initialDataLoaded, setInitialDataLoaded] = useState(false);
 
   useEffect(() => {
     if (!account || !players) return;
@@ -78,8 +79,9 @@ export const Game = ({ web3, account }) => {
   const getArray = useCallback(
     async (name) => {
       if (!game) {
-        return;
+        return console.log("no game");
       }
+      console.log("getting");
       let elements = [];
       let length = 0;
       try {
@@ -103,7 +105,6 @@ export const Game = ({ web3, account }) => {
     [game]
   );
 
-  // FIXME: put somewhere else not in fn
   const mapEvent = useCallback(
     (event) => {
       const data = event.returnValues;
@@ -201,12 +202,18 @@ export const Game = ({ web3, account }) => {
   }, [game, mapEvent, players, proposals, rules]);
 
   const fetchData = useCallback(async () => {
-    console.log("fetching data");
     await fetchRules();
     await fetchProposals();
     await fetchPlayers();
     await fetchEvents();
   }, [fetchRules, fetchProposals, fetchPlayers, fetchEvents]);
+
+  useEffect(() => {
+    if (!game) return;
+    if (initialDataLoaded) return;
+    fetchData();
+    setInitialDataLoaded(true);
+  }, [fetchData, initialDataLoaded, game]);
 
   const voteOnProposal = useContractFn(game, "voteOnProposal", {
     from: account,

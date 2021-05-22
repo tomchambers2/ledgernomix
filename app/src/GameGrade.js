@@ -6,7 +6,6 @@ const vetocracy = (proposals) => {
   const successfulProposals = proposals.filter(
     ({ successful }) => successful
   ).length;
-  console.log(successfulProposals);
   return successfulProposals > 0
     ? (successfulProposals / proposals.length) * 100
     : 0;
@@ -14,9 +13,6 @@ const vetocracy = (proposals) => {
 
 export const GameGrade = ({ players, proposals }) => {
   if (!players || !proposals) return <div>LOADING...</div>;
-
-  console.log(players);
-  console.log(proposals);
 
   return (
     <>
