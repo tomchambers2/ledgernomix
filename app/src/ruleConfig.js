@@ -3,6 +3,12 @@ export const ruleConfig = {
     name: "Entry fee",
     description: "The amount in DAI to buy into the game",
   },
+  "Start balance": {
+    name: "Start balance",
+    description: "The amount of game tokens a player starts with",
+    unit: "",
+    inactive: 1000,
+  },
   "Proposal reward": {
     name: "Proposal reward",
     description:

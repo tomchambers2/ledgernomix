@@ -279,20 +279,20 @@ export const Game = ({ web3, account }) => {
           </div>
         </div>
         <div className="vertical-panels-container">
-          <div>
-            <div className="panel game-over">
+          <div className="column">
+            <div className="game-grade panel">
               <OrnateBorder></OrnateBorder>
               <GameGrade players={players} proposals={proposals}></GameGrade>
             </div>
-            <div className="panel rules">
+            <div className="rules panel">
               <OrnateBorder></OrnateBorder>
               <div className="subpanel rules">
                 {(rules && <Rules rules={rules}></Rules>) || <Loader></Loader>}
               </div>
             </div>
           </div>
-          <div>
-            <div className="panel">
+          <div className="column">
+            <div className="payout panel">
               <OrnateBorder></OrnateBorder>
               <Payout players={players} playerAddress={account}></Payout>
             </div>
@@ -313,18 +313,23 @@ export const Game = ({ web3, account }) => {
               )) || <Loader></Loader>}
             </div>
           </div>
-          <div className="panel scores panel-container">
-            <OrnateBorder></OrnateBorder>
-            {(players && (
-              <Scores players={players} getPlayerName={getPlayerName}></Scores>
-            )) || <Loader></Loader>}
+          <div className="column">
+            <div className="ledger panel">
+              <OrnateBorder></OrnateBorder>
+              {(players && (
+                <Scores
+                  players={players}
+                  getPlayerName={getPlayerName}
+                ></Scores>
+              )) || <Loader></Loader>}
 
-            {events
-              .slice()
-              .reverse()
-              .map((event) => (
-                <div className="item">{event}</div>
-              ))}
+              {events
+                .slice()
+                .reverse()
+                .map((event) => (
+                  <div className="item">{event}</div>
+                ))}
+            </div>
           </div>
         </div>
       </div>

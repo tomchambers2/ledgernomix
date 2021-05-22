@@ -20,7 +20,7 @@ export const GameGrade = ({ players, proposals }) => {
 
   return (
     <>
-      <h2>Game grade</h2>
+      <h2>Game Grade</h2>
       <p>
         {[
           { title: "Equality", number: 60, avg: 45 },
