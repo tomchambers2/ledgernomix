@@ -6,7 +6,10 @@ const vetocracy = (proposals) => {
   const successfulProposals = proposals.filter(
     ({ successful }) => successful
   ).length;
-  return (successfulProposals / proposals.length) * 100;
+  console.log(successfulProposals);
+  return successfulProposals > 0
+    ? (successfulProposals / proposals.length) * 100
+    : 0;
 };
 
 export const GameGrade = ({ players, proposals }) => {
@@ -22,7 +25,7 @@ export const GameGrade = ({ players, proposals }) => {
         {[
           { title: "Equality", number: 60, avg: 45 },
           { title: "Participation", number: 41 },
-          { title: "Inflation", number: 68 },
+          { title: "Inflation", number: 100 },
           { title: "Vetocracy", number: vetocracy(proposals) },
         ].map((statistic) => (
           <Statistic {...statistic}></Statistic>

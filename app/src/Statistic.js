@@ -7,7 +7,11 @@ export const Statistic = ({ title, number }) => {
         <div>{title}</div>
         <div>{number}</div>
       </div>
-      <div className="chart"></div>
+      <div className="chart">
+        <div className="position" style={{ left: `${number - 3}%` }}>
+          X
+        </div>
+      </div>
     </div>
   );
 };

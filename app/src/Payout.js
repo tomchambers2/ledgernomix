@@ -10,6 +10,8 @@ export const Payout = ({ players, playerAddress }) => {
       otherPlayerAddress === playerAddress
   );
 
+  if (!players) return <div>LOADING...</div>;
+
   const totalBalance = Web3.utils.fromWei(
     players.reduce((acc, { balance }) => acc + balance, 0)
   );

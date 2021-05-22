@@ -4,6 +4,7 @@ import "./eskapade-fraktur-wakamaifondue.css";
 import "noty/lib/noty.css";
 import "noty/lib/themes/mint.css";
 import { Game } from "./Game";
+import { Setup } from "./Setup";
 import { GameList } from "./GameList";
 import { fireNotification } from "./fireNotification";
 import { useContract } from "./useContract";
@@ -132,21 +133,8 @@ function App() {
 
   return (
     <div className="app">
-      {!setupStatus.metamask && (
-        <div>
-          <a
-            className="button"
-            target="_blank"
-            href="https://metamask.io/download.html"
-            rel="noreferrer"
-          >
-            Install Metamask browser extension
-          </a>
-        </div>
-      )}
-      {!setupStatus.network && "Wrong network"}
-
       <Router>
+        <Setup setupStatus={setupStatus}></Setup>
         <Switch>
           <Route path="/:gameAddress">
             <Game web3={web3} account={account}></Game>
