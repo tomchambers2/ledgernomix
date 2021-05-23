@@ -20,9 +20,9 @@ export const GameGrade = ({ players, proposals }) => {
 
       {[
         { title: "Equality", number: 60, avg: 45 },
-        { title: "Participation", number: 41 },
-        { title: "Inflation", number: 100 },
-        { title: "Vetocracy", number: vetocracy(proposals) },
+        { title: "Participation", number: 41, avg: 33 },
+        { title: "Inflation", number: 100, avg: 45 },
+        { title: "Vetocracy", number: vetocracy(proposals), avg: 55 },
       ].map((statistic) => (
         <Statistic key={statistic.title} {...statistic}></Statistic>
       ))}

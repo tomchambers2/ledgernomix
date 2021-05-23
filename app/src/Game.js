@@ -143,7 +143,9 @@ export const Game = ({ web3, account }) => {
               <strong>{event.event}</strong> -{" "}
               {getPlayerName(event.returnValues.proposer)} proposed to change{" "}
               {rules[event.returnValues.ruleIndex].name} to{" "}
-              {event.returnValues.value}
+              {event.returnValues.value}{" "}
+              {(event.returnValues.complete && "Complete") || "pending"}{" "}
+              {(event.returnValues.successful && "success") || "failed"}
             </>
           );
         case "PlayerUpdate":
@@ -326,7 +328,7 @@ export const Game = ({ web3, account }) => {
         </div>
         <div className="vertical-panels-container">
           <div className="column">
-            {!gameActive && (
+            {gameActive && (
               <div className="game-grade panel">
                 <OrnateBorder></OrnateBorder>
                 <GameGrade players={players} proposals={proposals}></GameGrade>

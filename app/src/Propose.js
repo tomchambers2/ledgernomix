@@ -21,7 +21,9 @@ export const Propose = ({
   const [proposedValueValid, setProposedValueValid] = useState(true);
   const [proposedValueError, setProposedValueError] = useState(null);
 
-  const ruleOptions = rules.map((rule, i) => ({ value: i, label: rule.name }));
+  const ruleOptions = rules
+    .filter(({ name }) => !ruleConfig[name].unproposable)
+    .map((rule, i) => ({ value: i, label: rule.name }));
   const customStyles = {
     control: (provided, state) => ({
       ...provided,
@@ -118,7 +120,13 @@ export const Propose = ({
       {!isPlayer && (
         <div className="disabled-panel">Join the game to make proposals</div>
       )}
-
+      {/* proposal {proposals.length}
+      <br />
+      players {players.length}
+      <br />
+      index {playerIndex()}
+      <br />
+      yes {proposals.length % players.length === playerIndex()} */}
       {isPlayer &&
         ((proposals.length % players.length === playerIndex() && (
           <>
