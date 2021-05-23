@@ -21,6 +21,8 @@ import { ProposalCounter } from "./ProposalCounter";
 import { OrnateBorder } from "./OrnateBorder";
 import { GameGrade } from "./GameGrade";
 import { Payout } from "./Payout";
+import { gameConfig } from "./gameConfig";
+const { cryptocurrency } = gameConfig;
 const FETCH_INTERVAL = 10 * 1000;
 
 export const Game = ({ web3, account }) => {
@@ -130,7 +132,7 @@ export const Game = ({ web3, account }) => {
           if (players[data.playerIndex]) {
             msg = (
               <span>
-                {getPlayerName(data.playerAddress)} has new balance of
+                {getPlayerName(data.playerAddress)} has new balance of{" "}
                 {Web3.utils.fromWei(data.balance)}
               </span>
             );
@@ -286,7 +288,7 @@ export const Game = ({ web3, account }) => {
             <div className="game-metadata">
               Players: {(players && players.length) || 0}
               <br></br>
-              Pot: {weiToEth(gameBalance) || 0}
+              Pot: {weiToEth(gameBalance) || 0} {cryptocurrency}
             </div>
           </div>
           <div className="player-details-panel panel">

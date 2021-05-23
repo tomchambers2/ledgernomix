@@ -1,7 +1,6 @@
 import Web3 from "web3";
 import { gameConfig } from "./gameConfig";
-import "./Payout.css";
-const { cryptoEntryFee } = gameConfig;
+const { cryptoEntryFee, cryptocurrency } = gameConfig;
 
 export const Payout = ({ players, playerAddress }) => {
   if (!players) return <div>LOADING...</div>;
@@ -33,15 +32,16 @@ export const Payout = ({ players, playerAddress }) => {
       <h2>Payout</h2>
       <div className="box">Place: {place}</div>
       <div className="box">
-        In game tokens: {Web3.utils.fromWei(player.balance)}
+        In Game Tokens: {Web3.utils.fromWei(player.balance)}
       </div>
       <div className="box">
-        Pot share:{" "}
+        Pot Share:{" "}
         {`${(Web3.utils.fromWei(player.balance) / totalBalance) * 100}%`}
       </div>
       <div className="box">
         Payout:{" "}
-        {(Web3.utils.fromWei(player.balance) / totalBalance) * totalCryptoPot}
+        {(Web3.utils.fromWei(player.balance) / totalBalance) * totalCryptoPot}{" "}
+        {cryptocurrency}
       </div>
     </div>
   );
