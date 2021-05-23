@@ -13,8 +13,9 @@ export const Payout = ({ players, playerAddress }) => {
 
   if (!players) return <div>LOADING...</div>;
 
-  const totalBalance = Web3.utils.fromWei(
-    players.reduce((acc, { balance }) => acc + balance, 0)
+  const totalBalance = players.reduce(
+    (acc, { balance }) => acc + parseInt(Web3.utils.fromWei(balance)),
+    0
   );
 
   const place =
@@ -28,6 +29,10 @@ export const Payout = ({ players, playerAddress }) => {
 
   const totalCryptoPot = cryptoEntryFee * players.length;
 
+  if (!player) return <div></div>;
+
+  const playerBalance = Web3.utils.fromWei(player.balance);
+
   return (
     <div>
       <h2>Payout</h2>
@@ -36,8 +41,7 @@ export const Payout = ({ players, playerAddress }) => {
         In Game Tokens: {Web3.utils.fromWei(player.balance)}
       </div>
       <div className="box">
-        Pot Share:{" "}
-        {`${(Web3.utils.fromWei(player.balance) / totalBalance) * 100}%`}
+        Pot Share: {`${((playerBalance / totalBalance) * 100).toFixed(2)}%`}
       </div>
       <div className="box">
         Payout:{" "}

@@ -435,7 +435,7 @@ describe("Game", () => {
   });
 
   describe("endGame", async () => {
-    it("should return deposits in proportion to players", async () => {
+    it.only("should return deposits in proportion to players", async () => {
       await game.connect(players[1]).joinGame({
         value: "5000000000000000000",
         gasPrice: 0,

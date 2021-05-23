@@ -59,17 +59,21 @@ export const Game = ({ web3, account }) => {
 
   const joinGameHandler = () => {
     if (!account)
-      return fireNotification("You need to install Metamask first!", "warning");
+      return fireNotification(
+        "You need to install Metamask first and connect to the correct network",
+        "warning"
+      );
     joinGame();
   };
 
   const getPlayerName = useCallback(
     (identifier) => {
-      if (!identifier || !players) return "Waiting For Player";
+      if (!players) return "SPECTATOR";
       const index =
         typeof identifier === "number"
           ? identifier
           : players.findIndex((p) => p.playerAddress === identifier);
+      if (index < 0) return <span>SPECTATOR</span>;
       return (
         <>
           PLAYER{" "}
@@ -144,18 +148,18 @@ export const Game = ({ web3, account }) => {
           );
         case "PlayerUpdate":
           let msg;
-          if (players[data.playerIndex]) {
-            msg = (
-              <span>
-                {getPlayerName(data.playerAddress)} has new balance of{" "}
-                {Web3.utils.fromWei(data.balance)}
-              </span>
-            );
-          } else {
-            msg = `New player joined: ${getPlayerName(data.playerAddress)} (${
-              data.playerAddress
-            })`;
-          }
+          // if (players[data.playerIndex]) {
+          msg = (
+            <span>
+              {getPlayerName(data.playerAddress)} has new balance of{" "}
+              {Web3.utils.fromWei(data.balance)}
+            </span>
+          );
+          // } else {
+          //   msg = `New player joined: ${getPlayerName(data.playerAddress)} (${
+          //     data.playerAddress
+          //   })`;
+          // }
           return msg;
         case "VoteUpdate":
           return (
@@ -322,10 +326,12 @@ export const Game = ({ web3, account }) => {
         </div>
         <div className="vertical-panels-container">
           <div className="column">
-            <div className="game-grade panel">
-              <OrnateBorder></OrnateBorder>
-              <GameGrade players={players} proposals={proposals}></GameGrade>
-            </div>
+            {!gameActive && (
+              <div className="game-grade panel">
+                <OrnateBorder></OrnateBorder>
+                <GameGrade players={players} proposals={proposals}></GameGrade>
+              </div>
+            )}
             <div className="rules panel">
               <OrnateBorder></OrnateBorder>
               <div className="subpanel rules">
@@ -334,10 +340,12 @@ export const Game = ({ web3, account }) => {
             </div>
           </div>
           <div className="column">
-            <div className="payout panel">
-              <OrnateBorder></OrnateBorder>
-              <Payout players={players} playerAddress={account}></Payout>
-            </div>
+            {!gameActive && (
+              <div className="payout panel">
+                <OrnateBorder></OrnateBorder>
+                <Payout players={players} playerAddress={account}></Payout>
+              </div>
+            )}
             <div className="proposals panel">
               <OrnateBorder></OrnateBorder>
               {(rules && proposals && (

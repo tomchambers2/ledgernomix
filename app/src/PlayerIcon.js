@@ -2,8 +2,6 @@ import Identicon from "identicon.js";
 import "./PlayerIcon.css";
 
 export function PlayerIcon({ address }) {
-  if (!address) return <img alt="No player"></img>;
-
   var options = {
     background: [0, 0, 0, 255], // rgba black
     foreground: [255, 255, 255, 255], // rgba white
@@ -12,8 +10,11 @@ export function PlayerIcon({ address }) {
     format: "svg", // use SVG instead of PNG
   };
 
+  var data = new Identicon(address || "000000000000000", options).toString();
+
+  // if (!address) return <img alt="No player"></img>;
+
   // create a base64 encoded SVG
-  var data = new Identicon(address, options).toString();
 
   // write to a data URI
   //   document.write(

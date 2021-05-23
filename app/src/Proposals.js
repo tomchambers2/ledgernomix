@@ -29,25 +29,26 @@ export const Proposals = ({
   return (
     <>
       <h2>Proposals</h2>
-      {(!rules.length && "LOADING...") || (
+      {(!rules.length && "LOADING...") ||
         // (!proposals.length &&
         //   "No rule changes have been proposed so far. Use the 'Propose rule change' form to start the game")}
 
-        <div className="item">
-          {(rules && (
-            <Propose
-              rules={rules}
-              createProposal={createProposal}
-              isPlayer={isPlayer}
-              gameActive={gameActive}
-              players={players}
-              proposals={proposals}
-              playerIndex={playerIndex}
-              getPlayerName={getPlayerName}
-            ></Propose>
-          )) || <Loader></Loader>}
-        </div>
-      )}
+        (gameActive && (
+          <div className="item">
+            {(rules && (
+              <Propose
+                rules={rules}
+                createProposal={createProposal}
+                isPlayer={isPlayer}
+                gameActive={gameActive}
+                players={players}
+                proposals={proposals}
+                playerIndex={playerIndex}
+                getPlayerName={getPlayerName}
+              ></Propose>
+            )) || <Loader></Loader>}
+          </div>
+        ))}
 
       {proposals
         .map((proposal, index) => ({ ...proposal, index }))
@@ -76,11 +77,13 @@ export const Proposals = ({
                 !proposal.complete &&
                 !proposal.pending && (
                   <>
-                    <div
-                      className="button"
-                      onClick={() => voteOnProposal(proposal.index, true)}
-                    >
-                      Yes
+                    <div classname="votes-column">
+                      <div
+                        className="button"
+                        onClick={() => voteOnProposal(proposal.index, true)}
+                      >
+                        Yes
+                      </div>
                       {proposal.votes &&
                         proposal.votes
                           .filter(({ vote, playerAddress }) => vote)
@@ -88,11 +91,13 @@ export const Proposals = ({
                             <>{getPlayerName(playerAddress)} voted 👍🏻</>
                           ))}
                     </div>
-                    <div
-                      className="button"
-                      onClick={() => voteOnProposal(proposal.index, false)}
-                    >
-                      No
+                    <div classname="votes-column">
+                      <div
+                        className="button"
+                        onClick={() => voteOnProposal(proposal.index, false)}
+                      >
+                        No
+                      </div>
                       {proposal.votes &&
                         proposal.votes
                           .filter(({ vote, playerAddress }) => !vote)

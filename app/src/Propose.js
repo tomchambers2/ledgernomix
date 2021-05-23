@@ -115,60 +115,65 @@ export const Propose = ({
 
   return (
     <>
-      {(!gameActive && <div className="disabled-panel">Game over</div>) ||
-        (!isPlayer && (
-          <div className="disabled-panel">Join the game to make proposals</div>
-        ))}
-
-      {(proposals.length % players.length === playerIndex() && (
-        <>
-          <div className="proposal-form">
-            I propose that{" "}
-            <Select
-              className="select-box"
-              styles={customStyles}
-              options={ruleOptions}
-              value={proposedRuleOption}
-              onChange={(option) => setProposedRuleOption(option)}
-            ></Select>{" "}
-            be changed to{" "}
-            <div className="input-container">
-              <input
-                onChange={({ target: { value } }) => setProposedValue(value)}
-                type="text"
-                value={proposedValue}
-                disabled={!proposedRuleOption}
-              ></input>
-              {proposedRuleOption && ruleConfig[proposedRuleOption.label].unit}
-            </div>
-          </div>
-          <div>
-            <button
-              onClick={createProposalHandler}
-              disabled={
-                !proposedValueValid || !proposedRuleOption || proposedValueError
-              }
-            >
-              Create proposal
-            </button>
-          </div>
-          <p>{proposedValueError}</p>
-          <p
-            className={classNames(
-              "input-helper",
-              !proposedValueValid && "error"
-            )}
-          >
-            {!proposedValueValid &&
-              proposedRuleOption &&
-              `${rules[proposedRuleOption.value].name} must be between ${
-                rules[proposedRuleOption.value].lowerBound
-              } and ${rules[proposedRuleOption.value].upperBound}`}
-          </p>
-        </>
-      )) || (
-        <h3>Waiting for {getPlayerName(proposals.length % players.length)}</h3>
+      {!isPlayer && (
+        <div className="disabled-panel">Join the game to make proposals</div>
       )}
+
+      {isPlayer &&
+        ((proposals.length % players.length === playerIndex() && (
+          <>
+            <div className="proposal-form">
+              I propose that{" "}
+              <Select
+                className="select-box"
+                styles={customStyles}
+                options={ruleOptions}
+                value={proposedRuleOption}
+                onChange={(option) => setProposedRuleOption(option)}
+              ></Select>{" "}
+              be changed to{" "}
+              <div className="input-container">
+                <input
+                  onChange={({ target: { value } }) => setProposedValue(value)}
+                  type="text"
+                  value={proposedValue}
+                  disabled={!proposedRuleOption}
+                ></input>
+                {proposedRuleOption &&
+                  ruleConfig[proposedRuleOption.label].unit}
+              </div>
+            </div>
+            <div>
+              <button
+                onClick={createProposalHandler}
+                disabled={
+                  !proposedValueValid ||
+                  !proposedRuleOption ||
+                  proposedValueError
+                }
+              >
+                Create proposal
+              </button>
+            </div>
+            <p>{proposedValueError}</p>
+            <p
+              className={classNames(
+                "input-helper",
+                !proposedValueValid && "error"
+              )}
+            >
+              {!proposedValueValid &&
+                proposedRuleOption &&
+                `${rules[proposedRuleOption.value].name} must be between ${
+                  rules[proposedRuleOption.value].lowerBound
+                } and ${rules[proposedRuleOption.value].upperBound}`}
+            </p>
+          </>
+        )) || (
+          <h3>
+            Waiting for {getPlayerName(proposals.length % players.length)}
+          </h3>
+        ))}
     </>
   );
 };

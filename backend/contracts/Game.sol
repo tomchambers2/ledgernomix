@@ -428,23 +428,24 @@ contract Game {
 
             uint256 balancesSum;
             uint256 thisGameContractBalance = address(this).balance;
-            Player[] memory playersCopy = players;
+            uint256[] memory playerBalancesCopy = new uint256[](players.length);
 
-            for (uint256 index = 0; index < playersCopy.length; index++) {
-                balancesSum += playersCopy[index].balance;
+            for (uint256 index = 0; index < players.length; index++) {
+                playerBalancesCopy[index] = players[index].balance;
+                balancesSum += playerBalancesCopy[index];
             }
             if (balancesSum == 0) {
-                for (uint256 index = 0; index < playersCopy.length; index++) {
-                    playersCopy[index].balance += 1; // if all balances are zero, divide pot equally
-                    balancesSum += playersCopy[index].balance;
+                for (uint256 index = 0; index < players.length; index++) {
+                    playerBalancesCopy[index] += 1; // if all balances are zero, divide pot equally
+                    balancesSum += playerBalancesCopy[index];
                 }
             }
-            for (uint256 index = 0; index < playersCopy.length; index++) {
-                if (playersCopy[index].balance == 0) continue; // skip players if they have no share
+            for (uint256 index = 0; index < players.length; index++) {
+                if (playerBalancesCopy[index] == 0) continue; // skip players if they have no share
                 uint256 share =
-                    (playersCopy[index].balance * thisGameContractBalance) /
+                    (playerBalancesCopy[index] * thisGameContractBalance) /
                         balancesSum;
-                payable(playersCopy[index].playerAddress).transfer(share);
+                payable(players[index].playerAddress).transfer(share);
             }
         }
     }
