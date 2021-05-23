@@ -18,8 +18,11 @@ describe("Game", () => {
   const ether = 1000000000000000000;
 
   beforeEach(async () => {
+    players = await ethers.getSigners();
+    [owner, addr1, addr2] = players;
+
     const Calculations = await ethers.getContractFactory("Calculations");
-    calculations = await Calculations.deploy();
+    calculations = await Calculations.deploy({ gasPrice: 0 });
     await calculations.deployed();
 
     Game = await ethers.getContractFactory("Game", {
@@ -27,9 +30,6 @@ describe("Game", () => {
         Calculations: calculations.address,
       },
     });
-
-    players = await ethers.getSigners();
-    [owner, addr1, addr2] = players;
 
     createGame = async ({
       entryFee = 5,
@@ -58,6 +58,7 @@ describe("Game", () => {
         {
           value: intToHex(entryFee * 1000000000000000000),
           // "0x4563918244F40000", // 5 ether in hex
+          gasPrice: 0,
         }
       );
       await game.deployed();
@@ -439,27 +440,94 @@ describe("Game", () => {
         value: "5000000000000000000",
         gasPrice: 0,
       });
-      const player1Balance = await players[0].getBalance();
-      const player2Balance = await players[1].getBalance();
 
-      for (let i = 0; i < 3; i++) {
-        await game.createProposal(0, 500, { gasPrice: 0 });
+      const player1BalanceStart = ethers.utils.formatEther(
+        await players[0].getBalance()
+      );
+      const player2BalanceStart = ethers.utils.formatEther(
+        await players[1].getBalance()
+      );
+
+      for (let i = 0; i < 30; i++) {
+        await game.connect(players[0]).createProposal(0, 500, { gasPrice: 0 });
         await game.connect(players[0]).voteOnProposal(i, true, { gasPrice: 0 });
       }
 
       const player1 = await game.players(0);
-      // console.log("p1 in game balance after game", player1.balance.toString());
+      const player2 = await game.players(1);
 
-      const player1BalanceEnd = await players[0].getBalance();
-      const player2BalanceEnd = await players[1].getBalance();
+      const player1BalanceEnd = ethers.utils.formatEther(
+        await players[0].getBalance()
+      );
+      const player2BalanceEnd = ethers.utils.formatEther(
+        await players[1].getBalance()
+      );
 
-      // console.log("p1 end balance", player1BalanceEnd.toString());
-
-      expect(Math.abs(player1Balance - player1BalanceEnd)).to.equal(1);
-      expect(Math.abs(player2Balance - player2BalanceEnd)).to.equal(1);
+      const player1Payout = player1BalanceEnd - player1BalanceStart;
+      const player2Payout = player2BalanceEnd - player2BalanceStart;
+      expect(player1Payout).to.equal(6.875);
+      expect(player2Payout).to.equal(3.125);
     });
 
-    it("should not send any deposits if a pending proposal is voted on after end of game", () => {});
+    it("should payout correctly after 100 rounds", async () => {
+      const game = await createGame({
+        maxProposals: 100,
+        reward: 100000,
+      });
+
+      await game.connect(players[1]).joinGame({
+        value: "5000000000000000000",
+        gasPrice: 0,
+      });
+
+      const player1BalanceStart = ethers.utils.formatEther(
+        await players[0].getBalance()
+      );
+      const player2BalanceStart = ethers.utils.formatEther(
+        await players[1].getBalance()
+      );
+
+      for (let i = 0; i < 100; i++) {
+        await game.connect(players[0]).createProposal(0, 500, { gasPrice: 0 });
+        await game.connect(players[0]).voteOnProposal(i, true, { gasPrice: 0 });
+      }
+
+      const player1 = await game.players(0);
+      const player2 = await game.players(1);
+
+      const player1BalanceEnd = ethers.utils.formatEther(
+        await players[0].getBalance()
+      );
+      const player2BalanceEnd = ethers.utils.formatEther(
+        await players[1].getBalance()
+      );
+
+      const player1Payout = player1BalanceEnd - player1BalanceStart;
+      const player2Payout = player2BalanceEnd - player2BalanceStart;
+
+      expect(player1Payout).to.toBeGreaterThan(9.99);
+      expect(player2Payout).to.toBeLessThan(0.01);
+    });
+
+    it("should handle the case where payment cannot be made due to rounding", async () => {
+      const game = await createGame({
+        pollTax: 100,
+        reward: 0,
+        proposalCost: 0,
+      });
+
+      await game.connect(players[1]).joinGame({
+        value: "5000000000000000000",
+        gasPrice: 0,
+      });
+
+      for (let i = 0; i < 3; i++) {
+        console.log("round");
+        await game.connect(players[0]).createProposal(0, 500, { gasPrice: 0 });
+        console.log("vote");
+        await game.connect(players[0]).voteOnProposal(i, true, { gasPrice: 0 });
+      }
+    });
   });
 
   describe("calculationMajority", () => {

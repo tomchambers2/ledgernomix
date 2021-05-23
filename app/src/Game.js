@@ -76,6 +76,11 @@ export const Game = ({ web3, account }) => {
     [players]
   );
 
+  const getPlayerIndex = useCallback(() => {
+    if (!account || !players) return "Waiting For Player";
+    return players.findIndex((p) => p.playerAddress === account);
+  }, [players, account]);
+
   const getArray = useCallback(
     async (name) => {
       if (!game) {
@@ -264,7 +269,10 @@ export const Game = ({ web3, account }) => {
                   <h2>
                     Game{" "}
                     <span className="game-address">
-                      {gameAddress.substr(0, 5)}
+                      {gameAddress.substr(
+                        gameAddress.length - 5,
+                        gameAddress.length
+                      )}
                     </span>
                   </h2>
                 ))}
@@ -315,6 +323,8 @@ export const Game = ({ web3, account }) => {
                   playerAddress={account}
                   web3={web3}
                   account={account}
+                  players={players}
+                  playerIndex={getPlayerIndex}
                 ></Proposals>
               )) || <Loader></Loader>}
             </div>

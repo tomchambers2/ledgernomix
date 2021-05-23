@@ -17,6 +17,8 @@ export const Proposals = ({
   gameActive,
   web3,
   account,
+  players,
+  playerIndex,
 }) => {
   const { gameAddress } = useParams();
   const game = useContract(web3, GameContract.abi, gameAddress);
@@ -38,6 +40,9 @@ export const Proposals = ({
               createProposal={createProposal}
               isPlayer={isPlayer}
               gameActive={gameActive}
+              players={players}
+              proposals={proposals}
+              playerIndex={playerIndex}
             ></Propose>
           )) || <Loader></Loader>}
         </div>

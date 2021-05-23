@@ -396,7 +396,7 @@ contract Game {
         }
     }
 
-    function getPlayer(address playerAddress) private returns (uint256) {
+    function getPlayer(address playerAddress) private view returns (uint256) {
         for (uint256 index = 0; index < players.length; index++) {
             if (players[index].playerAddress == playerAddress) return index;
         }
@@ -423,14 +423,24 @@ contract Game {
             proposals.length >= rules[uint256(RuleIndices.MaxProposals)].value
         ) {
             uint256 balancesSum;
-            uint256 finalEntryFees = address(this).balance;
+            uint256 thisGameContractBalance = address(this).balance;
+
             for (uint256 index = 0; index < players.length; index++) {
+                players[index].balance += 1;
                 balancesSum += players[index].balance;
             }
             for (uint256 index = 0; index < players.length; index++) {
+                console.log(
+                    "will pay",
+                    players[index].balance,
+                    thisGameContractBalance,
+                    balancesSum
+                );
                 uint256 share =
-                    (players[index].balance * finalEntryFees) / balancesSum;
-                payable(players[index].playerAddress).send(share); //FIXME: error here
+                    (players[index].balance * thisGameContractBalance) /
+                        balancesSum;
+                console.log("paying", share);
+                payable(players[index].playerAddress).transfer(share);
             }
         }
     }

@@ -4,7 +4,15 @@ import classNames from "classnames";
 import { ruleConfig } from "./ruleConfig";
 import isEqual from "lodash.isequal";
 
-export const Propose = ({ rules, createProposal, isPlayer, gameActive }) => {
+export const Propose = ({
+  rules,
+  createProposal,
+  isPlayer,
+  gameActive,
+  proposals,
+  players,
+  playerIndex,
+}) => {
   const [prevRules, setPrevRules] = useState([]);
   const [proposedRuleOption, setProposedRuleOption] = useState(null);
   const [prevProposedRuleOption, setPrevProposedRuleOption] = useState(null);
@@ -68,6 +76,7 @@ export const Propose = ({ rules, createProposal, isPlayer, gameActive }) => {
     } else {
       setProposedValueError(null);
     }
+    console.log(proposedValue);
     if (
       parseInt(proposedValue) >=
         parseInt(rules[proposedRuleOption.value].lowerBound) &&
@@ -99,49 +108,62 @@ export const Propose = ({ rules, createProposal, isPlayer, gameActive }) => {
     }
   };
 
+  if (!players || !proposals) return <div>LOADING...</div>;
+
   return (
     <>
       {(!gameActive && <div className="disabled-panel">Game over</div>) ||
         (!isPlayer && (
           <div className="disabled-panel">Join the game to make proposals</div>
         ))}
-      <div className="proposal-form">
-        I propose that{" "}
-        <Select
-          className="select-box"
-          styles={customStyles}
-          options={ruleOptions}
-          value={proposedRuleOption}
-          onChange={(option) => setProposedRuleOption(option)}
-        ></Select>{" "}
-        be changed to{" "}
-        <div className="input-container">
-          <input
-            onChange={({ target: { value } }) => setProposedValue(value)}
-            type="text"
-            value={proposedValue}
-            disabled={!proposedRuleOption}
-          ></input>
-          {proposedRuleOption && ruleConfig[proposedRuleOption.label].unit}
-        </div>
-      </div>
-      <div>
-        <button
-          onClick={createProposalHandler}
-          disabled={
-            !proposedValueValid || !proposedRuleOption || proposedValueError
-          }
-        >
-          Create proposal
-        </button>
-      </div>
-      <p>{proposedValueError}</p>
-      <p className={classNames("input-helper", !proposedValueValid && "error")}>
-        {proposedRuleOption &&
-          `${rules[proposedRuleOption.value].name} must be between ${
-            rules[proposedRuleOption.value].lowerBound
-          } and ${rules[proposedRuleOption.value].upperBound}`}
-      </p>
+
+      {(proposals.length % players.length === playerIndex() && (
+        <>
+          <div className="proposal-form">
+            I propose that{" "}
+            <Select
+              className="select-box"
+              styles={customStyles}
+              options={ruleOptions}
+              value={proposedRuleOption}
+              onChange={(option) => setProposedRuleOption(option)}
+            ></Select>{" "}
+            be changed to{" "}
+            <div className="input-container">
+              <input
+                onChange={({ target: { value } }) => setProposedValue(value)}
+                type="text"
+                value={proposedValue}
+                disabled={!proposedRuleOption}
+              ></input>
+              {proposedRuleOption && ruleConfig[proposedRuleOption.label].unit}
+            </div>
+          </div>
+          <div>
+            <button
+              onClick={createProposalHandler}
+              disabled={
+                !proposedValueValid || !proposedRuleOption || proposedValueError
+              }
+            >
+              Create proposal
+            </button>
+          </div>
+          <p>{proposedValueError}</p>
+          <p
+            className={classNames(
+              "input-helper",
+              !proposedValueValid && "error"
+            )}
+          >
+            {!proposedValueValid &&
+              proposedRuleOption &&
+              `${rules[proposedRuleOption.value].name} must be between ${
+                rules[proposedRuleOption.value].lowerBound
+              } and ${rules[proposedRuleOption.value].upperBound}`}
+          </p>
+        </>
+      )) || <h3>Wait for your turn</h3>}
     </>
   );
 };
