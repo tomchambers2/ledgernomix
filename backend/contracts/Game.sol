@@ -430,10 +430,16 @@ contract Game {
             uint256 thisGameContractBalance = address(this).balance;
 
             for (uint256 index = 0; index < players.length; index++) {
-                players[index].balance += 1;
                 balancesSum += players[index].balance;
             }
+            if (balancesSum == 0) {
+                for (uint256 index = 0; index < players.length; index++) {
+                    players[index].balance += 1; // if all balances are zero, divide pot equally
+                    balancesSum += players[index].balance;
+                }
+            }
             for (uint256 index = 0; index < players.length; index++) {
+                if (players[index].balance == 0) continue; // skip players if they have no share
                 uint256 share =
                     (players[index].balance * thisGameContractBalance) /
                         balancesSum;

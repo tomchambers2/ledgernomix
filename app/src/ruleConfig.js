@@ -43,6 +43,7 @@ export const ruleConfig = {
   "Wealth tax": {
     name: "Wealth tax",
     description: "A percentage tax collected on every completed proposal",
+    unit: "%",
     inactive: 0,
   },
   "Wealth tax threshold": {

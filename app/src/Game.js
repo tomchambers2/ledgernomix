@@ -279,29 +279,31 @@ export const Game = ({ web3, account }) => {
         <div className="header-container">
           <div className="game-details-panel panel">
             <OrnateBorder></OrnateBorder>
-            <div className="game-timers-container">
-              <Clock
-                blockInterval={FETCH_INTERVAL}
-                timeoutCallback={fetchData}
-              />
-              <ProposalCounter
-                completeProposals={proposals}
-                maxProposals={getRuleValue("Max proposals")}
-              />
-            </div>
+
+            {(!gameActive && "This game has ended") || (
+              <div className="game-timers-container">
+                <Clock
+                  blockInterval={FETCH_INTERVAL}
+                  timeoutCallback={fetchData}
+                />
+                <ProposalCounter
+                  completeProposals={proposals}
+                  maxProposals={getRuleValue("Max proposals")}
+                />
+              </div>
+            )}
             <div className="game-name">
-              {(!gameActive && "This game has ended") ||
-                (isPlayer && (
-                  <h2>
-                    Game{" "}
-                    <span className="game-address">
-                      {gameAddress.substr(
-                        gameAddress.length - 5,
-                        gameAddress.length
-                      )}
-                    </span>
-                  </h2>
-                ))}
+              {isPlayer && (
+                <h2>
+                  Game{" "}
+                  <span className="game-address">
+                    {gameAddress.substr(
+                      gameAddress.length - 5,
+                      gameAddress.length
+                    )}
+                  </span>
+                </h2>
+              )}
               {gameActive && !isPlayer && (
                 <button onClick={joinGameHandler}>Join game</button>
               )}
