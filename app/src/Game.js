@@ -298,7 +298,7 @@ export const Game = ({ web3, account }) => {
                   Game{" "}
                   <span className="game-address">
                     {gameAddress.substr(
-                      gameAddress.length - 5,
+                      gameAddress.length - 6,
                       gameAddress.length
                     )}
                   </span>

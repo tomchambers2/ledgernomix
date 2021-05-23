@@ -1,5 +1,6 @@
 import Web3 from "web3";
 import { gameConfig } from "./gameConfig";
+import "./Payout.css";
 const { cryptoEntryFee, cryptocurrency } = gameConfig;
 
 export const Payout = ({ players, playerAddress }) => {

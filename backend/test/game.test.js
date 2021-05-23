@@ -509,7 +509,7 @@ describe("Game", () => {
       expect(player2Payout).to.be.below(0.01);
     });
 
-    it.only("should handle the case where payment cannot be made due to rounding", async () => {
+    it("should handle the case where payment cannot be made due to rounding", async () => {
       const game = await createGame({
         pollTax: 100,
         reward: 0,
