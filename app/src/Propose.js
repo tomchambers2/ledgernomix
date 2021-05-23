@@ -77,7 +77,6 @@ export const Propose = ({
     } else {
       setProposedValueError(null);
     }
-    console.log(proposedValue);
     if (
       parseInt(proposedValue) >=
         parseInt(rules[proposedRuleOption.value].lowerBound) &&

@@ -7,9 +7,9 @@ export const OrnateBorder = () => {
             <path
               fill="none"
               stroke="#333333"
-              stroke-width="4"
-              stroke-linejoin="miter"
-              stroke-miterlimit="8.0"
+              strokeWidth="4"
+              strokeLinejoin="miter"
+              strokeMiterlimit="8.0"
               d="M2,40 L2,16 C11,34 11,11 11,11 C34,11 16,2 16,2 L40,2"
             />
           </svg>
@@ -20,7 +20,7 @@ export const OrnateBorder = () => {
               points="0,2 5000,2"
               fill="none"
               stroke="#000000"
-              stroke-width="4"
+              strokeWidth="4"
             />
           </svg>
         </div>
@@ -29,9 +29,9 @@ export const OrnateBorder = () => {
             <path
               fill="none"
               stroke="#333333"
-              stroke-width="4"
-              stroke-linejoin="miter"
-              stroke-miterlimit="8.0"
+              strokeWidth="4"
+              strokeLinejoin="miter"
+              strokeMiterlimit="8.0"
               transform="rotate(90,20,20)"
               d="M2,40 L2,16 C11,34 11,11 11,11 C34,11 16,2 16,2 L40,2"
             />
@@ -45,7 +45,7 @@ export const OrnateBorder = () => {
               points="2,0 2,20000"
               fill="none"
               stroke="#000000"
-              stroke-width="4"
+              strokeWidth="4"
             />
           </svg>
         </div>
@@ -56,7 +56,7 @@ export const OrnateBorder = () => {
               points="38,0 38,20000"
               fill="none"
               stroke="#000000"
-              stroke-width="4"
+              strokeWidth="4"
             />
           </svg>
         </div>
@@ -67,9 +67,9 @@ export const OrnateBorder = () => {
             <path
               fill="none"
               stroke="#333333"
-              stroke-width="4"
-              stroke-linejoin="miter"
-              stroke-miterlimit="8.0"
+              strokeWidth="4"
+              strokeLinejoin="miter"
+              strokeMiterlimit="8.0"
               transform="rotate(270,20,20)"
               d="M2,40 L2,16 C11,34 11,11 11,11 C34,11 16,2 16,2 L40,2"
             />
@@ -81,7 +81,7 @@ export const OrnateBorder = () => {
               points="0,38 5000,38"
               fill="none"
               stroke="#000000"
-              stroke-width="4"
+              strokeWidth="4"
             />
           </svg>
         </div>
@@ -90,9 +90,9 @@ export const OrnateBorder = () => {
             <path
               fill="none"
               stroke="#333333"
-              stroke-width="4"
-              stroke-linejoin="miter"
-              stroke-miterlimit="8.0"
+              strokeWidth="4"
+              strokeLinejoin="miter"
+              strokeMiterlimit="8.0"
               transform="rotate(180,20,20)"
               d="M2,40 L2,16 C11,34 11,11 11,11 C34,11 16,2 16,2 L40,2"
             />

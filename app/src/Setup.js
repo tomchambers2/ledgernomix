@@ -19,7 +19,7 @@ export const Setup = ({ setupStatus }) => {
       {setupStatus.metamask && !setupStatus.network && (
         <>
           <div>Next connect to our test network</div>
-          <img src={networkImage}></img>
+          <img alt="network" src={networkImage}></img>
           {/* image
         ask for private key to import */}
         </>
