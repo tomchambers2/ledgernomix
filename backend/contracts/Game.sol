@@ -407,11 +407,11 @@ contract Game {
     function enactProposal(uint256 proposalIndex) private {
         proposals[proposalIndex].successful = true;
         Proposal memory p = proposals[proposalIndex]; // FIXME: does using memory here use up gas?
-        rules[p.ruleIndex].value = p.value;
         uint256 playerIndex = getPlayer(p.proposer);
         uint256 reward =
             Calculations.etherToWei(rules[uint256(RuleIndices.Reward)].value);
         players[playerIndex].balance += reward; // FIXME: is there a better way
+        rules[p.ruleIndex].value = p.value;
         emit PlayerUpdate(
             playerIndex,
             p.proposer,
