@@ -61,9 +61,12 @@ export const Game = ({ web3, account }) => {
   };
 
   const getPlayerName = useCallback(
-    (address) => {
-      if (!address || !players) return "Waiting For Player";
-      const index = players.findIndex((p) => p.playerAddress === address);
+    (identifier) => {
+      if (!identifier || !players) return "Waiting For Player";
+      const index =
+        typeof identifier === "number"
+          ? identifier
+          : players.findIndex((p) => p.playerAddress === identifier);
       return (
         <>
           PLAYER{" "}

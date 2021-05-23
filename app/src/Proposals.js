@@ -43,6 +43,7 @@ export const Proposals = ({
               players={players}
               proposals={proposals}
               playerIndex={playerIndex}
+              getPlayerName={getPlayerName}
             ></Propose>
           )) || <Loader></Loader>}
         </div>

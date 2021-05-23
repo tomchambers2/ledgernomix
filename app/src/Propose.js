@@ -12,6 +12,7 @@ export const Propose = ({
   proposals,
   players,
   playerIndex,
+  getPlayerName,
 }) => {
   const [prevRules, setPrevRules] = useState([]);
   const [proposedRuleOption, setProposedRuleOption] = useState(null);
@@ -110,6 +111,9 @@ export const Propose = ({
 
   if (!players || !proposals) return <div>LOADING...</div>;
 
+  if (proposals.filter(({ complete }) => complete).length !== proposals.length)
+    return <h2>Waiting for current proposal to complete</h2>;
+
   return (
     <>
       {(!gameActive && <div className="disabled-panel">Game over</div>) ||
@@ -163,7 +167,9 @@ export const Propose = ({
               } and ${rules[proposedRuleOption.value].upperBound}`}
           </p>
         </>
-      )) || <h3>Wait for your turn</h3>}
+      )) || (
+        <h3>Waiting for {getPlayerName(proposals.length % players.length)}</h3>
+      )}
     </>
   );
 };
