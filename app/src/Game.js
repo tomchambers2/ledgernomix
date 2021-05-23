@@ -112,6 +112,20 @@ export const Game = ({ web3, account }) => {
     [game]
   );
 
+  const getValue = useCallback(
+    async (name) => {
+      if (!game) return;
+      try {
+        const value = await game.methods[name].call();
+        return value;
+      } catch (e) {
+        fireNotification(`Failed to get ${name}`);
+        console.error(`Failed to get ${name}: ${e.message}`);
+      }
+    },
+    [game]
+  );
+
   const mapEvent = useCallback(
     (event) => {
       const data = event.returnValues;
@@ -208,12 +222,17 @@ export const Game = ({ web3, account }) => {
     setEvents([...pastEvents.map(mapEvent)]);
   }, [game, mapEvent, players, proposals, rules]);
 
+  const fetchGameEndTime = useCallback(async () => {
+    const gameEndTime = await getValue("gameEndTime");
+  }, [getValue]);
+
   const fetchData = useCallback(async () => {
     await fetchRules();
     await fetchProposals();
     await fetchPlayers();
     await fetchEvents();
-  }, [fetchRules, fetchProposals, fetchPlayers, fetchEvents]);
+    await fetchGameEndTime();
+  }, [fetchRules, fetchProposals, fetchPlayers, fetchEvents, fetchGameEndTime]);
 
   useEffect(() => {
     if (!game) return;

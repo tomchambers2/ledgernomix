@@ -2,7 +2,6 @@ import { ruleConfig } from "./ruleConfig";
 import classNames from "classnames";
 
 export const Rules = ({ rules }) => {
-  console.log("Rules: ", rules);
   return (
     <>
       <h2>Rules</h2>

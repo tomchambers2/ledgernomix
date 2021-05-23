@@ -63,6 +63,8 @@ contract GameFactory {
 }
 
 contract Game {
+    uint256 gameEndTime = 1234;
+
     struct Player {
         address playerAddress;
         uint256 balance;
@@ -422,6 +424,8 @@ contract Game {
         if (
             proposals.length >= rules[uint256(RuleIndices.MaxProposals)].value
         ) {
+            gameEndTime = block.timestamp;
+
             uint256 balancesSum;
             uint256 thisGameContractBalance = address(this).balance;
 
@@ -430,16 +434,9 @@ contract Game {
                 balancesSum += players[index].balance;
             }
             for (uint256 index = 0; index < players.length; index++) {
-                console.log(
-                    "will pay",
-                    players[index].balance,
-                    thisGameContractBalance,
-                    balancesSum
-                );
                 uint256 share =
                     (players[index].balance * thisGameContractBalance) /
                         balancesSum;
-                console.log("paying", share);
                 payable(players[index].playerAddress).transfer(share);
             }
         }
