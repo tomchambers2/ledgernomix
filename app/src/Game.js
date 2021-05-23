@@ -33,6 +33,7 @@ export const Game = ({ web3, account }) => {
   const [proposals, setProposals] = useState(null);
   const [isPlayer, setIsPlayer] = useState(null);
   const [initialDataLoaded, setInitialDataLoaded] = useState(false);
+  const [gameEndTime, setGameEndTime] = useState(0);
 
   useEffect(() => {
     if (!account || !players) return;
@@ -116,7 +117,7 @@ export const Game = ({ web3, account }) => {
     async (name) => {
       if (!game) return;
       try {
-        const value = await game.methods[name].call();
+        const value = await game.methods[name].call().call();
         return value;
       } catch (e) {
         fireNotification(`Failed to get ${name}`);
@@ -224,6 +225,7 @@ export const Game = ({ web3, account }) => {
 
   const fetchGameEndTime = useCallback(async () => {
     const gameEndTime = await getValue("gameEndTime");
+    setGameEndTime(gameEndTime);
   }, [getValue]);
 
   const fetchData = useCallback(async () => {

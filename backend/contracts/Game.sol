@@ -63,7 +63,7 @@ contract GameFactory {
 }
 
 contract Game {
-    uint256 gameEndTime = 1234;
+    uint256 public gameEndTime;
 
     struct Player {
         address playerAddress;
