@@ -1,3 +1,5 @@
+import { OrnateBorder } from "./OrnateBorder";
+
 export const GameList = ({ gamesList, newGameHandler }) => {
   return (
     <>
@@ -8,15 +10,18 @@ export const GameList = ({ gamesList, newGameHandler }) => {
           </button>
         </div>
       </div>
-      {(!gamesList && "Loading...") || (
-        <ol>
-          {gamesList.map((game) => (
-            <li>
-              <a href={game}>{game}</a>
-            </li>
-          ))}
-        </ol>
-      )}
+      <div className="game-list panel">
+        <OrnateBorder></OrnateBorder>
+        {(!gamesList && "Loading...") || (
+          <ol>
+            {gamesList.map((game) => (
+              <li>
+                <a href={game}>{game}</a>
+              </li>
+            ))}
+          </ol>
+        )}
+      </div>
     </>
   );
 };

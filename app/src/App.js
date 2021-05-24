@@ -132,21 +132,36 @@ function App() {
 
   return (
     <div className="app">
-      <Router>
-        <Setup setupStatus={setupStatus}></Setup>
-        <Switch>
-          <Route path="/:gameAddress">
-            <Game web3={web3} account={account}></Game>
-          </Route>
-          <Route path="/">
-            {newGameAddress && <Redirect to="/" />}
-            <GameList
-              gamesList={gamesList}
-              newGameHandler={newGameHandler}
-            ></GameList>
-          </Route>
-        </Switch>
-      </Router>
+      <div className="intro">
+        <div>
+          <h1>
+            Ledgernomi<span style={{ fontVariant: "small-caps" }}>x</span>
+          </h1>
+        </div>
+        <div className="links">
+          <h3>How to play</h3>
+          <h3>About</h3>
+        </div>
+      </div>
+      <div className="all-panels-container">
+        <div className="background-spacer"></div>
+        <div className="background-pattern"></div>
+        <Router>
+          <Setup setupStatus={setupStatus}></Setup>
+          <Switch>
+            <Route path="/:gameAddress">
+              <Game web3={web3} account={account}></Game>
+            </Route>
+            <Route path="/">
+              {newGameAddress && <Redirect to="/" />}
+              <GameList
+                gamesList={gamesList}
+                newGameHandler={newGameHandler}
+              ></GameList>
+            </Route>
+          </Switch>
+        </Router>
+      </div>
     </div>
   );
 }

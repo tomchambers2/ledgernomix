@@ -267,123 +267,104 @@ export const Game = ({ web3, account }) => {
 
   return (
     <>
-      <div className="intro">
-        <div>
-          <h1>
-            Ledgernomi<span style={{ fontVariant: "small-caps" }}>x</span>
-          </h1>
-        </div>
+      <div className="header-container">
+        <div className="game-details-panel panel">
+          <OrnateBorder></OrnateBorder>
 
-        <div className="links">
-          <h3>How to play</h3>
-          <h3>About</h3>
+          {(!gameActive && "This game has ended") || (
+            <div className="game-timers-container">
+              <Clock
+                blockInterval={FETCH_INTERVAL}
+                timeoutCallback={fetchData}
+              />
+              <ProposalCounter
+                completeProposals={proposals}
+                maxProposals={getRuleValue("Max proposals")}
+              />
+            </div>
+          )}
+          <div className="game-name">
+            {isPlayer && (
+              <h2>
+                Game{" "}
+                <span className="game-address">
+                  {gameAddress.substr(
+                    gameAddress.length - 6,
+                    gameAddress.length
+                  )}
+                </span>
+              </h2>
+            )}
+            {gameActive && !isPlayer && (
+              <button onClick={joinGameHandler}>Join game</button>
+            )}
+          </div>
+          <div className="game-metadata">
+            Players: {(players && players.length) || 0}
+            <br></br>
+            Pot: {weiToEth(gameBalance) || 0} {cryptocurrency}
+          </div>
+        </div>
+        <div className="player-details-panel panel">
+          <OrnateBorder></OrnateBorder>
+          <PlayerIcon address={account}></PlayerIcon>
+          <div className="PlayerID">{getPlayerName(account)}</div>
         </div>
       </div>
-
-      <div className="all-panels-container">
-        <div className="background-pattern"></div>
-        <div className="header-container">
-          <div className="game-details-panel panel">
-            <OrnateBorder></OrnateBorder>
-
-            {(!gameActive && "This game has ended") || (
-              <div className="game-timers-container">
-                <Clock
-                  blockInterval={FETCH_INTERVAL}
-                  timeoutCallback={fetchData}
-                />
-                <ProposalCounter
-                  completeProposals={proposals}
-                  maxProposals={getRuleValue("Max proposals")}
-                />
-              </div>
-            )}
-            <div className="game-name">
-              {isPlayer && (
-                <h2>
-                  Game{" "}
-                  <span className="game-address">
-                    {gameAddress.substr(
-                      gameAddress.length - 6,
-                      gameAddress.length
-                    )}
-                  </span>
-                </h2>
-              )}
-              {gameActive && !isPlayer && (
-                <button onClick={joinGameHandler}>Join game</button>
-              )}
+      <div className="vertical-panels-container">
+        <div className="column">
+          {gameActive && (
+            <div className="game-grade panel">
+              <OrnateBorder></OrnateBorder>
+              <GameGrade players={players} proposals={proposals}></GameGrade>
             </div>
-            <div className="game-metadata">
-              Players: {(players && players.length) || 0}
-              <br></br>
-              Pot: {weiToEth(gameBalance) || 0} {cryptocurrency}
-            </div>
-          </div>
-          <div className="player-details-panel panel">
+          )}
+          <div className="rules panel">
             <OrnateBorder></OrnateBorder>
-            <PlayerIcon address={account}></PlayerIcon>
-            <div className="PlayerID">{getPlayerName(account)}</div>
+            <div className="subpanel rules">
+              {(rules && <Rules rules={rules}></Rules>) || <Loader></Loader>}
+            </div>
           </div>
         </div>
-        <div className="vertical-panels-container">
-          <div className="column">
-            {gameActive && (
-              <div className="game-grade panel">
-                <OrnateBorder></OrnateBorder>
-                <GameGrade players={players} proposals={proposals}></GameGrade>
-              </div>
-            )}
-            <div className="rules panel">
+        <div className="column">
+          {!gameActive && (
+            <div className="payout panel">
               <OrnateBorder></OrnateBorder>
-              <div className="subpanel rules">
-                {(rules && <Rules rules={rules}></Rules>) || <Loader></Loader>}
-              </div>
+              <Payout players={players} playerAddress={account}></Payout>
             </div>
+          )}
+          <div className="proposals panel">
+            <OrnateBorder></OrnateBorder>
+            {(rules && proposals && (
+              <Proposals
+                proposals={proposals}
+                rules={rules}
+                getPlayerName={getPlayerName}
+                voteOnProposal={voteOnProposalHandler}
+                isPlayer={isPlayer}
+                gameActive={gameActive}
+                playerAddress={account}
+                web3={web3}
+                account={account}
+                players={players}
+                playerIndex={getPlayerIndex}
+              ></Proposals>
+            )) || <Loader></Loader>}
           </div>
-          <div className="column">
-            {!gameActive && (
-              <div className="payout panel">
-                <OrnateBorder></OrnateBorder>
-                <Payout players={players} playerAddress={account}></Payout>
-              </div>
-            )}
-            <div className="proposals panel">
-              <OrnateBorder></OrnateBorder>
-              {(rules && proposals && (
-                <Proposals
-                  proposals={proposals}
-                  rules={rules}
-                  getPlayerName={getPlayerName}
-                  voteOnProposal={voteOnProposalHandler}
-                  isPlayer={isPlayer}
-                  gameActive={gameActive}
-                  playerAddress={account}
-                  web3={web3}
-                  account={account}
-                  players={players}
-                  playerIndex={getPlayerIndex}
-                ></Proposals>
-              )) || <Loader></Loader>}
-            </div>
-          </div>
-          <div className="column">
-            <div className="ledger panel">
-              <OrnateBorder></OrnateBorder>
-              {(players && (
-                <Scores
-                  players={players}
-                  getPlayerName={getPlayerName}
-                ></Scores>
-              )) || <Loader></Loader>}
+        </div>
+        <div className="column">
+          <div className="ledger panel">
+            <OrnateBorder></OrnateBorder>
+            {(players && (
+              <Scores players={players} getPlayerName={getPlayerName}></Scores>
+            )) || <Loader></Loader>}
 
-              {events
-                .slice()
-                .reverse()
-                .map((event) => (
-                  <div className="item">{event}</div>
-                ))}
-            </div>
+            {events
+              .slice()
+              .reverse()
+              .map((event) => (
+                <div className="item">{event}</div>
+              ))}
           </div>
         </div>
       </div>

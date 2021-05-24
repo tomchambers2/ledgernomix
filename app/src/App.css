@@ -3,7 +3,7 @@
   --game-foreground: white;
   --game-graphics-primary: black;
   --game-graphics-accent: white;
-  --game-graphics-active: red;
+  --game-graphics-active: white;
   --game-border: 14px;
   --game-line-width: 4px;
   --game-icon-size: 140px;
@@ -22,9 +22,10 @@ a:visited {
 }
 
 a:hover {
-  color: var(--game-graphics-active);
-  background-color: var(--game-graphics-primary);
+  color: var(--game-graphics-);
+  background-color: var(--game-graphics-foreground);
   text-decoration: none;
+  z-index: 99;
 }
 
 a:active {
@@ -67,6 +68,10 @@ body {
   pointer-events: none;
 }
 
+.background-spacer {
+  height: var(--game-border);
+}
+
 .app {
   justify-content: center;
 }
@@ -103,10 +108,17 @@ body {
   text-align: center;
   position: relative; /* this allows ornate border to be positioned absolute */
   min-height: 200px;
+  position: relative;
+  top: 0;
+  transition: top ease 0.3s;
 }
 
 .column > .panel {
   padding-bottom: calc(((var(--game-border) * 2) + var(--game-line-width)) * 2);
+}
+
+.panel:hover {
+  top: calc(-1 * var(--game-border));
 }
 
 h1,
@@ -148,22 +160,24 @@ a.button {
   padding: 0px;
   border-width: 0px;
 
-  /* border: var(--game-line-width) solidvar(--game-graphics-primary);
+  border: var(--game-line-width) solidvar(--game-graphics-primary);
   color: black;
-  margin: 15px;
-  padding: 8px 40px 18px 40px;
+  /* margin: 15px; */
+  /* padding: 8px 40px 18px 40px; */
 
   text-decoration: none;
   background: var(--game-foreground);
   font-weight: bold;
-  cursor: pointer; */
+  cursor: pointer;
 }
 
-button:hover,
+/* button:hover,
 .button:hover {
   cursor: pointer;
-  background: var(--game-graphics-active);
-}
+   background: var(--game-graphics-active);
+  top: -10px; 
+  z-index: 98;
+} */
 
 button:disabled,
 .button:disabled,
@@ -240,6 +254,13 @@ a.button:disabled {
     var(--game-icon-size) + (var(--game-border) * 2) +
       (var(--game-line-width) * 2)
   );
+  position: relative;
+  top: 0;
+  transition: top ease 0.3s;
+}
+
+.game-icon-panel:hover {
+  top: calc(-1 * var(--game-border));
 }
 
 .join > div {
@@ -262,6 +283,19 @@ a.button:disabled {
   border-radius: 100%;
   background-color: var(--game-graphics-primary);
   color: var(--game-graphics-accent);
+  border: var(--game-line-width) solid var(--game-graphics-accent);
+  width: calc(var(--game-icon-size) - (var(--game-line-width) * 4));
+  height: calc(var(--game-icon-size) - (var(--game-line-width) * 4));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+}
+
+.game-button > div:hover {
+  border-radius: 100%;
+  background-color: var(--game-foreground);
+  color: var(--game-graphics-primary);
   border: var(--game-line-width) solid var(--game-graphics-accent);
   width: calc(var(--game-icon-size) - (var(--game-line-width) * 4));
   height: calc(var(--game-icon-size) - (var(--game-line-width) * 4));
@@ -341,7 +375,6 @@ a.button:disabled {
   color: var(--game-graphics-accent);
   background-color: var(--game-graphics-primary);
   border-radius: 0px;
-  /* border: 4px solid var(--game-graphics-accent); */
   margin: 10px 0;
   font-size: 20px;
   outline-offset: calc(var(--game-line-width) * -2);
