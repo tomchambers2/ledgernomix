@@ -51,7 +51,6 @@ body {
     var(--eskapade-fraktur-tnum);
   padding: 0px 10px 0px 10px;
   background: var(--game-background);
-  /* --eskapade-fraktur-salt: "salt" on; */
 }
 
 .background-pattern {
@@ -102,8 +101,8 @@ body {
   margin: var(--game-border);
   background: var(--game-foreground);
   box-sizing: content-box;
-  /* outline: var(--game-line-width) solid var(--game-graphics-primary); */
-  outline-offset: calc(-1 * (var(--game-line-width) + var(--game-border)));
+  /* outline: var(--game-line-width) solid var(--game-graphics-primary);
+  outline-offset: calc(-1 * (var(--game-line-width) + var(--game-border))); */
   padding: calc((var(--game-border) * 2) + var(--game-line-width));
   text-align: center;
   position: relative; /* this allows ornate border to be positioned absolute */
@@ -124,12 +123,10 @@ body {
 h1,
 h2 {
   font-family: "UnifrakturMaguntia", cursive;
-  font-weight: bold;
 }
 
 h1 {
   font-size: 80px;
-  font-weight: bold;
   margin: 0;
   margin-bottom: 1rem;
 }
@@ -148,7 +145,7 @@ h3 {
 .game-icons-container {
   display: flex;
   justify-content: center;
-  padding-bottom: 40px;
+  padding: 40px;
 }
 
 button,
@@ -160,24 +157,22 @@ a.button {
   padding: 0px;
   border-width: 0px;
 
-  border: var(--game-line-width) solidvar(--game-graphics-primary);
-  color: black;
-  /* margin: 15px; */
-  /* padding: 8px 40px 18px 40px; */
+  outline: var(--game-line-width) solid var(--game-graphics-accent);
+  outline-offset: calc(-1 * var(--game-line-width));
 
+  border: var(--game-line-width) solid var(--game-graphics-primary);
+  color: var(--game-graphics-accent);
   text-decoration: none;
-  background: var(--game-foreground);
+  background: var(--game-graphics-primary);
   font-weight: bold;
   cursor: pointer;
 }
 
-/* button:hover,
 .button:hover {
   cursor: pointer;
-   background: var(--game-graphics-active);
-  top: -10px; 
-  z-index: 98;
-} */
+  background: var(--game-foreground);
+  color: var(--game-graphics-primary);
+}
 
 button:disabled,
 .button:disabled,
@@ -277,6 +272,7 @@ a.button:disabled {
   display: flex;
   justify-content: center;
   align-items: center;
+  outline: 0;
 }
 
 .game-button > div {
@@ -404,6 +400,12 @@ input {
   50% {
     opacity: 0;
   }
+}
+
+.setup,
+.game-list {
+  width: 50%;
+  margin: auto;
 }
 
 .ornate-border-container {

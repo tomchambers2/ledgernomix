@@ -12,14 +12,15 @@ export const GameList = ({ gamesList, newGameHandler }) => {
       </div>
       <div className="game-list panel">
         <OrnateBorder></OrnateBorder>
+        <h2>Games</h2>
         {(!gamesList && "Loading...") || (
-          <ol>
+          <div className="list-of games">
             {gamesList.map((game) => (
-              <li>
+              <button className="game-list-item">
                 <a href={game}>{game}</a>
-              </li>
+              </button>
             ))}
-          </ol>
+          </div>
         )}
       </div>
     </>
