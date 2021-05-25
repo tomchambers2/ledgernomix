@@ -16,9 +16,11 @@ export const GameList = ({ gamesList, newGameHandler }) => {
         {(!gamesList && "Loading...") || (
           <div className="list-of games">
             {gamesList.map((game) => (
-              <button className="game-list-item">
-                <a href={game}>{game}</a>
-              </button>
+              <div className="game-list-item">
+                <a className="game-list-button" href={game}>
+                  {game}
+                </a>
+              </div>
             ))}
           </div>
         )}

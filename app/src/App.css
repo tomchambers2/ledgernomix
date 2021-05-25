@@ -11,26 +11,23 @@
 
 a:link {
   color: var(--game-graphics-accent);
-  background-color: var(--game-graphics-primary);
   text-decoration: none;
 }
 
 a:visited {
   color: var(--game-graphics-accent);
-  background-color: var(--game-graphics-primary);
   text-decoration: none;
 }
 
 a:hover {
-  color: var(--game-graphics-);
-  background-color: var(--game-graphics-foreground);
+  color: var(--game-graphics-primary);
   text-decoration: none;
-  z-index: 99;
+  /* z-index: 99; */
 }
 
 a:active {
   color: var(--game-graphics-accent);
-  background-color: var(--game-graphics-primary);
+
   text-decoration: none;
 }
 
@@ -150,29 +147,36 @@ h3 {
 
 button,
 .button,
-a.button {
+a.button,
+.game-list-button {
   font-family: eskapade-fraktur, serif;
-  font-size: 30px;
-
-  padding: 0px;
+  font-size: 20px;
+  padding: calc(2 * var(--game-line-width));
+  margin: var(--game-border);
   border-width: 0px;
-
   outline: var(--game-line-width) solid var(--game-graphics-accent);
-  outline-offset: calc(-1 * var(--game-line-width));
-
+  outline-offset: calc(-2 * var(--game-line-width));
   border: var(--game-line-width) solid var(--game-graphics-primary);
   color: var(--game-graphics-accent);
   text-decoration: none;
   background: var(--game-graphics-primary);
   font-weight: bold;
   cursor: pointer;
+  line-height: 3;
 }
 
-.button:hover {
+button:hover,
+.button:hover,
+a.button:hover,
+.game-list-button:hover {
   cursor: pointer;
   background: var(--game-foreground);
   color: var(--game-graphics-primary);
 }
+
+/* .game-list-item-width {
+  width: 100%;
+} */
 
 button:disabled,
 .button:disabled,
@@ -273,6 +277,7 @@ a.button:disabled {
   justify-content: center;
   align-items: center;
   outline: 0;
+  padding: 0;
 }
 
 .game-button > div {
@@ -286,9 +291,24 @@ a.button:disabled {
   justify-content: center;
   align-items: center;
   font-size: 30px;
+  line-height: 1;
 }
 
-.game-button > div:hover {
+.game-button:hover {
+  border-radius: 100%;
+  background-color: var(--game-graphics-primary);
+  color: var(--game-graphics-accent);
+  border: 0;
+  width: var(--game-icon-size);
+  height: var(--game-icon-size);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  outline: 0;
+  padding: 0;
+}
+
+.game-button:hover > div {
   border-radius: 100%;
   background-color: var(--game-foreground);
   color: var(--game-graphics-primary);
@@ -406,6 +426,9 @@ input {
 .game-list {
   width: 50%;
   margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
 }
 
 .ornate-border-container {

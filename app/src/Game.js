@@ -267,6 +267,17 @@ export const Game = ({ web3, account }) => {
 
   return (
     <>
+      {gameActive && !isPlayer && (
+        <div className="game-icons-container">
+          <div className="game-icon-panel">
+            <button className="game-button" onClick={joinGameHandler}>
+              <div>
+                Join <br></br> Game
+              </div>
+            </button>
+          </div>
+        </div>
+      )}
       <div className="header-container">
         <div className="game-details-panel panel">
           <OrnateBorder></OrnateBorder>
@@ -284,7 +295,7 @@ export const Game = ({ web3, account }) => {
             </div>
           )}
           <div className="game-name">
-            {isPlayer && (
+            {game && (
               <h2>
                 Game{" "}
                 <span className="game-address">
@@ -294,9 +305,6 @@ export const Game = ({ web3, account }) => {
                   )}
                 </span>
               </h2>
-            )}
-            {gameActive && !isPlayer && (
-              <button onClick={joinGameHandler}>Join game</button>
             )}
           </div>
           <div className="game-metadata">

@@ -14,7 +14,7 @@ export const Setup = ({ setupStatus }) => {
             href="https://metamask.io/download.html"
             rel="noreferrer"
           >
-            First install Metamask browser extension
+            <h3>First install Metamask browser extension</h3>
           </a>
         </div>
       )}
