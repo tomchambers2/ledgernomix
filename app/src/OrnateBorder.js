@@ -6,7 +6,7 @@ export const OrnateBorder = () => {
           <svg>
             <path
               fill="none"
-              stroke="#333333"
+              stroke="#000000"
               strokeWidth="4"
               strokeLinejoin="miter"
               strokeMiterlimit="8.0"
@@ -28,7 +28,7 @@ export const OrnateBorder = () => {
           <svg>
             <path
               fill="none"
-              stroke="#333333"
+              stroke="#000000"
               strokeWidth="4"
               strokeLinejoin="miter"
               strokeMiterlimit="8.0"
@@ -66,7 +66,7 @@ export const OrnateBorder = () => {
           <svg>
             <path
               fill="none"
-              stroke="#333333"
+              stroke="#000000"
               strokeWidth="4"
               strokeLinejoin="miter"
               strokeMiterlimit="8.0"
@@ -89,7 +89,7 @@ export const OrnateBorder = () => {
           <svg>
             <path
               fill="none"
-              stroke="#333333"
+              stroke="#000000"
               strokeWidth="4"
               strokeLinejoin="miter"
               strokeMiterlimit="8.0"

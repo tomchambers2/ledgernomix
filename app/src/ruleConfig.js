@@ -1,18 +1,19 @@
 export const ruleConfig = {
   "Entry fee": {
-    name: "Entry Fee",
+    name: "Entry fee",
     description: "The amount in DAI to buy into the game",
     inactive: 10,
     unproposable: true,
   },
   "Start balance": {
-    name: "Start Balance",
+    name: "Start balance",
     description: "The amount of game tokens a player starts with",
     unit: "",
     inactive: 1000,
+    unproposable: true,
   },
   "Proposal reward": {
-    name: "Successful Proposal Reward",
+    name: "Successful proposal reward",
     description:
       "The amount given to a player when their proposal is successful",
     unit: "",
@@ -31,29 +32,30 @@ export const ruleConfig = {
     unit: "%",
   },
   "Max proposals": {
-    name: "Max Proposals",
+    name: "Max proposals",
     description: "The game ends when this many proposals have been completed",
     unit: "",
     inactive: 30,
+    unproposable: false,
   },
   "Poll tax": {
-    name: "Poll Tax",
+    name: "Poll tax",
     description: "A fixed tax collected on every completed proposal",
     inactive: 0,
   },
   "Wealth tax": {
-    name: "Wealth Tax",
+    name: "Wealth tax",
     description: "A percentage tax collected on every completed proposal",
     unit: "%",
     inactive: 0,
   },
   "Wealth tax threshold": {
-    name: "Wealth Tax Threshold",
+    name: "Wealth tax threshold",
     description: "A percentage tax collected on every completed proposal",
     inactive: 0,
   },
   "Proposal fee": {
-    name: "Proposal Fee",
+    name: "Proposal fee",
     description: "A fee collected on newly created proposals",
     inactive: 0,
   },

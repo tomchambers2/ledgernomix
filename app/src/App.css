@@ -152,7 +152,7 @@ a.button,
   font-family: eskapade-fraktur, serif;
   font-size: 20px;
   padding: calc(2 * var(--game-line-width));
-  margin: var(--game-border);
+  /* margin: var(--game-border), 0; */
   border-width: 0px;
   outline: var(--game-line-width) solid var(--game-graphics-accent);
   outline-offset: calc(-2 * var(--game-line-width));
@@ -162,7 +162,7 @@ a.button,
   background: var(--game-graphics-primary);
   font-weight: bold;
   cursor: pointer;
-  line-height: 3;
+  line-height: 2.5;
 }
 
 button:hover,
@@ -181,28 +181,29 @@ a.button:hover,
 button:disabled,
 .button:disabled,
 a.button:disabled {
-  /* border-color: grey;*/
-  color: var(--game-background);
+  outline: var(--game-line-width) solid var(--game-graphics-accent);
+  outline-offset: calc(-2 * var(--game-line-width));
+  border: var(--game-line-width) solid var(--game-background);
+  color: var(--game-graphics-accent);
+  background: var(--game-background);
+  cursor: not-allowed;
 }
 
 .vote-actions {
   display: flex;
+  justify-content: space-around;
 }
 
-.vote-actions .button {
-  padding: 20px;
-  margin: 5px;
-  width: 50%;
-  background: black;
-  color: white;
-  outline: var(--game-line-width) solid white;
-  outline-offset: -1px;
+.votes-column {
+  flex-grow: 1;
+  margin: var(--game-border) 0;
 }
-.vote-actions .button:first-of-type {
-  margin-left: 0;
+
+.votes-column:first-of-type {
+  margin-right: calc(var(--game-border) / 2);
 }
-.vote-actions .button:last-of-type {
-  margin-right: 0;
+.votes-column:last-of-type {
+  margin-left: calc(var(--game-border) / 2);
 }
 
 /* .disabled-panel {
@@ -355,9 +356,6 @@ a.button:disabled {
 }
 
 .proposal-form .select-box {
-  /* width: 300px;
-  display: inline-block;
-  margin: 0 10px; */
   position: relative;
   font-family: eskapade-fraktur, serif;
   font-weight: bold;
@@ -429,6 +427,15 @@ input {
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
+}
+
+.create-proposal {
+  width: 100%;
+  margin: 10px 0;
+}
+
+.game-list-item {
+  margin: var(--game-border) 0;
 }
 
 .ornate-border-container {

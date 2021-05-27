@@ -77,7 +77,7 @@ export const Proposals = ({
                 !proposal.complete &&
                 !proposal.pending && (
                   <>
-                    <div classname="votes-column">
+                    <div className="votes-column">
                       <div
                         className="button"
                         onClick={() => voteOnProposal(proposal.index, true)}
@@ -91,7 +91,7 @@ export const Proposals = ({
                             <>{getPlayerName(playerAddress)} voted 👍🏻</>
                           ))}
                     </div>
-                    <div classname="votes-column">
+                    <div className="votes-column">
                       <div
                         className="button"
                         onClick={() => voteOnProposal(proposal.index, false)}

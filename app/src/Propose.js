@@ -113,7 +113,7 @@ export const Propose = ({
   if (!players || !proposals) return <div>LOADING...</div>;
 
   if (proposals.filter(({ complete }) => complete).length !== proposals.length)
-    return <h2>Waiting for current proposal to complete</h2>;
+    return <>Waiting for current proposal to complete</>;
 
   return (
     <>
@@ -151,8 +151,10 @@ export const Propose = ({
                   ruleConfig[proposedRuleOption.label].unit}
               </div>
             </div>
+            <br></br>
             <div>
               <button
+                className="create-proposal"
                 onClick={createProposalHandler}
                 disabled={
                   !proposedValueValid ||
