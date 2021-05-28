@@ -180,9 +180,7 @@ export const Propose = ({
             </p>
           </>
         )) || (
-          <h3>
-            Waiting for {getPlayerName(proposals.length % players.length)}
-          </h3>
+          <>Waiting for {getPlayerName(proposals.length % players.length)}</>
         ))}
     </>
   );
