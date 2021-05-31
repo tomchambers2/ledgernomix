@@ -46,14 +46,20 @@ const inflation = (players) => {
   );
   const totalEndGameBalance = weiToEth(totalEndGameBalanceWei);
 
-  console.log("totalEndGameBalanceWei: ", totalEndGameBalanceWei);
-  console.log("totalEndGameBalance: ", totalEndGameBalance);
-  console.log("totalStartGameBalance: ", totalStartGameBalance);
+  // console.log("totalEndGameBalanceWei: ", totalEndGameBalanceWei);
+  // console.log("totalEndGameBalance: ", totalEndGameBalance);
+  // console.log("totalStartGameBalance: ", totalStartGameBalance);
 
   const actualInflation =
     (totalEndGameBalance / totalStartGameBalance) * 100 - 100;
+  const inflationRankFactor = 0.01;
 
-  return (actualInflation + 100) / 2;
+  const inverseTanInflation = Math.atan(actualInflation * inflationRankFactor);
+
+  const normalisedInflationRank =
+    ((inverseTanInflation + Math.PI / 2) / Math.PI) * 100;
+
+  return normalisedInflationRank;
 };
 
 export const GameGrade = ({ players, proposals }) => {

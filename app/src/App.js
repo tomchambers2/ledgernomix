@@ -132,6 +132,7 @@ function App() {
 
   return (
     <div className="app">
+      <div className="background-gradient"></div>
       <div className="intro">
         <div>
           <h1>
@@ -145,7 +146,7 @@ function App() {
       </div>
       <div className="all-panels-container">
         <div className="background-spacer"></div>
-        <div className="background-pattern"></div>
+
         <Router>
           <Setup setupStatus={setupStatus}></Setup>
           <Switch>

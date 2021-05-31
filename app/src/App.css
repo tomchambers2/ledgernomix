@@ -1,3 +1,7 @@
+html {
+  height: 100%;
+}
+
 :root {
   --game-background: #daf1d5;
   --game-foreground: white;
@@ -50,6 +54,24 @@ body {
   background: var(--game-background);
 }
 
+.background-gradient {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+      0deg,
+      rgb(247 226 255) 0%,
+      rgb(222, 222, 222) 50%,
+      rgb(231 255 223) 100%
+    )
+    fixed;
+  mix-blend-mode: color;
+  z-index: 99;
+  pointer-events: none;
+}
+
 .background-pattern {
   position: absolute;
   top: 0;
@@ -62,6 +84,40 @@ body {
   mix-blend-mode: darken;
   z-index: 1;
   pointer-events: none;
+  background-position: 0px 30px;
+  transition: background-position 0.3s;
+}
+
+.game-icon-panel > .background-pattern {
+  border-radius: 100%;
+}
+
+.panel:hover > .background-pattern {
+  background-position: 0px 0px;
+  transition: background-position 0.3s;
+}
+
+.game-icon-panel:hover > .background-pattern {
+  background-position: 0px 0px;
+  transition: background-position 0.3s;
+}
+
+.game-details-panel > .background-pattern,
+.ledger > .background-pattern {
+  background-position: 900px 30px;
+}
+
+.game-details-panel:hover > .background-pattern,
+.ledger:hover > .background-pattern {
+  background-position: 900px 0px;
+}
+
+.proposals > .background-pattern {
+  background-position: 300px 30px;
+}
+
+.proposals:hover > .background-pattern {
+  background-position: 300px 0px;
 }
 
 .background-spacer {
@@ -191,11 +247,11 @@ a.button:disabled {
 
 .vote-actions {
   display: flex;
-  justify-content: space-around;
+  flex-direction: row;
 }
 
 .votes-column {
-  flex-grow: 1;
+  width: 100%;
   margin: var(--game-border) 0;
 }
 
@@ -204,6 +260,10 @@ a.button:disabled {
 }
 .votes-column:last-of-type {
   margin-left: calc(var(--game-border) / 2);
+}
+
+.votes-column > .button {
+  margin-bottom: var(--game-border);
 }
 
 /* .disabled-panel {

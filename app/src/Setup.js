@@ -7,6 +7,7 @@ export const Setup = ({ setupStatus }) => {
       {" "}
       {!setupStatus.metamask && (
         <div className="setup panel">
+          <div className="background-pattern"></div>
           <OrnateBorder></OrnateBorder>
           <a
             className="button"
@@ -20,6 +21,7 @@ export const Setup = ({ setupStatus }) => {
       )}
       {setupStatus.metamask && !setupStatus.network && (
         <div className="setup panel">
+          <div className="background-pattern"></div>
           <OrnateBorder></OrnateBorder>
           <div>Next connect to our test network</div>
           <img alt="network" src={networkImage}></img>

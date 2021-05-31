@@ -270,6 +270,7 @@ export const Game = ({ web3, account }) => {
       {gameActive && !isPlayer && (
         <div className="game-icons-container">
           <div className="game-icon-panel">
+            <div className="background-pattern"></div>
             <button className="game-button" onClick={joinGameHandler}>
               <div>
                 Join <br></br> Game
@@ -280,6 +281,7 @@ export const Game = ({ web3, account }) => {
       )}
       <div className="header-container">
         <div className="game-details-panel panel">
+          <div className="background-pattern"></div>
           <OrnateBorder></OrnateBorder>
 
           {(!gameActive && "This game has ended") || (
@@ -314,6 +316,7 @@ export const Game = ({ web3, account }) => {
           </div>
         </div>
         <div className="player-details-panel panel">
+          <div className="background-pattern"></div>
           <OrnateBorder></OrnateBorder>
           <PlayerIcon address={account}></PlayerIcon>
           <div className="PlayerID">{getPlayerName(account)}</div>
@@ -323,11 +326,13 @@ export const Game = ({ web3, account }) => {
         <div className="column">
           {gameActive && (
             <div className="game-grade panel">
+              <div className="background-pattern"></div>
               <OrnateBorder></OrnateBorder>
               <GameGrade players={players} proposals={proposals}></GameGrade>
             </div>
           )}
           <div className="rules panel">
+            <div className="background-pattern"></div>
             <OrnateBorder></OrnateBorder>
             <div className="subpanel rules">
               {(rules && <Rules rules={rules}></Rules>) || <Loader></Loader>}
@@ -337,11 +342,13 @@ export const Game = ({ web3, account }) => {
         <div className="column">
           {!gameActive && (
             <div className="payout panel">
+              <div className="background-pattern"></div>
               <OrnateBorder></OrnateBorder>
               <Payout players={players} playerAddress={account}></Payout>
             </div>
           )}
           <div className="proposals panel">
+            <div className="background-pattern"></div>
             <OrnateBorder></OrnateBorder>
             {(rules && proposals && (
               <Proposals
@@ -362,6 +369,7 @@ export const Game = ({ web3, account }) => {
         </div>
         <div className="column">
           <div className="ledger panel">
+            <div className="background-pattern"></div>
             <OrnateBorder></OrnateBorder>
             {(players && (
               <Scores players={players} getPlayerName={getPlayerName}></Scores>

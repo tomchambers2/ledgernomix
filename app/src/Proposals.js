@@ -87,9 +87,7 @@ export const Proposals = ({
                       {proposal.votes &&
                         proposal.votes
                           .filter(({ vote, playerAddress }) => vote)
-                          .map(() => (
-                            <>{getPlayerName(playerAddress)} voted 👍🏻</>
-                          ))}
+                          .map(() => <>{getPlayerName(playerAddress)}</>)}
                     </div>
                     <div className="votes-column">
                       <div
@@ -101,9 +99,7 @@ export const Proposals = ({
                       {proposal.votes &&
                         proposal.votes
                           .filter(({ vote, playerAddress }) => !vote)
-                          .map(() => (
-                            <>{getPlayerName(playerAddress)} voted 👎</>
-                          ))}
+                          .map(() => <>{getPlayerName(playerAddress)}</>)}
                     </div>
                   </>
                 )}

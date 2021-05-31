@@ -5,12 +5,14 @@ export const GameList = ({ gamesList, newGameHandler }) => {
     <>
       <div className="game-icons-container">
         <div className="game-icon-panel">
+          <div className="background-pattern"></div>
           <button className="game-button" onClick={newGameHandler}>
             <div>Create Game</div>
           </button>
         </div>
       </div>
       <div className="game-list panel">
+        <div className="background-pattern"></div>
         <OrnateBorder></OrnateBorder>
         <h2>Games</h2>
         {(!gamesList && "Loading...") || (

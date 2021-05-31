@@ -1,7 +1,3 @@
 .title.complete {
   text-decoration: line-through;
 }
-
-.votes-columns-container {
-  display: flex;
-}
