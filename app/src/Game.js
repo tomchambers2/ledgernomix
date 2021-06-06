@@ -232,8 +232,32 @@ export const Game = ({ web3, account }) => {
   }, [game, mapEvent, players, proposals, rules]);
 
   const fetchGameEndTime = useCallback(async () => {
-    const gameEndTime = await getValue("gameEndTime");
-    setGameEndTime(gameEndTime);
+    const gameEndTimestamp = await getValue("gameEndTime");
+    // Create a new JavaScript Date object based on the timestamp
+    // multiplied by 1000 so that the argument is in milliseconds, not seconds.
+    var date = new Date(gameEndTimestamp * 1000);
+
+    var formattedDate = date.toLocaleDateString("en-UK", {
+      timeZone: "UTC",
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+
+    // Will display time in 10:30:23 format
+    var formattedTime = date.toLocaleString([], {
+      timeZone: "UTC",
+      timeStyle: "short",
+    });
+
+    //console.log(formattedTime);
+    setGameEndTime(
+      <>
+        <div>{formattedDate}</div>
+        <div>at</div>
+        <div>{formattedTime} UTC</div>
+      </>
+    );
   }, [getValue]);
 
   const fetchData = useCallback(async () => {
@@ -284,7 +308,12 @@ export const Game = ({ web3, account }) => {
           <div className="background-pattern"></div>
           <OrnateBorder></OrnateBorder>
 
-          {(!gameActive && "This game has ended") || (
+          {(!gameActive && (
+            <div className="game-ended-container">
+              Game Finished
+              <div>{gameEndTime}</div>
+            </div>
+          )) || (
             <div className="game-timers-container">
               <Clock
                 blockInterval={FETCH_INTERVAL}
@@ -310,9 +339,18 @@ export const Game = ({ web3, account }) => {
             )}
           </div>
           <div className="game-metadata">
-            Players: {(players && players.length) || 0}
-            <br></br>
-            Pot: {weiToEth(gameBalance) || 0} {cryptocurrency}
+            <div className="game-metadata-item">
+              <div>Players</div>
+              <div className="join-line"></div>
+              <div>{(players && players.length) || 0}</div>
+            </div>
+            <div className="game-metadata-item">
+              <div>Pot</div>
+              <div className="join-line"></div>
+              <div>
+                {weiToEth(gameBalance).toFixed(2) || 0} {cryptocurrency}
+              </div>
+            </div>
           </div>
         </div>
         <div className="player-details-panel panel">

@@ -82,7 +82,7 @@ body {
   background-size: 1200px;
   background-repeat: repeat;
   mix-blend-mode: darken;
-  z-index: 1;
+  z-index: 2;
   pointer-events: none;
   background-position: 0px 30px;
   transition: background-position 0.3s;
@@ -496,6 +496,18 @@ input {
 
 .game-list-item {
   margin: var(--game-border) 0;
+}
+.split {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.join-line {
+  background-color: var(--game-graphics-primary);
+  height: var(--game-line-width);
+  flex-grow: 1;
+  align-self: center;
+  margin: 0 var(--game-border);
 }
 
 .ornate-border-container {

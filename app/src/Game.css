@@ -1,13 +1,13 @@
-/* :root {
-  --game-background: #f2f1e2;
+:root {
+  --game-background: #daf1d5;
   --game-foreground: white;
   --game-graphics-primary: black;
   --game-graphics-accent: white;
-  --game-graphics-active: red;
+  --game-graphics-active: white;
   --game-border: 14px;
   --game-line-width: 4px;
   --game-icon-size: 140px;
-} */
+}
 
 .header-container {
   display: flex;
@@ -31,8 +31,34 @@
   padding-left: 48px;
 }
 
-.game-metadata {
+.game-ended-container {
   flex-basis: 22%;
+  height: 264px;
+  background-color: var(--game-foreground);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  margin-left: 48px;
+  z-index: 1;
+  border-left: var(--game-line-width) solid var(--game-graphics-primary);
+  border-right: var(--game-line-width) solid var(--game-graphics-primary);
+}
+
+.game-metadata {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  padding-right: 48px;
+  flex-basis: 22%;
+}
+.game-metadata-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  border: 0 var(--game-line-width) solid black;
+  padding: var(--game-border);
+  margin: var(--game-border) 0 0 0;
+  text-align: center;
 }
 
 .player-details-panel {

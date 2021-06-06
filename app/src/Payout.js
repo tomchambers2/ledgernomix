@@ -1,7 +1,12 @@
 import Web3 from "web3";
 import { gameConfig } from "./gameConfig";
-import "./Payout.css";
 const { cryptoEntryFee, cryptocurrency } = gameConfig;
+
+function getNumberWithOrdinal(n) {
+  var s = ["th", "st", "nd", "rd"],
+    v = n % 100;
+  return n + (s[(v - 20) % 10] || s[v] || s[0]);
+}
 
 export const Payout = ({ players, playerAddress }) => {
   if (!players) return <div>LOADING...</div>;
@@ -36,17 +41,26 @@ export const Payout = ({ players, playerAddress }) => {
   return (
     <div>
       <h2>Payout</h2>
-      <div className="box">Place: {place}</div>
-      <div className="box">
-        In Game Tokens: {Web3.utils.fromWei(player.balance)}
+      <div className="item split">
+        <div>Place:</div> <div>{getNumberWithOrdinal(place)}</div>
       </div>
-      <div className="box">
-        Pot Share: {`${((playerBalance / totalBalance) * 100).toFixed(2)}%`}
+      <div className="item split">
+        <div>In Game Tokens:</div>
+        <div>{Web3.utils.fromWei(player.balance)}</div>
       </div>
-      <div className="box">
-        Payout:{" "}
-        {(Web3.utils.fromWei(player.balance) / totalBalance) * totalCryptoPot}{" "}
-        {cryptocurrency}
+      <div className="item split">
+        <div>Pot Share:</div>
+        <div>{`${((playerBalance / totalBalance) * 100).toFixed(2)}%`}</div>
+      </div>
+      <div className="item split">
+        <div>Payout: </div>
+        <div>
+          {(
+            (Web3.utils.fromWei(player.balance) / totalBalance) *
+            totalCryptoPot
+          ).toFixed(2)}{" "}
+          {cryptocurrency}
+        </div>
       </div>
     </div>
   );
