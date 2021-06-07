@@ -366,7 +366,7 @@ export const Game = ({ web3, account }) => {
       </div>
       <div className="vertical-panels-container">
         <div className="column">
-          {gameActive && (
+          {!gameActive && (
             <div className="game-grade panel">
               <div className="background-pattern"></div>
               <OrnateBorder></OrnateBorder>
@@ -382,7 +382,7 @@ export const Game = ({ web3, account }) => {
           </div>
         </div>
         <div className="column">
-          {!gameActive && (
+          {!gameActive && isPlayer && (
             <div className="payout panel">
               <div className="background-pattern"></div>
               <OrnateBorder></OrnateBorder>

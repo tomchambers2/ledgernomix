@@ -77,8 +77,7 @@ export const Proposals = ({
                     <div className="votes-column">
                       {(proposal.votes.some(
                         ({ playerAddress: voter }) => voter === playerAddress
-                      ) &&
-                        "Yes") || (
+                      ) && <div className="votes-column-header">Yes</div>) || (
                         <div
                           className="button"
                           onClick={() => voteOnProposal(proposal.index, true)}
@@ -101,8 +100,7 @@ export const Proposals = ({
                       <div>
                         {(proposal.votes.some(
                           ({ playerAddress: voter }) => voter === playerAddress
-                        ) &&
-                          "No") || (
+                        ) && <div className="votes-column-header">No</div>) || (
                           <div
                             className="button"
                             onClick={() => voteOnProposal(proposal.index, true)}

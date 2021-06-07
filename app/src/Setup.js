@@ -1,5 +1,7 @@
 import { OrnateBorder } from "./OrnateBorder";
-import networkImage from "./backgrounds/metamaskSettings.jpg";
+import metamaskMenuImage from "./backgrounds/metamaskMenuImage.jpg";
+import networkSettingsImage from "./backgrounds/metamaskNetworkSettings.jpg";
+import networksImage from "./backgrounds/metamaskNetworks.jpg";
 
 export const Setup = ({ setupStatus }) => {
   return (
@@ -23,17 +25,32 @@ export const Setup = ({ setupStatus }) => {
         <div className="setup panel">
           <div className="background-pattern"></div>
           <OrnateBorder></OrnateBorder>
-          <div>
-            Before you can play you need to connect to our test network.
-          </div>
+          <div>Before you can play you need to connect to our test network</div>
           <br></br>
           <div>
-            Click on Metamask, the fox icon to the top right of your browser.
+            Click on Metamask, the fox icon to the top right of your browser
           </div>
           <br></br>
-          <img alt="network" src={networkImage} width="352"></img>
-          {/* image
-        ask for private key to import */}
+          <div>By default, Metamask is set up for Ethereum</div>
+          <br></br>
+          <div>Click on "Ethereum Mainnet" to change networks</div>
+          <br></br>
+          <img alt="network" src={metamaskMenuImage} width="359"></img>
+          <br></br>
+          <div>Select "Custom RPC" from the list of networks</div>
+          <br></br>
+          <img alt="network" src={networksImage} width="352"></img>
+          <br></br>
+          <div>Enter our network settings as below</div>
+          <br></br>
+          <img alt="network" src={networkSettingsImage} width="352"></img>
+          <br></br>
+          <div>Save and close the network settings</div>
+          <br></br>
+          <div>These instructions should disappear</div>
+          <br></br>
+          <div>Try refreshing (Ctrl or Cmd + R) if that doesn't work</div>
+          <br></br>
         </div>
       )}
     </>

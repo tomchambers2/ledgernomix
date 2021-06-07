@@ -68,7 +68,7 @@ body {
     )
     fixed;
   mix-blend-mode: color;
-  z-index: 99;
+  z-index: 90;
   pointer-events: none;
 }
 
@@ -276,6 +276,10 @@ a.button:disabled {
 .votes-row-divider {
   background-color: var(--game-graphics-primary);
   height: var(--game-line-width);
+}
+
+.votes-column-header {
+  margin: var(--game-border);
 }
 
 .voters {
@@ -527,7 +531,10 @@ input {
 }
 
 .setup > img {
-  z-index: 99;
+  position: relative;
+  align-self: center;
+  border: var(--game-line-width) solid var(--game-graphics-primary);
+  z-index: 91;
 }
 
 .ornate-border-container {
