@@ -146,7 +146,6 @@ function App() {
       </div>
       <div className="all-panels-container">
         <div className="background-spacer"></div>
-
         <Router>
           <Setup setupStatus={setupStatus}></Setup>
           <Switch>

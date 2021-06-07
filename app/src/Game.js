@@ -14,7 +14,7 @@ import { default as GameContract } from "./contracts/Game.json";
 import Web3 from "web3";
 import { useParams } from "react-router-dom";
 import { useContractBalance } from "./useContractBalance";
-import { weiToEth } from "./utils.js";
+import { weiToEth, getNumberWithOrdinal } from "./utils.js";
 import { PlayerIcon } from "./PlayerIcon";
 import { Clock } from "./Clock";
 import { ProposalCounter } from "./ProposalCounter";
@@ -237,14 +237,16 @@ export const Game = ({ web3, account }) => {
     // multiplied by 1000 so that the argument is in milliseconds, not seconds.
     var date = new Date(gameEndTimestamp * 1000);
 
-    var formattedDate = date.toLocaleDateString("en-UK", {
+    const numericDate = date.getDate();
+
+    const formattedDate = getNumberWithOrdinal(numericDate);
+
+    var formattedMonth = date.toLocaleDateString("en-UK", {
       timeZone: "UTC",
-      day: "numeric",
       month: "short",
       year: "numeric",
     });
 
-    // Will display time in 10:30:23 format
     var formattedTime = date.toLocaleString([], {
       timeZone: "UTC",
       timeStyle: "short",
@@ -253,7 +255,9 @@ export const Game = ({ web3, account }) => {
     //console.log(formattedTime);
     setGameEndTime(
       <>
-        <div>{formattedDate}</div>
+        <div>
+          {formattedDate} {formattedMonth}
+        </div>
         <div>at</div>
         <div>{formattedTime} UTC</div>
       </>

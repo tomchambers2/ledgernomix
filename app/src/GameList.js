@@ -15,7 +15,7 @@ export const GameList = ({ gamesList, newGameHandler }) => {
         <div className="background-pattern"></div>
         <OrnateBorder></OrnateBorder>
         <h2>Games</h2>
-        {(!gamesList && "Loading...") || (
+        {(!gamesList && "Awaiting Metamask...") || (
           <div className="list-of games">
             {gamesList.map((game) => (
               <div className="game-list-item">

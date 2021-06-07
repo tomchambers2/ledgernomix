@@ -248,22 +248,38 @@ a.button:disabled {
 .vote-actions {
   display: flex;
   flex-direction: row;
+  margin-top: var(--game-border);
 }
 
 .votes-column {
-  width: 100%;
   margin: var(--game-border) 0;
+  flex-grow: 1;
+  width: 100px;
 }
 
-.votes-column:first-of-type {
-  margin-right: calc(var(--game-border) / 2);
+.votes-column:first-of-type > .button {
+  margin-right: var(--game-border);
 }
-.votes-column:last-of-type {
-  margin-left: calc(var(--game-border) / 2);
+.votes-column:last-of-type > .button {
+  margin-left: var(--game-border);
 }
 
 .votes-column > .button {
   margin-bottom: var(--game-border);
+}
+
+.votes-column-divider {
+  background-color: var(--game-graphics-primary);
+  width: var(--game-line-width);
+}
+
+.votes-row-divider {
+  background-color: var(--game-graphics-primary);
+  height: var(--game-line-width);
+}
+
+.voters {
+  margin-top: var(--game-border);
 }
 
 /* .disabled-panel {

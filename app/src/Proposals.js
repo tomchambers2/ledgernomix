@@ -84,11 +84,15 @@ export const Proposals = ({
                       >
                         Yes
                       </div>
-                      {proposal.votes &&
-                        proposal.votes
-                          .filter(({ vote, playerAddress }) => vote)
-                          .map(() => <>{getPlayerName(playerAddress)}</>)}
+                      <div className="votes-row-divider"></div>
+                      <div className="voters">
+                        {proposal.votes &&
+                          proposal.votes
+                            .filter(({ vote, playerAddress }) => vote)
+                            .map(() => <>{getPlayerName(playerAddress)}</>)}
+                      </div>
                     </div>
+                    <div className="votes-column-divider"></div>
                     <div className="votes-column">
                       <div
                         className="button"
@@ -96,10 +100,13 @@ export const Proposals = ({
                       >
                         No
                       </div>
-                      {proposal.votes &&
-                        proposal.votes
-                          .filter(({ vote, playerAddress }) => !vote)
-                          .map(() => <>{getPlayerName(playerAddress)}</>)}
+                      <div className="votes-row-divider"></div>
+                      <div className="voters">
+                        {proposal.votes &&
+                          proposal.votes
+                            .filter(({ vote, playerAddress }) => !vote)
+                            .map(() => <>{getPlayerName(playerAddress)}</>)}
+                      </div>
                     </div>
                   </>
                 )}
