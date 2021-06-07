@@ -526,6 +526,10 @@ input {
   margin: 0 var(--game-border);
 }
 
+.setup > img {
+  z-index: 99;
+}
+
 .ornate-border-container {
   position: absolute;
   top: 0;

@@ -22,8 +22,8 @@ export const Propose = ({
   const [proposedValueError, setProposedValueError] = useState(null);
 
   const ruleOptions = rules
-    // .filter(({ name }) => !ruleConfig[name].unproposable)
-    .map((rule, i) => ({ value: i, label: rule.name }));
+    .map((rule, i) => ({ value: i, label: rule.name }))
+    .filter(({ label }) => !ruleConfig[label].unproposable);
   const customStyles = {
     control: (provided, state) => ({
       ...provided,

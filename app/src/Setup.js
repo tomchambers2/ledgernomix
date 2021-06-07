@@ -1,5 +1,5 @@
 import { OrnateBorder } from "./OrnateBorder";
-import networkImage from "./backgrounds/paper2.jpg";
+import networkImage from "./backgrounds/metamaskSettings.jpg";
 
 export const Setup = ({ setupStatus }) => {
   return (
@@ -23,8 +23,15 @@ export const Setup = ({ setupStatus }) => {
         <div className="setup panel">
           <div className="background-pattern"></div>
           <OrnateBorder></OrnateBorder>
-          <div>Next connect to our test network</div>
-          <img alt="network" src={networkImage}></img>
+          <div>
+            Before you can play you need to connect to our test network.
+          </div>
+          <br></br>
+          <div>
+            Click on Metamask, the fox icon to the top right of your browser.
+          </div>
+          <br></br>
+          <img alt="network" src={networkImage} width="352"></img>
           {/* image
         ask for private key to import */}
         </div>
