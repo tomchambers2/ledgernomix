@@ -140,7 +140,7 @@ function App() {
           </h1>
         </div>
         <div className="links">
-          <h3>How to play</h3>
+          <h3>How to Play</h3>
           <h3>About</h3>
         </div>
       </div>

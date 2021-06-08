@@ -534,7 +534,7 @@ input {
   position: relative;
   align-self: center;
   border: var(--game-line-width) solid var(--game-graphics-primary);
-  z-index: 91;
+  /* z-index: 91; */
 }
 
 .ornate-border-container {

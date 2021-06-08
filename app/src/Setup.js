@@ -39,7 +39,7 @@ export const Setup = ({ setupStatus }) => {
           <br></br>
           <div>Select "Custom RPC" from the list of networks</div>
           <br></br>
-          <img alt="network" src={networksImage} width="352"></img>
+          <img alt="network" src={networksImage} width="308"></img>
           <br></br>
           <div>Enter our network settings as below</div>
           <br></br>
@@ -49,7 +49,9 @@ export const Setup = ({ setupStatus }) => {
           <br></br>
           <div>These instructions should disappear</div>
           <br></br>
-          <div>Try refreshing (Ctrl or Cmd + R) if that doesn't work</div>
+          <div>
+            Try refreshing (Control or Command + R) if that doesn't work
+          </div>
           <br></br>
         </div>
       )}

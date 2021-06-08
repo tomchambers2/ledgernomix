@@ -1,4 +1,3 @@
-import "./Proposals.css";
 import classNames from "classnames";
 import { Propose } from "./Propose";
 import { Loader } from "./Loader";
@@ -63,64 +62,72 @@ export const Proposals = ({
               className={classNames("title", proposal.complete && "complete")}
             >
               {getPlayerName(proposal.proposer)}{" "}
-              {proposal.complete ? "proposed" : "proposes"}:<br></br> "
-              {rules[proposal.ruleIndex].name} should be {proposal.value}"
+              {proposal.complete
+                ? proposal.successful
+                  ? "sucessfully proposed"
+                  : "unsucessfully proposed"
+                : "proposes"}
+              :<br></br> "{rules[proposal.ruleIndex].name} should be{" "}
+              {proposal.value}"
             </div>
             <div className="votes"></div>
             {proposal.pending && "PENDING"}
             <div className="vote-actions">
-              {isPlayer &&
-                gameActive &&
-                !proposal.complete &&
-                !proposal.pending && (
-                  <>
-                    <div className="votes-column">
-                      {(proposal.votes.some(
+              {isPlayer && !proposal.pending && (
+                <>
+                  <div className="votes-column">
+                    {((proposal.votes.some(
+                      ({ playerAddress: voter }) => voter === playerAddress
+                    ) ||
+                      proposal.complete) && (
+                      <div className="votes-column-header">Yes</div>
+                    )) || (
+                      <div
+                        className="button"
+                        onClick={() => voteOnProposal(proposal.index, true)}
+                      >
+                        Yes
+                      </div>
+                    )}
+                    <div className="votes-row-divider"></div>
+                    <div className="voters">
+                      {proposal.votes &&
+                        proposal.votes
+                          .filter(({ vote }) => vote)
+                          .map((vote) => (
+                            <div>{getPlayerName(vote.playerAddress)}</div>
+                          ))}
+                    </div>
+                  </div>
+                  <div className="votes-column-divider"></div>
+                  <div className="votes-column">
+                    <div>
+                      {((proposal.votes.some(
                         ({ playerAddress: voter }) => voter === playerAddress
-                      ) && <div className="votes-column-header">Yes</div>) || (
+                      ) ||
+                        proposal.complete) && (
+                        <div className="votes-column-header">No</div>
+                      )) || (
                         <div
                           className="button"
                           onClick={() => voteOnProposal(proposal.index, true)}
                         >
-                          Yes
+                          No
                         </div>
                       )}
-                      <div className="votes-row-divider"></div>
-                      <div className="voters">
-                        {proposal.votes &&
-                          proposal.votes
-                            .filter(({ vote }) => vote)
-                            .map((vote) => (
-                              <>{getPlayerName(vote.playerAddress)}</>
-                            ))}
-                      </div>
                     </div>
-                    <div className="votes-column-divider"></div>
-                    <div className="votes-column">
-                      <div>
-                        {(proposal.votes.some(
-                          ({ playerAddress: voter }) => voter === playerAddress
-                        ) && <div className="votes-column-header">No</div>) || (
-                          <div
-                            className="button"
-                            onClick={() => voteOnProposal(proposal.index, true)}
-                          >
-                            No
-                          </div>
-                        )}
-                      </div>
-                      <div className="votes-row-divider"></div>
-                      <div className="voters">
-                        {proposal.votes &&
-                          proposal.votes
-                            .filter(({ vote }) => !vote)
-                            .map((vote) => (
-                              <>{getPlayerName(vote.playerAddress)}</>
-                            ))}
-                      </div>
+                    <div className="votes-row-divider"></div>
+                    <div className="voters">
+                      {proposal.votes &&
+                        proposal.votes
+                          .filter(({ vote }) => !vote)
+                          .map((vote) => (
+                            <div>{getPlayerName(vote.playerAddress)}</div>
+                          ))}
                     </div>
-                  </>
-                )}
+                  </div>
+                </>
+              )}
             </div>
           </div>
         ))}

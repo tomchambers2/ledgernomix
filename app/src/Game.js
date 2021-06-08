@@ -140,9 +140,8 @@ export const Game = ({ web3, account }) => {
         case "ProposalUpdate":
           return (
             <>
-              <strong>{event.event}</strong> -{" "}
-              {getPlayerName(event.returnValues.proposer)} proposed to change{" "}
-              {rules[event.returnValues.ruleIndex].name} to{" "}
+              {event.event} - {getPlayerName(event.returnValues.proposer)}{" "}
+              proposed to change {rules[event.returnValues.ruleIndex].name} to{" "}
               {event.returnValues.value}{" "}
               {(event.returnValues.complete && "Complete") || "pending"}{" "}
               {(event.returnValues.successful && "success") || "failed"}
@@ -164,20 +163,16 @@ export const Game = ({ web3, account }) => {
           // }
           return msg;
         case "VoteUpdate":
+          console.log("event: ", event);
           return (
             <>
-              <strong>{event.event}</strong> -{" "}
-              <strong>{getPlayerName(event.returnValues.playerAddress)}</strong>{" "}
+              {event.event} - {getPlayerName(event.returnValues.playerAddress)}{" "}
               joined the game with balance{" "}
               {Web3.utils.fromWei(event.returnValues.balance)}
             </>
           );
         case "RuleUpdate":
-          return (
-            <>
-              <strong>{event.event}</strong> - Rule change
-            </>
-          );
+          return <>{event.event} - Rule change</>;
         default:
           return "UNKNOWN EVENT";
       }
