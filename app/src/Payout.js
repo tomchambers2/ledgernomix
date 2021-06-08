@@ -44,16 +44,19 @@ export const Payout = ({ players, playerAddress }) => {
         <div>Place</div> <div className="join-line"></div>
         <div>{getNumberWithOrdinal(place)}</div>
       </div>
+      <br></br>
       <div className="split">
         <div>Game Tokens</div>
         <div className="join-line"></div>
         <div>{Web3.utils.fromWei(player.balance)}</div>
       </div>
+      <div className="equals">=</div>
       <div className="split">
         <div>Pot Share</div>
         <div className="join-line"></div>
         <div>{`${((playerBalance / totalBalance) * 100).toFixed(2)}%`}</div>
       </div>
+      <div className="equals">=</div>
       <div className="split">
         <div>Payout</div>
         <div className="join-line"></div>

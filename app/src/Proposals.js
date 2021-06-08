@@ -64,8 +64,8 @@ export const Proposals = ({
               {getPlayerName(proposal.proposer)}{" "}
               {proposal.complete
                 ? proposal.successful
-                  ? "sucessfully proposed"
-                  : "unsucessfully proposed"
+                  ? "successfully proposed"
+                  : "unsuccessfully proposed"
                 : "proposes"}
               :<br></br> "{rules[proposal.ruleIndex].name} should be{" "}
               {proposal.value}"

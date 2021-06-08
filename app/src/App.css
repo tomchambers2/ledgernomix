@@ -517,12 +517,19 @@ input {
 .game-list-item {
   margin: var(--game-border) 0;
 }
+
 .split {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin: calc(var(--game-border) * 2) var(--game-border);
+  margin: var(--game-border);
 }
+
+.equals {
+  text-align: right;
+  margin: 0 var(--game-border);
+}
+
 .statistic {
   margin: calc(var(--game-border) * 2) var(--game-border);
 }
