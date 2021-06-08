@@ -43,6 +43,11 @@ export const Setup = ({ setupStatus }) => {
           <br></br>
           <div>Enter our network settings as below</div>
           <br></br>
+          <div>Network Name: ngrok</div>
+          <br></br>
+          <div>New RPC URL: https://ledgerblockchain.ngrok.io</div>
+          <br></br>
+          <div>Chain ID: 1337</div>
           <img alt="network" src={networkSettingsImage} width="352"></img>
           <br></br>
           <div>Save and close the network settings</div>
@@ -50,7 +55,7 @@ export const Setup = ({ setupStatus }) => {
           <div>These instructions should disappear</div>
           <br></br>
           <div>
-            Try refreshing (Control or Command + R) if that doesn't work
+            <div>Try refreshing the page (Control or Command + R)</div>
           </div>
           <br></br>
         </div>

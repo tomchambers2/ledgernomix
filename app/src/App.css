@@ -230,10 +230,6 @@ a.button:hover,
   color: var(--game-graphics-primary);
 }
 
-/* .game-list-item-width {
-  width: 100%;
-} */
-
 button:disabled,
 .button:disabled,
 a.button:disabled {
@@ -279,28 +275,13 @@ a.button:disabled {
 }
 
 .votes-column-header {
-  margin: var(--game-border);
+  margin-top: var(--game-border);
+  margin-bottom: calc(var(--game-border) * 2);
 }
 
 .voters {
   margin-top: var(--game-border);
 }
-
-/* .disabled-panel {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(1, 1, 1, 0.3);
-  backdrop-filter: blur(2px);
-  z-index: 1000;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  /* font-size: 30px; 
-  color: white;
-} */
 
 .input-helper.error {
   color: red;

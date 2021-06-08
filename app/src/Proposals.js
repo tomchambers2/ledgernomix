@@ -73,13 +73,14 @@ export const Proposals = ({
             <div className="votes"></div>
             {proposal.pending && "PENDING"}
             <div className="vote-actions">
-              {isPlayer && !proposal.pending && (
+              {!proposal.pending && (
                 <>
                   <div className="votes-column">
                     {((proposal.votes.some(
                       ({ playerAddress: voter }) => voter === playerAddress
                     ) ||
-                      proposal.complete) && (
+                      proposal.complete ||
+                      !isPlayer) && (
                       <div className="votes-column-header">Yes</div>
                     )) || (
                       <div
@@ -101,21 +102,20 @@ export const Proposals = ({
                   </div>
                   <div className="votes-column-divider"></div>
                   <div className="votes-column">
-                    <div>
-                      {((proposal.votes.some(
-                        ({ playerAddress: voter }) => voter === playerAddress
-                      ) ||
-                        proposal.complete) && (
-                        <div className="votes-column-header">No</div>
-                      )) || (
-                        <div
-                          className="button"
-                          onClick={() => voteOnProposal(proposal.index, true)}
-                        >
-                          No
-                        </div>
-                      )}
-                    </div>
+                    {((proposal.votes.some(
+                      ({ playerAddress: voter }) => voter === playerAddress
+                    ) ||
+                      proposal.complete ||
+                      !isPlayer) && (
+                      <div className="votes-column-header">No</div>
+                    )) || (
+                      <div
+                        className="button"
+                        onClick={() => voteOnProposal(proposal.index, true)}
+                      >
+                        No
+                      </div>
+                    )}
                     <div className="votes-row-divider"></div>
                     <div className="voters">
                       {proposal.votes &&
