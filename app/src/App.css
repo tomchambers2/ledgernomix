@@ -521,7 +521,12 @@ input {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  margin: calc(var(--game-border) * 2) var(--game-border);
 }
+.statistic {
+  margin: calc(var(--game-border) * 2) var(--game-border);
+}
+
 .join-line {
   background-color: var(--game-graphics-primary);
   height: var(--game-line-width);
