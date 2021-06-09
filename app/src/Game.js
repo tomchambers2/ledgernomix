@@ -136,15 +136,19 @@ export const Game = ({ web3, account }) => {
   const mapEvent = useCallback(
     (event) => {
       const data = event.returnValues;
+      // console.log(event);
       switch (event.event) {
         case "ProposalUpdate":
           return (
             <>
-              {event.event} - {getPlayerName(event.returnValues.proposer)}{" "}
-              proposed to change {rules[event.returnValues.ruleIndex].name} to{" "}
-              {event.returnValues.value}{" "}
-              {(event.returnValues.complete && "Complete") || "pending"}{" "}
-              {(event.returnValues.successful && "success") || "failed"}
+              {event.returnValues.complete && event.returnValues.successful && (
+                // ({getPlayerName(event.returnValues.proposer)} {event.returnValues.value}) }
+                <>
+                  {getPlayerName(event.returnValues.proposer)} changed{" "}
+                  {rules[event.returnValues.ruleIndex].name} to{" "}
+                  {event.returnValues.value}
+                </>
+              )}
             </>
           );
         case "PlayerUpdate":
@@ -166,13 +170,14 @@ export const Game = ({ web3, account }) => {
           console.log("event: ", event);
           return (
             <>
-              {event.event} - {getPlayerName(event.returnValues.playerAddress)}{" "}
+              {/* {event.event} - {getPlayerName(event.returnValues.playerAddress)}{" "}
               joined the game with balance{" "}
-              {Web3.utils.fromWei(event.returnValues.balance)}
+              {Web3.utils.fromWei(event.returnValues.balance)} */}
             </>
           );
         case "RuleUpdate":
-          return <>{event.event} - Rule change</>;
+          return <></>;
+        // return <>{event.event} - Rule change</>;
         default:
           return "UNKNOWN EVENT";
       }

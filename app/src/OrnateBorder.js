@@ -1,9 +1,11 @@
+import "./OrnateBorder.css";
+
 export const OrnateBorder = () => {
   return (
     <div className="ornate-border-container">
       <div className="ornate-border-row-a">
         <div className="ornate-border-col-a">
-          <svg>
+          <svg width="40" height="40">
             <path
               fill="none"
               stroke="#000000"
@@ -14,18 +16,9 @@ export const OrnateBorder = () => {
             />
           </svg>
         </div>
-        <div className="ornate-border-col-b">
-          <svg width="100%">
-            <polyline
-              points="0,2 5000,2"
-              fill="none"
-              stroke="#000000"
-              strokeWidth="4"
-            />
-          </svg>
-        </div>
+        <div className="ornate-border-col-b"></div>
         <div className="ornate-border-col-c">
-          <svg>
+          <svg width="40" height="40">
             <path
               fill="none"
               stroke="#000000"
@@ -39,31 +32,13 @@ export const OrnateBorder = () => {
         </div>
       </div>
       <div className="ornate-border-row-b">
-        <div className="ornate-border-col-a">
-          <svg height="100%">
-            <polyline
-              points="2,0 2,20000"
-              fill="none"
-              stroke="#000000"
-              strokeWidth="4"
-            />
-          </svg>
-        </div>
+        <div className="ornate-border-col-a"></div>
         <div className="ornate-border-col-b"></div>
-        <div className="ornate-border-col-c">
-          <svg height="100%">
-            <polyline
-              points="38,0 38,20000"
-              fill="none"
-              stroke="#000000"
-              strokeWidth="4"
-            />
-          </svg>
-        </div>
+        <div className="ornate-border-col-c"></div>
       </div>
       <div className="ornate-border-row-c">
         <div className="ornate-border-col-a">
-          <svg>
+          <svg width="40" height="40">
             <path
               fill="none"
               stroke="#000000"
@@ -75,18 +50,9 @@ export const OrnateBorder = () => {
             />
           </svg>
         </div>
-        <div className="ornate-border-col-b">
-          <svg width="100%">
-            <polyline
-              points="0,38 5000,38"
-              fill="none"
-              stroke="#000000"
-              strokeWidth="4"
-            />
-          </svg>
-        </div>
+        <div className="ornate-border-col-b"></div>
         <div className="ornate-border-col-c">
-          <svg>
+          <svg width="40" height="40">
             <path
               fill="none"
               stroke="#000000"

@@ -1,0 +1,64 @@
+:root {
+  --game-graphics-primary: black;
+  --game-border: 14px;
+  --game-line-width: 4px;
+  --game-icon-size: 140px;
+}
+
+.ornate-border-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: var(--game-border);
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  pointer-events: none;
+}
+
+.ornate-border-row-a {
+  height: 40px;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+}
+.ornate-border-row-b {
+  flex-grow: 1;
+  display: flex;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+}
+.ornate-border-row-c {
+  height: 40px;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+}
+
+.ornate-border-col-a,
+.ornate-border-col-c {
+  width: 40px;
+}
+.ornate-border-col-b {
+  flex-grow: 1;
+  display: flex;
+}
+
+.ornate-border-row-a > .ornate-border-col-b {
+  border-top: var(--game-line-width) solid var(--game-graphics-primary);
+}
+
+.ornate-border-row-b > .ornate-border-col-a {
+  border-left: var(--game-line-width) solid var(--game-graphics-primary);
+}
+
+.ornate-border-row-b > .ornate-border-col-c {
+  border-right: var(--game-line-width) solid var(--game-graphics-primary);
+}
+
+.ornate-border-row-c > .ornate-border-col-b {
+  border-bottom: var(--game-line-width) solid var(--game-graphics-primary);
+}

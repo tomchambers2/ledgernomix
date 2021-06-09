@@ -54,9 +54,7 @@ export const Setup = ({ setupStatus }) => {
           <br></br>
           <div>These instructions should disappear</div>
           <br></br>
-          <div>
-            <div>Try refreshing the page (Control or Command + R)</div>
-          </div>
+          <div>Try refreshing the page (Control or Command + R)</div>
           <br></br>
         </div>
       )}
