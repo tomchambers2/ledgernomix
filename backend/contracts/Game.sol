@@ -105,25 +105,13 @@ contract Game {
         return proposals.length;
     }
 
-    event PlayerUpdate(
-        uint256 playerIndex,
+    event LedgerEntry(
         address playerAddress,
-        uint256 balance
-    );
-    event ProposalUpdate(
-        uint256 proposalIndex,
-        address proposer,
-        uint256 ruleIndex,
-        uint256 value,
-        bool complete,
-        bool successful
-    );
-    event RuleUpdate(uint256 ruleIndex, uint256 value);
-    event VoteUpdate(
-        uint256 proposalIndex,
-        uint256 voteIndex,
-        address player,
-        uint256 vote
+        uint256 amount,
+        bool isDeduction,
+        uint256 balance,
+        bool successfulProposal,
+        uint256 ruleIndex
     );
 
     struct Vote {
@@ -141,7 +129,7 @@ contract Game {
         PollTax,
         WealthTax,
         WealthTaxThreshold,
-        ProposalCost
+        ProposalFee
     }
 
     constructor(
@@ -155,7 +143,7 @@ contract Game {
         uint256 pollTaxValue,
         uint256 wealthTaxValue,
         uint256 wealthTaxThreshold,
-        uint256 proposalCost
+        uint256 proposalFee
     ) payable {
         rules.push(Rule("Entry fee", entryFee, 0, 1000));
         rules.push(Rule("Start balance", startBalance, 0, 1000));
@@ -166,7 +154,7 @@ contract Game {
         rules.push(Rule("Poll tax", pollTaxValue, 1, 1000));
         rules.push(Rule("Wealth tax", wealthTaxValue, 1, 100));
         rules.push(Rule("Wealth tax threshold", wealthTaxThreshold, 0, 1000));
-        rules.push(Rule("Proposal fee", proposalCost, 0, 1000));
+        rules.push(Rule("Proposal fee", proposalFee, 0, 1000));
         gameFee();
         createPlayer(firstPlayer);
     }
@@ -208,7 +196,6 @@ contract Game {
         Player storage p = players.push();
         p.playerAddress = playerAddress;
         p.balance = rules[uint256(RuleIndices.StartBalance)].value * eth;
-        emit PlayerUpdate(players.length - 1, p.playerAddress, p.balance);
     }
 
     modifier isPlayer() {
@@ -227,7 +214,7 @@ contract Game {
     function subtractProposalFee() private {
         uint256 proposalFee =
             Calculations.etherToWei(
-                rules[uint256(RuleIndices.ProposalCost)].value
+                rules[uint256(RuleIndices.ProposalFee)].value
             );
         uint256 playerIndex = getPlayer(msg.sender);
         require(
@@ -240,6 +227,15 @@ contract Game {
         } else {
             players[playerIndex].balance -= proposalFee;
         }
+
+        emit LedgerEntry(
+            msg.sender,
+            proposalFee,
+            true,
+            players[playerIndex].balance,
+            false,
+            uint256(RuleIndices.ProposalFee)
+        );
     }
 
     function createProposal(uint256 ruleIndex, uint256 value)
@@ -262,15 +258,6 @@ contract Game {
         p.proposer = msg.sender;
         p.ruleIndex = ruleIndex;
         p.value = value;
-
-        emit ProposalUpdate(
-            proposals.length - 1,
-            p.proposer,
-            p.ruleIndex,
-            p.value,
-            false,
-            false
-        );
     }
 
     function getVotesLength(
@@ -336,6 +323,15 @@ contract Game {
             } else {
                 players[index].balance -= tax;
             }
+
+            emit LedgerEntry(
+                players[index].playerAddress,
+                tax,
+                true,
+                players[index].balance,
+                false,
+                uint256(RuleIndices.PollTax)
+            );
         }
     }
 
@@ -348,10 +344,20 @@ contract Game {
 
             if (threshold < players[index].balance) {
                 uint256 taxableAmount = players[index].balance - threshold;
-                players[index].balance =
-                    players[index].balance -
+                uint256 wealthTaxAmount =
                     ((taxableAmount *
                         rules[uint256(RuleIndices.WealthTax)].value) / 100);
+                players[index].balance =
+                    players[index].balance -
+                    wealthTaxAmount;
+                emit LedgerEntry(
+                    players[index].playerAddress,
+                    wealthTaxAmount,
+                    true,
+                    players[index].balance,
+                    false,
+                    uint256(RuleIndices.WealthTax)
+                );
             }
         }
     }
@@ -385,15 +391,6 @@ contract Game {
             }
             collectPollTax();
             collectWealthTax();
-            emit ProposalUpdate(
-                proposalIndex,
-                proposals[proposalIndex].proposer,
-                proposals[proposalIndex].ruleIndex,
-                proposals[proposalIndex].value,
-                true,
-                successful
-            );
-
             endGame();
         }
     }
@@ -412,12 +409,14 @@ contract Game {
             Calculations.etherToWei(rules[uint256(RuleIndices.Reward)].value);
         players[playerIndex].balance += reward; // FIXME: is there a better way
         rules[p.ruleIndex].value = p.value;
-        emit PlayerUpdate(
-            playerIndex,
+        emit LedgerEntry(
             p.proposer,
-            players[playerIndex].balance
+            reward,
+            false,
+            players[playerIndex].balance,
+            true,
+            p.ruleIndex
         );
-        emit RuleUpdate(p.ruleIndex, p.value);
     }
 
     function endGame() private {
