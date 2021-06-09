@@ -20,13 +20,13 @@ export const ruleConfig = {
     inactive: 0,
   },
   Majority: {
-    name: "Majority",
+    name: "Majority required",
     description:
       "The proportion of votes required for a proposal to be enacted",
     unit: "%",
   },
   Quorum: {
-    name: "Quorum",
+    name: "Quorum required",
     description:
       "The proportion of players required for a proposal to complete",
     unit: "%",
@@ -35,7 +35,6 @@ export const ruleConfig = {
     name: "Max proposals",
     description: "The game ends when this many proposals have been completed",
     unit: "",
-    inactive: 30,
     unproposable: false,
   },
   "Poll tax": {

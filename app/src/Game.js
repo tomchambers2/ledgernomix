@@ -136,53 +136,25 @@ export const Game = ({ web3, account }) => {
   const mapEvent = useCallback(
     (event) => {
       const data = event.returnValues;
-      // console.log(event);
+      console.log(data);
       switch (event.event) {
-        case "ProposalUpdate":
+        case "LedgerEntry":
           return (
             <>
-              {event.returnValues.complete && event.returnValues.successful && (
-                // ({getPlayerName(event.returnValues.proposer)} {event.returnValues.value}) }
-                <>
-                  {getPlayerName(event.returnValues.proposer)} changed{" "}
-                  {rules[event.returnValues.ruleIndex].name} to{" "}
-                  {event.returnValues.value}
-                </>
-              )}
+              {getPlayerName(data.playerAddress)}{" "}
+              {`was ${data.isDeduction ? "deducted" : "awarded"} ${weiToEth(
+                data.amount
+              )} for
+              ${data.successfulProposal ? "successful proposal on" : ""} ${
+                rules[data.ruleIndex].name
+              }`}
             </>
           );
-        case "PlayerUpdate":
-          let msg;
-          // if (players[data.playerIndex]) {
-          msg = (
-            <span>
-              {getPlayerName(data.playerAddress)} has new balance of{" "}
-              {Web3.utils.fromWei(data.balance)}
-            </span>
-          );
-          // } else {
-          //   msg = `New player joined: ${getPlayerName(data.playerAddress)} (${
-          //     data.playerAddress
-          //   })`;
-          // }
-          return msg;
-        case "VoteUpdate":
-          console.log("event: ", event);
-          return (
-            <>
-              {/* {event.event} - {getPlayerName(event.returnValues.playerAddress)}{" "}
-              joined the game with balance{" "}
-              {Web3.utils.fromWei(event.returnValues.balance)} */}
-            </>
-          );
-        case "RuleUpdate":
-          return <></>;
-        // return <>{event.event} - Rule change</>;
         default:
           return "UNKNOWN EVENT";
       }
     },
-    [rules, getPlayerName, players]
+    [rules, getPlayerName]
   );
 
   const fetchVotes = useCallback(
