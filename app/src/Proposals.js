@@ -29,9 +29,6 @@ export const Proposals = ({
     <>
       <h2>Proposals</h2>
       {(!rules.length && "LOADING...") ||
-        // (!proposals.length &&
-        //   "No rule changes have been proposed so far. Use the 'Propose rule change' form to start the game")}
-
         (gameActive && (
           <div className="item">
             {(rules && (
@@ -65,70 +62,75 @@ export const Proposals = ({
               {proposal.complete
                 ? proposal.successful
                   ? "successfully proposed"
-                  : "unsuccessfully proposed"
+                  : proposal.feePaid
+                  ? "unsuccessfully proposed"
+                  : "tried to propose"
                 : "proposes"}
               :<br></br> "{rules[proposal.ruleIndex].name} should be{" "}
               {proposal.value}"
             </div>
-            <div className="votes"></div>
-            {proposal.pending && "PENDING"}
-            <div className="vote-actions">
-              {!proposal.pending && (
-                <>
-                  <div className="votes-column">
-                    {((proposal.votes.some(
-                      ({ playerAddress: voter }) => voter === playerAddress
-                    ) ||
-                      proposal.complete ||
-                      !isPlayer) && (
-                      <div className="votes-column-header">Yes</div>
-                    )) || (
-                      <div
-                        className="button"
-                        onClick={() => voteOnProposal(proposal.index, true)}
-                      >
-                        Yes
+            {(!proposal.feePaid && <div> but could not afford fee</div>) || (
+              <div className="votes">
+                {proposal.pending && "PENDING"}
+                <div className="vote-actions">
+                  {!proposal.pending && (
+                    <>
+                      <div className="votes-column">
+                        {((proposal.votes.some(
+                          ({ playerAddress: voter }) => voter === playerAddress
+                        ) ||
+                          proposal.complete ||
+                          !isPlayer) && (
+                          <div className="votes-column-header">Yes</div>
+                        )) || (
+                          <div
+                            className="button"
+                            onClick={() => voteOnProposal(proposal.index, true)}
+                          >
+                            Yes
+                          </div>
+                        )}
+                        <div className="votes-row-divider"></div>
+                        <div className="voters">
+                          {proposal.votes &&
+                            proposal.votes
+                              .filter(({ vote }) => vote)
+                              .map((vote) => (
+                                <div>{getPlayerName(vote.playerAddress)}</div>
+                              ))}
+                        </div>
                       </div>
-                    )}
-                    <div className="votes-row-divider"></div>
-                    <div className="voters">
-                      {proposal.votes &&
-                        proposal.votes
-                          .filter(({ vote }) => vote)
-                          .map((vote) => (
-                            <div>{getPlayerName(vote.playerAddress)}</div>
-                          ))}
-                    </div>
-                  </div>
-                  <div className="votes-column-divider"></div>
-                  <div className="votes-column">
-                    {((proposal.votes.some(
-                      ({ playerAddress: voter }) => voter === playerAddress
-                    ) ||
-                      proposal.complete ||
-                      !isPlayer) && (
-                      <div className="votes-column-header">No</div>
-                    )) || (
-                      <div
-                        className="button"
-                        onClick={() => voteOnProposal(proposal.index, true)}
-                      >
-                        No
+                      <div className="votes-column-divider"></div>
+                      <div className="votes-column">
+                        {((proposal.votes.some(
+                          ({ playerAddress: voter }) => voter === playerAddress
+                        ) ||
+                          proposal.complete ||
+                          !isPlayer) && (
+                          <div className="votes-column-header">No</div>
+                        )) || (
+                          <div
+                            className="button"
+                            onClick={() => voteOnProposal(proposal.index, true)}
+                          >
+                            No
+                          </div>
+                        )}
+                        <div className="votes-row-divider"></div>
+                        <div className="voters">
+                          {proposal.votes &&
+                            proposal.votes
+                              .filter(({ vote }) => !vote)
+                              .map((vote) => (
+                                <div>{getPlayerName(vote.playerAddress)}</div>
+                              ))}
+                        </div>
                       </div>
-                    )}
-                    <div className="votes-row-divider"></div>
-                    <div className="voters">
-                      {proposal.votes &&
-                        proposal.votes
-                          .filter(({ vote }) => !vote)
-                          .map((vote) => (
-                            <div>{getPlayerName(vote.playerAddress)}</div>
-                          ))}
-                    </div>
-                  </div>
-                </>
-              )}
-            </div>
+                    </>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         ))}
     </>

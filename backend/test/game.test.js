@@ -403,7 +403,7 @@ describe("Game", () => {
       expect(player.balance.toString()).to.equal("0");
     });
 
-    it("should reject creating a proposal when balance is less than proposal fee", async () => {
+    it("proposal should be unsuccessful when balance is less than proposal fee", async () => {
       game = await createGame({
         entryFee: 0,
         startBalance: 0,
@@ -413,11 +413,11 @@ describe("Game", () => {
         value: "0",
       });
 
-      return expect(
-        game.connect(players[1]).createProposal(0, 500, { gasPrice: 0 })
-      ).to.eventually.be.rejectedWith(
-        "You do not have enough game funds to pay the proposal cost"
-      );
+      await game.connect(players[1]).createProposal(0, 500, { gasPrice: 0 });
+      const proposal = await game.proposals(0);
+      await expect(proposal.complete).to.equal(true);
+      await expect(proposal.successful).to.equal(false);
+      await expect(proposal.feePaid).to.equal(false);
     });
 
     it("should apply a proposal fee when a proposal is made", async () => {
@@ -431,6 +431,8 @@ describe("Game", () => {
       await game.createProposal(0, 500, { gasPrice: 0 });
       player = await game.players(0);
       expect(player.balance.toString()).to.equal((3 * ether).toString());
+      const proposal = await game.proposals(0);
+      await expect(proposal.feePaid).to.equal(true);
     });
   });
 

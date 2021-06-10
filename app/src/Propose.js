@@ -120,13 +120,6 @@ export const Propose = ({
       {!isPlayer && (
         <div className="disabled-panel">Join the game to make proposals</div>
       )}
-      {/* proposal {proposals.length}
-      <br />
-      players {players.length}
-      <br />
-      index {playerIndex()}
-      <br />
-      yes {proposals.length % players.length === playerIndex()} */}
       {isPlayer &&
         ((proposals.length % players.length === playerIndex() && (
           <>

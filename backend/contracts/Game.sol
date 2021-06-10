@@ -55,7 +55,7 @@ contract GameFactory {
                 1,
                 10,
                 3,
-                1 //proposal fee
+                400 //proposal fee
             );
         games.push(g);
         emit NewGame(games.length - 1, address(g));
@@ -94,7 +94,8 @@ contract Game {
         Vote[] votes;
         // mutability
         bool mutabilityChange;
-        bool proposedMutability;
+        //fee
+        bool feePaid;
         // state
         bool complete;
         bool successful;
@@ -211,31 +212,34 @@ contract Game {
         _;
     }
 
-    function subtractProposalFee() private {
+    function subtractProposalFee() private returns (bool) {
         uint256 proposalFee =
             Calculations.etherToWei(
                 rules[uint256(RuleIndices.ProposalFee)].value
             );
         uint256 playerIndex = getPlayer(msg.sender);
-        require(
-            players[playerIndex].balance >= proposalFee,
-            "You do not have enough game funds to pay the proposal cost"
-        );
+        // require(
+        //     players[playerIndex].balance >= proposalFee,
+        //     "You do not have enough game funds to pay the proposal cost"
+        // );
+
+        bool thisFeePaid = true;
 
         if (proposalFee > players[playerIndex].balance) {
-            players[playerIndex].balance = 0;
+            thisFeePaid = false;
         } else {
             players[playerIndex].balance -= proposalFee;
+            emit LedgerEntry(
+                msg.sender,
+                proposalFee,
+                true,
+                players[playerIndex].balance,
+                false,
+                uint256(RuleIndices.ProposalFee)
+            );
         }
 
-        emit LedgerEntry(
-            msg.sender,
-            proposalFee,
-            true,
-            players[playerIndex].balance,
-            false,
-            uint256(RuleIndices.ProposalFee)
-        );
+        return thisFeePaid;
     }
 
     function createProposal(uint256 ruleIndex, uint256 value)
@@ -252,12 +256,17 @@ contract Game {
                 value >= rules[ruleIndex].lowerBound,
             "Proposal value must be within rule bounds"
         );
-        subtractProposalFee();
 
         Proposal storage p = proposals.push(); // TODO: does this need to be storage, or can it be memory?
         p.proposer = msg.sender;
         p.ruleIndex = ruleIndex;
         p.value = value;
+        p.feePaid = true;
+        if (!subtractProposalFee()) {
+            p.successful = false;
+            p.feePaid = false;
+            p.complete = true;
+        }
     }
 
     function getVotesLength(
