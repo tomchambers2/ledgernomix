@@ -263,7 +263,7 @@ export const Game = ({ web3, account }) => {
     }
   };
 
-  const gameActive = useGameActive(proposals, getRuleValue("Max proposals"));
+  const gameActive = useGameActive(proposals, getRuleValue("Game length"));
 
   return (
     <>
@@ -297,7 +297,7 @@ export const Game = ({ web3, account }) => {
               />
               <ProposalCounter
                 completeProposals={proposals}
-                maxProposals={getRuleValue("Max proposals")}
+                maxProposals={getRuleValue("Game length")}
               />
             </div>
           )}

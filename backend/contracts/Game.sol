@@ -48,14 +48,14 @@ contract GameFactory {
                 msg.sender,
                 10, // entry fee
                 1000, // start balance
-                10,
-                50,
-                50,
-                30,
-                1,
-                10,
-                3,
-                400 //proposal fee
+                2000, //Successful Proposal reward
+                50, //Majority
+                50, //Quorum
+                30, //Game length
+                0, //Poll Tax
+                0, //Wealth Tax
+                0, // Wealth Tax Threshold
+                0 //Proposal fee
             );
         games.push(g);
         emit NewGame(games.length - 1, address(g));
@@ -148,14 +148,16 @@ contract Game {
     ) payable {
         rules.push(Rule("Entry fee", entryFee, 0, 1000));
         rules.push(Rule("Start balance", startBalance, 0, 1000));
-        rules.push(Rule("Proposal reward", rewardValue, 0, 1000));
+        rules.push(Rule("Proposal reward", rewardValue, 0, 1000000000));
         rules.push(Rule("Majority", majorityValue, 0, 100));
         rules.push(Rule("Quorum", quorumValue, 0, 100));
-        rules.push(Rule("Max proposals", maxProposalsValue, 1, 100));
-        rules.push(Rule("Poll tax", pollTaxValue, 1, 1000));
+        rules.push(Rule("Game length", maxProposalsValue, 1, 100));
+        rules.push(Rule("Poll tax", pollTaxValue, 1, 1000000000));
         rules.push(Rule("Wealth tax", wealthTaxValue, 1, 100));
-        rules.push(Rule("Wealth tax threshold", wealthTaxThreshold, 0, 1000));
-        rules.push(Rule("Proposal fee", proposalFee, 0, 1000));
+        rules.push(
+            Rule("Wealth tax threshold", wealthTaxThreshold, 0, 1000000000)
+        );
+        rules.push(Rule("Proposal fee", proposalFee, 0, 1000000000));
         gameFee();
         createPlayer(firstPlayer);
     }
