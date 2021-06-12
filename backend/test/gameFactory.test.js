@@ -29,7 +29,7 @@ describe("GameFactory", () => {
   describe("newGame", () => {
     it("should create a new game and add to the list of addresses", async () => {
       await gameFactory.connect(signer).newGame({
-        value: "10000000000000000000",
+        value: "5000000000000000000",
       });
       const game = await gameFactory.games(0);
       // expect(game).to.equal("0x8C310F133d4906CF931F55D6574c790cD5964afd"); // FIXME: address doesn't seem to be consistent during tests

@@ -107,7 +107,7 @@ function App() {
 
   const newGame = useContractFn(gameFactory, "newGame", {
     from: account,
-    value: Web3.utils.toWei("10"),
+    value: Web3.utils.toWei("5"),
   });
   const newGameHandler = async () => {
     const newGameAddress = await newGame();

@@ -40,13 +40,13 @@ contract GameFactory {
 
     function newGame() public payable {
         require(
-            msg.value == Calculations.etherToWei(10),
-            "You must send the entry fee (10) to create a game"
+            msg.value == Calculations.etherToWei(5),
+            "You must send the entry fee (5) to create a game"
         );
         Game g =
             new Game{value: msg.value}(
                 msg.sender,
-                10, // entry fee
+                5, // entry fee
                 1000, // start balance
                 2000, //Successful Proposal reward
                 50, //Majority
