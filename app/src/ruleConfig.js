@@ -1,8 +1,8 @@
 export const ruleConfig = {
   "Entry fee": {
     name: "Entry fee",
-    description: "The amount in DAI to buy into the game",
-    inactive: 10,
+    description: "The amount in xDAI to buy into the game",
+    inactive: 5,
     unproposable: true,
   },
   "Start balance": {

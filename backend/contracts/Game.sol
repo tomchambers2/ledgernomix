@@ -50,7 +50,7 @@ contract GameFactory {
                 1000, // start balance
                 2000, //Successful Proposal reward
                 50, //Majority
-                50, //Quorum
+                65, //Quorum
                 30, //Game length
                 0, //Poll Tax
                 0, //Wealth Tax
@@ -230,15 +230,17 @@ contract Game {
         if (proposalFee > players[playerIndex].balance) {
             thisFeePaid = false;
         } else {
-            players[playerIndex].balance -= proposalFee;
-            emit LedgerEntry(
-                msg.sender,
-                proposalFee,
-                true,
-                players[playerIndex].balance,
-                false,
-                uint256(RuleIndices.ProposalFee)
-            );
+            if (proposalFee > 0) {
+                players[playerIndex].balance -= proposalFee;
+                emit LedgerEntry(
+                    msg.sender,
+                    proposalFee,
+                    true,
+                    players[playerIndex].balance,
+                    false,
+                    uint256(RuleIndices.ProposalFee)
+                );
+            }
         }
 
         return thisFeePaid;
