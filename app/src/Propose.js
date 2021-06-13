@@ -113,7 +113,7 @@ export const Propose = ({
   if (!players || !proposals) return <div>LOADING...</div>;
 
   if (proposals.filter(({ complete }) => complete).length !== proposals.length)
-    return <>Waiting until a quorum have voted on the current proposal</>;
+    return <>Waiting for a quorum of votes on the currrent proposal</>;
 
   return (
     <>
@@ -121,7 +121,7 @@ export const Propose = ({
         <div className="disabled-panel">Join the game to make proposals</div>
       )}
       {isPlayer &&
-        (((proposals.length % players.length) + players.length - 1 ===
+        (((proposals.length + players.length - 1) % players.length ===
           playerIndex() && (
           <>
             <div className="proposal-form">

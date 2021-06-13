@@ -331,20 +331,23 @@ contract Game {
                 Calculations.etherToWei(
                     rules[uint256(RuleIndices.PollTax)].value
                 );
-            if (tax > players[index].balance) {
-                players[index].balance = 0;
-            } else {
-                players[index].balance -= tax;
-            }
 
-            emit LedgerEntry(
-                players[index].playerAddress,
-                tax,
-                true,
-                players[index].balance,
-                false,
-                uint256(RuleIndices.PollTax)
-            );
+            if (tax > 0) {
+                if (tax > players[index].balance) {
+                    players[index].balance = 0;
+                } else {
+                    players[index].balance -= tax;
+                }
+
+                emit LedgerEntry(
+                    players[index].playerAddress,
+                    tax,
+                    true,
+                    players[index].balance,
+                    false,
+                    uint256(RuleIndices.PollTax)
+                );
+            }
         }
     }
 
@@ -355,22 +358,24 @@ contract Game {
                     rules[uint256(RuleIndices.WealthTaxThreshold)].value
                 );
 
-            if (threshold < players[index].balance) {
-                uint256 taxableAmount = players[index].balance - threshold;
-                uint256 wealthTaxAmount =
-                    ((taxableAmount *
-                        rules[uint256(RuleIndices.WealthTax)].value) / 100);
-                players[index].balance =
-                    players[index].balance -
-                    wealthTaxAmount;
-                emit LedgerEntry(
-                    players[index].playerAddress,
-                    wealthTaxAmount,
-                    true,
-                    players[index].balance,
-                    false,
-                    uint256(RuleIndices.WealthTax)
-                );
+            if (rules[uint256(RuleIndices.WealthTax)].value > 0) {
+                if (threshold < players[index].balance) {
+                    uint256 taxableAmount = players[index].balance - threshold;
+                    uint256 wealthTaxAmount =
+                        ((taxableAmount *
+                            rules[uint256(RuleIndices.WealthTax)].value) / 100);
+                    players[index].balance =
+                        players[index].balance -
+                        wealthTaxAmount;
+                    emit LedgerEntry(
+                        players[index].playerAddress,
+                        wealthTaxAmount,
+                        true,
+                        players[index].balance,
+                        false,
+                        uint256(RuleIndices.WealthTax)
+                    );
+                }
             }
         }
     }
