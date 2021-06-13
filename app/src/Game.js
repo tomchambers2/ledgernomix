@@ -136,7 +136,6 @@ export const Game = ({ web3, account }) => {
   const mapEvent = useCallback(
     (event) => {
       const data = event.returnValues;
-      console.log(data);
       switch (event.event) {
         case "LedgerEntry":
           return (

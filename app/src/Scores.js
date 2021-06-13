@@ -12,6 +12,7 @@ export const Scores = ({ players, getPlayerName }) => {
     <>
       <h2>Ledger</h2>
       <div className="item">
+        {console.log("players: ", players)}
         {players
           .sort((p1, p2) => p2.balance - p1.balance)
           .map((player, i) => (

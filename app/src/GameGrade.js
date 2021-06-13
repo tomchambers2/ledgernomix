@@ -34,8 +34,8 @@ const vetocracy = (proposals) => {
     ({ successful }) => successful
   ).length;
   return successfulProposals > 0
-    ? (successfulProposals / proposals.length) * 100
-    : 0;
+    ? 100 - (successfulProposals / proposals.length) * 100
+    : 100;
 };
 
 const inflation = (players) => {
