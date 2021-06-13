@@ -174,7 +174,12 @@ export const Propose = ({
             </p>
           </>
         )) || (
-          <>Waiting for {getPlayerName(proposals.length % players.length)}</>
+          <>
+            Waiting for{" "}
+            {getPlayerName(
+              (proposals.length + players.length - 1) % players.length
+            )}
+          </>
         ))}
     </>
   );
