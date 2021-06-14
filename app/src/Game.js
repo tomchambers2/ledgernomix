@@ -266,6 +266,7 @@ export const Game = ({ web3, account }) => {
 
   return (
     <>
+      {console.log("players: ", players)}
       {gameActive && !isPlayer && (
         <div className="game-icons-container">
           <div className="game-icon-panel">
