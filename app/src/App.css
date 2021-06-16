@@ -72,6 +72,19 @@ body {
   pointer-events: none;
 }
 
+.ink-col-effect {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #202090;
+  mix-blend-mode: lighten;
+  z-index: 91;
+  pointer-events: none;
+  display: none; /* disabled */
+}
+
 .background-pattern {
   position: absolute;
   top: 0;
@@ -110,6 +123,14 @@ body {
 .game-details-panel:hover > .background-pattern,
 .ledger:hover > .background-pattern {
   background-position: 900px 0px;
+}
+
+.game-grade > .background-pattern {
+  background-position: 600px 930px;
+}
+
+.game-grade:hover > .background-pattern {
+  background-position: 600px 900px;
 }
 
 .proposals > .background-pattern {

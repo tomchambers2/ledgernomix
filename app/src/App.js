@@ -132,6 +132,7 @@ function App() {
 
   return (
     <div className="app">
+      <div className="ink-col-effect"></div>
       <div className="background-gradient"></div>
       <div className="intro">
         <div>
