@@ -1,3 +1,5 @@
+import { gameConfig } from "./gameConfig";
+
 export const ruleConfig = {
   "Entry fee": {
     name: "Entry fee",
@@ -8,7 +10,7 @@ export const ruleConfig = {
   "Start balance": {
     name: "Start balance",
     description: "The amount of game tokens a player starts with",
-    unit: "",
+    unit: " " + gameConfig.gameCurrency,
     inactive: 1000,
     unproposable: true,
   },
@@ -16,7 +18,7 @@ export const ruleConfig = {
     name: "Successful proposal reward",
     description:
       "The amount given to a player when their proposal is successful",
-    unit: "",
+    unit: " " + gameConfig.gameCurrency,
     inactive: 0,
   },
   Majority: {
@@ -41,6 +43,7 @@ export const ruleConfig = {
     name: "Poll tax",
     description: "A fixed tax collected on every completed proposal",
     inactive: 0,
+    unit: " " + gameConfig.gameCurrency,
   },
   "Wealth tax": {
     name: "Wealth tax",
@@ -51,11 +54,13 @@ export const ruleConfig = {
   "Wealth tax threshold": {
     name: "Wealth tax threshold",
     description: "A percentage tax collected on every completed proposal",
+    unit: " " + gameConfig.gameCurrency,
     inactive: 0,
   },
   "Proposal fee": {
     name: "Proposal fee",
     description: "A fee collected on newly created proposals",
     inactive: 0,
+    unit: " " + gameConfig.gameCurrency,
   },
 };

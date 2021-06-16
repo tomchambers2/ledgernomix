@@ -5,6 +5,7 @@ import { useContract } from "./useContract";
 import { useContractFn } from "./useContractFn";
 import { default as GameContract } from "./contracts/Game.json";
 import { useParams } from "react-router-dom";
+import { ruleConfig } from "./ruleConfig";
 
 export const Proposals = ({
   rules,
@@ -67,7 +68,8 @@ export const Proposals = ({
                   : "tried to propose"
                 : "proposes"}
               :<br></br> "{rules[proposal.ruleIndex].name} should be{" "}
-              {proposal.value}"
+              {proposal.value}
+              {ruleConfig[rules[proposal.ruleIndex].name].unit}"
             </div>
             {(!proposal.feePaid && <div> but could not afford fee</div>) || (
               <div className="votes">

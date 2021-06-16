@@ -143,7 +143,7 @@ export const Game = ({ web3, account }) => {
               {getPlayerName(data.playerAddress)}{" "}
               {`was ${data.isDeduction ? "deducted" : "awarded"} ${weiToEth(
                 data.amount
-              )} for
+              )} ${gameConfig.gameCurrency} for
               ${data.successfulProposal ? "successful proposal on" : ""} ${
                 rules[data.ruleIndex].name
               }`}
