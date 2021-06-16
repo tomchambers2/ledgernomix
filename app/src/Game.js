@@ -324,7 +324,11 @@ export const Game = ({ web3, account }) => {
               <div>Pot</div>
               <div className="join-line"></div>
               <div>
-                {weiToEth(gameBalance).toFixed(2) || 0} {cryptocurrency}
+                {/* {weiToEth(gameBalance).toFixed(2) || 0} {cryptocurrency} // actual pot, wasn't updating */}
+                {(players &&
+                  (players.length * gameConfig.cryptoEntryFee).toFixed(2)) ||
+                  0}{" "}
+                {cryptocurrency}
               </div>
             </div>
           </div>
