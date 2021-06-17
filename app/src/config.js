@@ -1,1 +1,1 @@
-export const config = { gameFactoryContract: { address: "0x4CD41f9c502412197fD4e6Eb066D3ACa67328509" } };
+export const config = { gameFactoryContract: { address: "0xc625D4B7eAa7cEcbC136d517D8e8B8F1959A1669" } };

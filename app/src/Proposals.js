@@ -113,7 +113,9 @@ export const Proposals = ({
                         )) || (
                           <div
                             className="button"
-                            onClick={() => voteOnProposal(proposal.index, true)}
+                            onClick={() =>
+                              voteOnProposal(proposal.index, false)
+                            }
                           >
                             No
                           </div>

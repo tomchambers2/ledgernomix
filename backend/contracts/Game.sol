@@ -224,11 +224,8 @@ contract Game {
         //     players[playerIndex].balance >= proposalFee,
         //     "You do not have enough game funds to pay the proposal cost"
         // );
-
-        bool thisFeePaid = true;
-
         if (proposalFee > players[playerIndex].balance) {
-            thisFeePaid = false;
+            return false;
         } else {
             if (proposalFee > 0) {
                 players[playerIndex].balance -= proposalFee;
@@ -243,7 +240,7 @@ contract Game {
             }
         }
 
-        return thisFeePaid;
+        return true;
     }
 
     function createProposal(uint256 ruleIndex, uint256 value)
@@ -267,9 +264,8 @@ contract Game {
         p.value = value;
         p.feePaid = true;
         if (!subtractProposalFee()) {
-            p.successful = false;
             p.feePaid = false;
-            p.complete = true;
+            countVotes(proposals.length - 1);
         }
     }
 
@@ -387,25 +383,30 @@ contract Game {
                 players.length
             );
 
-        if (proposals[proposalIndex].votes.length >= quorum) {
+        if (
+            (proposals[proposalIndex].votes.length >= quorum) ||
+            (proposals[proposalIndex].feePaid == false)
+        ) {
             proposals[proposalIndex].complete = true;
 
-            uint256 yesVotes;
-            for (
-                uint256 index = 0;
-                index < proposals[proposalIndex].votes.length;
-                index++
-            ) {
-                if (proposals[proposalIndex].votes[index].vote) yesVotes++;
-            }
-            uint256 majority =
-                Calculations.calculateMajority(
-                    rules[uint256(RuleIndices.Majority)].value,
-                    proposals[proposalIndex].votes.length
-                );
-            bool successful = yesVotes > majority;
-            if (successful) {
-                enactProposal(proposalIndex);
+            if (proposals[proposalIndex].feePaid == true) {
+                uint256 yesVotes;
+                for (
+                    uint256 index = 0;
+                    index < proposals[proposalIndex].votes.length;
+                    index++
+                ) {
+                    if (proposals[proposalIndex].votes[index].vote) yesVotes++;
+                }
+                uint256 majority =
+                    Calculations.calculateMajority(
+                        rules[uint256(RuleIndices.Majority)].value,
+                        proposals[proposalIndex].votes.length
+                    );
+                bool successful = yesVotes > majority;
+                if (successful) {
+                    enactProposal(proposalIndex);
+                }
             }
             collectPollTax();
             collectWealthTax();
