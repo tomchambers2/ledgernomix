@@ -143,7 +143,7 @@ export const Game = ({ web3, account }) => {
               {getPlayerName(data.playerAddress)}{" "}
               {`was ${data.isDeduction ? "deducted" : "awarded"} ${weiToEth(
                 data.amount
-              )} for
+              )} ${gameConfig.gameCurrency} for
               ${data.successfulProposal ? "successful proposal on" : ""} ${
                 rules[data.ruleIndex].name
               }`}
@@ -204,6 +204,7 @@ export const Game = ({ web3, account }) => {
 
   const fetchGameEndTime = useCallback(async () => {
     const gameEndTimestamp = await getValue("gameEndTime");
+
     // Create a new JavaScript Date object based on the timestamp
     // multiplied by 1000 so that the argument is in milliseconds, not seconds.
     var date = new Date(gameEndTimestamp * 1000);
@@ -262,10 +263,11 @@ export const Game = ({ web3, account }) => {
     }
   };
 
-  const gameActive = useGameActive(proposals, getRuleValue("Max proposals"));
+  const gameActive = useGameActive(proposals, getRuleValue("Game length"));
 
   return (
     <>
+      {console.log("players: ", players)}
       {gameActive && !isPlayer && (
         <div className="game-icons-container">
           <div className="game-icon-panel">
@@ -296,7 +298,7 @@ export const Game = ({ web3, account }) => {
               />
               <ProposalCounter
                 completeProposals={proposals}
-                maxProposals={getRuleValue("Max proposals")}
+                maxProposals={getRuleValue("Game length")}
               />
             </div>
           )}
@@ -323,7 +325,11 @@ export const Game = ({ web3, account }) => {
               <div>Pot</div>
               <div className="join-line"></div>
               <div>
-                {weiToEth(gameBalance).toFixed(2) || 0} {cryptocurrency}
+                {/* {weiToEth(gameBalance).toFixed(2) || 0} {cryptocurrency} // actual pot, wasn't updating */}
+                {(players &&
+                  (players.length * gameConfig.cryptoEntryFee).toFixed(2)) ||
+                  0}{" "}
+                {cryptocurrency}
               </div>
             </div>
           </div>

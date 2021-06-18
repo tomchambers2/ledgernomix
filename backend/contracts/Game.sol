@@ -40,22 +40,22 @@ contract GameFactory {
 
     function newGame() public payable {
         require(
-            msg.value == Calculations.etherToWei(10),
-            "You must send the entry fee (10) to create a game"
+            msg.value == Calculations.etherToWei(5),
+            "You must send the entry fee (5) to create a game"
         );
         Game g =
             new Game{value: msg.value}(
                 msg.sender,
-                10, // entry fee
+                5, // entry fee
                 1000, // start balance
-                10,
-                50,
-                50,
-                30,
-                1,
-                10,
-                3,
-                1 //proposal fee
+                2000, //Successful Proposal reward
+                50, //Majority
+                65, //Quorum
+                30, //Game length
+                0, //Poll Tax
+                0, //Wealth Tax
+                0, // Wealth Tax Threshold
+                0 //Proposal fee
             );
         games.push(g);
         emit NewGame(games.length - 1, address(g));
@@ -94,7 +94,8 @@ contract Game {
         Vote[] votes;
         // mutability
         bool mutabilityChange;
-        bool proposedMutability;
+        //fee
+        bool feePaid;
         // state
         bool complete;
         bool successful;
@@ -147,14 +148,16 @@ contract Game {
     ) payable {
         rules.push(Rule("Entry fee", entryFee, 0, 1000));
         rules.push(Rule("Start balance", startBalance, 0, 1000));
-        rules.push(Rule("Proposal reward", rewardValue, 0, 1000));
+        rules.push(Rule("Proposal reward", rewardValue, 0, 1000000000));
         rules.push(Rule("Majority", majorityValue, 0, 100));
         rules.push(Rule("Quorum", quorumValue, 0, 100));
-        rules.push(Rule("Max proposals", maxProposalsValue, 1, 100));
-        rules.push(Rule("Poll tax", pollTaxValue, 1, 1000));
+        rules.push(Rule("Game length", maxProposalsValue, 1, 100));
+        rules.push(Rule("Poll tax", pollTaxValue, 1, 1000000000));
         rules.push(Rule("Wealth tax", wealthTaxValue, 1, 100));
-        rules.push(Rule("Wealth tax threshold", wealthTaxThreshold, 0, 1000));
-        rules.push(Rule("Proposal fee", proposalFee, 0, 1000));
+        rules.push(
+            Rule("Wealth tax threshold", wealthTaxThreshold, 0, 1000000000)
+        );
+        rules.push(Rule("Proposal fee", proposalFee, 0, 1000000000));
         gameFee();
         createPlayer(firstPlayer);
     }
@@ -211,31 +214,33 @@ contract Game {
         _;
     }
 
-    function subtractProposalFee() private {
+    function subtractProposalFee() private returns (bool) {
         uint256 proposalFee =
             Calculations.etherToWei(
                 rules[uint256(RuleIndices.ProposalFee)].value
             );
         uint256 playerIndex = getPlayer(msg.sender);
-        require(
-            players[playerIndex].balance >= proposalFee,
-            "You do not have enough game funds to pay the proposal cost"
-        );
-
+        // require(
+        //     players[playerIndex].balance >= proposalFee,
+        //     "You do not have enough game funds to pay the proposal cost"
+        // );
         if (proposalFee > players[playerIndex].balance) {
-            players[playerIndex].balance = 0;
+            return false;
         } else {
-            players[playerIndex].balance -= proposalFee;
+            if (proposalFee > 0) {
+                players[playerIndex].balance -= proposalFee;
+                emit LedgerEntry(
+                    msg.sender,
+                    proposalFee,
+                    true,
+                    players[playerIndex].balance,
+                    false,
+                    uint256(RuleIndices.ProposalFee)
+                );
+            }
         }
 
-        emit LedgerEntry(
-            msg.sender,
-            proposalFee,
-            true,
-            players[playerIndex].balance,
-            false,
-            uint256(RuleIndices.ProposalFee)
-        );
+        return true;
     }
 
     function createProposal(uint256 ruleIndex, uint256 value)
@@ -252,12 +257,16 @@ contract Game {
                 value >= rules[ruleIndex].lowerBound,
             "Proposal value must be within rule bounds"
         );
-        subtractProposalFee();
 
         Proposal storage p = proposals.push(); // TODO: does this need to be storage, or can it be memory?
         p.proposer = msg.sender;
         p.ruleIndex = ruleIndex;
         p.value = value;
+        p.feePaid = true;
+        if (!subtractProposalFee()) {
+            p.feePaid = false;
+            countVotes(proposals.length - 1);
+        }
     }
 
     function getVotesLength(
@@ -318,20 +327,23 @@ contract Game {
                 Calculations.etherToWei(
                     rules[uint256(RuleIndices.PollTax)].value
                 );
-            if (tax > players[index].balance) {
-                players[index].balance = 0;
-            } else {
-                players[index].balance -= tax;
-            }
 
-            emit LedgerEntry(
-                players[index].playerAddress,
-                tax,
-                true,
-                players[index].balance,
-                false,
-                uint256(RuleIndices.PollTax)
-            );
+            if (tax > 0) {
+                if (tax > players[index].balance) {
+                    players[index].balance = 0;
+                } else {
+                    players[index].balance -= tax;
+                }
+
+                emit LedgerEntry(
+                    players[index].playerAddress,
+                    tax,
+                    true,
+                    players[index].balance,
+                    false,
+                    uint256(RuleIndices.PollTax)
+                );
+            }
         }
     }
 
@@ -342,22 +354,24 @@ contract Game {
                     rules[uint256(RuleIndices.WealthTaxThreshold)].value
                 );
 
-            if (threshold < players[index].balance) {
-                uint256 taxableAmount = players[index].balance - threshold;
-                uint256 wealthTaxAmount =
-                    ((taxableAmount *
-                        rules[uint256(RuleIndices.WealthTax)].value) / 100);
-                players[index].balance =
-                    players[index].balance -
-                    wealthTaxAmount;
-                emit LedgerEntry(
-                    players[index].playerAddress,
-                    wealthTaxAmount,
-                    true,
-                    players[index].balance,
-                    false,
-                    uint256(RuleIndices.WealthTax)
-                );
+            if (rules[uint256(RuleIndices.WealthTax)].value > 0) {
+                if (threshold < players[index].balance) {
+                    uint256 taxableAmount = players[index].balance - threshold;
+                    uint256 wealthTaxAmount =
+                        ((taxableAmount *
+                            rules[uint256(RuleIndices.WealthTax)].value) / 100);
+                    players[index].balance =
+                        players[index].balance -
+                        wealthTaxAmount;
+                    emit LedgerEntry(
+                        players[index].playerAddress,
+                        wealthTaxAmount,
+                        true,
+                        players[index].balance,
+                        false,
+                        uint256(RuleIndices.WealthTax)
+                    );
+                }
             }
         }
     }
@@ -369,25 +383,30 @@ contract Game {
                 players.length
             );
 
-        if (proposals[proposalIndex].votes.length >= quorum) {
+        if (
+            (proposals[proposalIndex].votes.length >= quorum) ||
+            (proposals[proposalIndex].feePaid == false)
+        ) {
             proposals[proposalIndex].complete = true;
 
-            uint256 yesVotes;
-            for (
-                uint256 index = 0;
-                index < proposals[proposalIndex].votes.length;
-                index++
-            ) {
-                if (proposals[proposalIndex].votes[index].vote) yesVotes++;
-            }
-            uint256 majority =
-                Calculations.calculateMajority(
-                    rules[uint256(RuleIndices.Majority)].value,
-                    proposals[proposalIndex].votes.length
-                );
-            bool successful = yesVotes > majority;
-            if (successful) {
-                enactProposal(proposalIndex);
+            if (proposals[proposalIndex].feePaid == true) {
+                uint256 yesVotes;
+                for (
+                    uint256 index = 0;
+                    index < proposals[proposalIndex].votes.length;
+                    index++
+                ) {
+                    if (proposals[proposalIndex].votes[index].vote) yesVotes++;
+                }
+                uint256 majority =
+                    Calculations.calculateMajority(
+                        rules[uint256(RuleIndices.Majority)].value,
+                        proposals[proposalIndex].votes.length
+                    );
+                bool successful = yesVotes > majority;
+                if (successful) {
+                    enactProposal(proposalIndex);
+                }
             }
             collectPollTax();
             collectWealthTax();

@@ -108,7 +108,7 @@ function App() {
 
   const newGame = useContractFn(gameFactory, "newGame", {
     from: account,
-    value: Web3.utils.toWei("10"),
+    value: Web3.utils.toWei("5"),
   });
   const newGameHandler = async () => {
     const newGameAddress = await newGame();
@@ -133,6 +133,7 @@ function App() {
 
   return (
     <div className="app">
+      <div className="ink-col-effect"></div>
       <div className="background-gradient"></div>
       <div className="intro">
         <div>
