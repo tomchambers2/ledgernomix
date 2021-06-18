@@ -20,6 +20,7 @@ export const Propose = ({
   const [proposedValue, setProposedValue] = useState(0);
   const [proposedValueValid, setProposedValueValid] = useState(true);
   const [proposedValueError, setProposedValueError] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(null);
 
   const ruleOptions = rules
     .map((rule, i) => ({ value: i, label: rule.name }))
@@ -102,14 +103,25 @@ export const Propose = ({
     setProposedValue(rules[proposedRuleOption.value].value);
   }, [proposedRuleOption, rules, prevRules, prevProposedRuleOption]);
 
-  const createProposalHandler = () => {
-    const result = createProposal(proposedRuleOption.value, proposedValue);
+  const createProposalHandler = async () => {
+    setIsSubmitting(true);
+    const result = await createProposal(
+      proposedRuleOption.value,
+      proposedValue
+    );
     if (result) {
       setProposedValue(0);
       setProposedRuleOption(null);
+    } else {
+      setIsSubmitting(false);
     }
   };
 
+  useEffect(() => {
+    setIsSubmitting(false);
+  }, [proposals]);
+
+  if (isSubmitting) return <div>SUBMITTING PROPOSAL...</div>;
   if (!players || !proposals) return <div>LOADING...</div>;
 
   if (proposals.filter(({ complete }) => complete).length !== proposals.length)
@@ -120,13 +132,7 @@ export const Propose = ({
       {!isPlayer && (
         <div className="disabled-panel">Join the game to make proposals</div>
       )}
-      {/* proposal {proposals.length}
-      <br />
-      players {players.length}
-      <br />
-      index {playerIndex()}
-      <br />
-      yes {proposals.length % players.length === playerIndex()} */}
+
       {isPlayer &&
         ((proposals.length % players.length === playerIndex() && (
           <>

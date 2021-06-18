@@ -71,7 +71,7 @@ export const Proposals = ({
               {proposal.value}"
             </div>
             <div className="votes"></div>
-            {proposal.pending && "PENDING"}
+            {proposal.pending && "SUBMITTING VOTE..."}
             <div className="vote-actions">
               {!proposal.pending && (
                 <>

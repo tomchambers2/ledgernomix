@@ -5,7 +5,14 @@ import networksImage from "./backgrounds/metamaskNetworks.jpg";
 import { useTimeout } from "./useTimeout";
 
 export const Setup = ({ setupStatus }) => {
-  useTimeout(5000, () => window.location.reload(false));
+  console.log(setupStatus);
+  useTimeout(5000, () => {
+    console.log(setupStatus, !setupStatus.metamask && !setupStatus.network);
+    if (!setupStatus.metamask && !setupStatus.network) {
+      console.log("run");
+      // window.location.reload();
+    }
+  });
 
   return (
     <>

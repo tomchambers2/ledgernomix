@@ -54,6 +54,7 @@ function App() {
 
   useEffect(() => {
     const fn = async () => {
+      console.log("check setup");
       if (!window.ethereum)
         return setSetupStatus({ metamask: false, network: false });
       const web3 = new Web3(window.ethereum);
