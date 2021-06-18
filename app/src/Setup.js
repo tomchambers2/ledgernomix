@@ -2,8 +2,11 @@ import { OrnateBorder } from "./OrnateBorder";
 import metamaskMenuImage from "./backgrounds/metamaskMenuImage.jpg";
 import networkSettingsImage from "./backgrounds/metamaskNetworkSettings.jpg";
 import networksImage from "./backgrounds/metamaskNetworks.jpg";
+import { useTimeout } from "./useTimeout";
 
 export const Setup = ({ setupStatus }) => {
+  useTimeout(5000, () => window.location.reload(false));
+
   return (
     <>
       {" "}
