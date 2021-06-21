@@ -30,3 +30,9 @@ After running these you can now use the game in the browser at `http://localhost
 cd backend
 yarn test
 ```
+
+## nGrok
+
+```
+ngrok start --all
+```

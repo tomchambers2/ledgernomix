@@ -195,10 +195,16 @@ export const Game = ({ web3, account }) => {
   }, [getArray]);
 
   const fetchEvents = useCallback(async () => {
+    console.log("RUNNING FETCHEVENTS");
+    console.log("game: ", game);
+    console.log("players: ", players);
+    console.log("proposals: ", proposals);
+    console.log("rules: ", rules);
     if (!game || !players || !proposals || !rules) return;
     const pastEvents = await game.getPastEvents("allEvents", {
       fromBlock: "earliest",
     });
+    console.log("pastEvents: ", pastEvents);
     setEvents([...pastEvents.map(mapEvent)]);
   }, [game, mapEvent, players, proposals, rules]);
 
@@ -274,7 +280,7 @@ export const Game = ({ web3, account }) => {
             <div className="background-pattern"></div>
             <button className="game-button" onClick={joinGameHandler}>
               <div>
-                Join <br></br> Game
+                Join <br></br>$5.00<br></br> Game
               </div>
             </button>
           </div>

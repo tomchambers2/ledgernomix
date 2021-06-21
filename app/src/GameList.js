@@ -7,7 +7,9 @@ export const GameList = ({ gamesList, newGameHandler }) => {
         <div className="game-icon-panel">
           <div className="background-pattern"></div>
           <button className="game-button" onClick={newGameHandler}>
-            <div>Create Game</div>
+            <div>
+              Create <br></br>$5.00<br></br> Game
+            </div>
           </button>
         </div>
       </div>
