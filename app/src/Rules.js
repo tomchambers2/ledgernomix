@@ -16,7 +16,8 @@ export const Rules = ({ rules }) => {
             key={i}
             className={classNames("item", rule.updated && "updated")}
           >
-            {ruleConfig.name} is {rule.value}
+            {ruleConfig.name} is {ruleConfig.append}
+            {rule.value}
             {ruleConfig.unit}
           </div>
         ))}

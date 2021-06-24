@@ -23,6 +23,7 @@ export const ruleConfig = {
   },
   Majority: {
     name: "Majority required",
+    append: ">",
     description:
       "The proportion of votes required for a proposal to be enacted",
     unit: "%",
