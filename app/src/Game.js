@@ -223,7 +223,6 @@ export const Game = ({ web3, account }) => {
       timeStyle: "short",
     });
 
-    //console.log(formattedTime);
     setGameEndTime(
       <>
         <div>
