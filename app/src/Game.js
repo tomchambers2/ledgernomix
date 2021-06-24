@@ -158,6 +158,7 @@ export const Game = ({ web3, account }) => {
 
   const fetchVotes = useCallback(
     async (proposals) => {
+      console.log("fetching votes");
       const updatedProposals = await Promise.all(
         proposals.slice().map(async (proposal, i) => {
           const votesLength = await game.methods.getVotesLength(i).call();
@@ -177,11 +178,13 @@ export const Game = ({ web3, account }) => {
   );
 
   const fetchRules = useCallback(async () => {
+    console.log("fetching rules");
     const rules = await getArray("rules", setRules);
     setRules(rules);
   }, [getArray]);
 
   const fetchProposals = useCallback(async () => {
+    console.log("fetching proposals");
     const proposals = await getArray("proposals", setProposals);
     if (proposals) {
       const proposalsWithVotes = await fetchVotes(proposals);
@@ -190,11 +193,13 @@ export const Game = ({ web3, account }) => {
   }, [getArray, fetchVotes]);
 
   const fetchPlayers = useCallback(async () => {
+    console.log("fetching players");
     const players = await getArray("players", setPlayers);
     setPlayers(players);
   }, [getArray]);
 
   const fetchEvents = useCallback(async () => {
+    console.log("fetching events");
     if (!game || !players || !proposals || !rules) return;
     const pastEvents = await game.getPastEvents("allEvents", {
       fromBlock: "earliest",
@@ -236,12 +241,19 @@ export const Game = ({ web3, account }) => {
   }, [getValue]);
 
   const fetchData = useCallback(async () => {
+    console.log("fetching data");
     await fetchRules();
     await fetchProposals();
     await fetchPlayers();
-    await fetchEvents();
     await fetchGameEndTime();
-  }, [fetchRules, fetchProposals, fetchPlayers, fetchEvents, fetchGameEndTime]);
+  }, [fetchRules, fetchProposals, fetchPlayers, fetchGameEndTime]);
+
+  useEffect(() => {
+    const fetch = async () => {
+      await fetchEvents();
+    };
+    fetch();
+  }, [fetchEvents]);
 
   useEffect(() => {
     if (!game) return;
@@ -266,7 +278,6 @@ export const Game = ({ web3, account }) => {
 
   return (
     <>
-      {console.log("players: ", players)}
       {gameActive && !isPlayer && (
         <div className="game-icons-container">
           <div className="game-icon-panel">

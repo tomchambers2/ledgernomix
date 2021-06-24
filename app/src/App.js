@@ -16,6 +16,7 @@ import {
   Switch,
   Route,
   Redirect,
+  Link,
 } from "react-router-dom";
 
 const Web3 = require("web3");
@@ -132,23 +133,23 @@ function App() {
   }, [gameFactory, gamesList]);
 
   return (
-    <div className="app">
-      <div className="ink-col-effect"></div>
-      <div className="background-gradient"></div>
-      <div className="intro">
-        <div>
-          <h1>
-            Ledgernomi<span style={{ fontVariant: "small-caps" }}>x</span>
-          </h1>
+    <Router>
+      <div className="app">
+        <div className="ink-col-effect"></div>
+        <div className="background-gradient"></div>
+        <div className="intro">
+          <Link to="/">
+            <h1 className="logo">
+              Ledgernomi<span style={{ fontVariant: "small-caps" }}>x</span>
+            </h1>
+          </Link>
+          <div className="links">
+            <h3>How to Play</h3>
+            <h3>About</h3>
+          </div>
         </div>
-        <div className="links">
-          <h3>How to Play</h3>
-          <h3>About</h3>
-        </div>
-      </div>
-      <div className="all-panels-container">
-        <div className="background-spacer"></div>
-        <Router>
+        <div className="all-panels-container">
+          <div className="background-spacer"></div>
           <Setup setupStatus={setupStatus}></Setup>
           <Switch>
             <Route path="/:gameAddress">
@@ -162,9 +163,9 @@ function App() {
               ></GameList>
             </Route>
           </Switch>
-        </Router>
+        </div>
       </div>
-    </div>
+    </Router>
   );
 }
 

@@ -4,22 +4,18 @@ Ledgernomix is a game based on Nomic games where players can change the rules to
 
 Future ideas include turning each game into a token backed economy so players are able to buy into games they think are running well, and cash out if they want to leave. Because each game would be a separate token, players can choose to have fair redistribution and inflation or a more competitive, non-inflationary set of rules.
 
+## Backend
+
+Start Ganache blockchain
+
+```
+yarn deploy
+```
+
 ## Frontend
 
 ```
-cd app
-yarn
 yarn start
-```
-
-## Backend
-
-```
-cd backend
-yarn
-npx hardhat node
-# open up a new tab
-npx hardhat run scripts/deploy.js --network localhost # deploys the contract to your local hardhat network
 ```
 
 After running these you can now use the game in the browser at `http://localhost:3000`

@@ -98,7 +98,9 @@ export const Proposals = ({
                             proposal.votes
                               .filter(({ vote }) => vote)
                               .map((vote) => (
-                                <div>{getPlayerName(vote.playerAddress)}</div>
+                                <div key={vote.playerAddress}>
+                                  {getPlayerName(vote.playerAddress)}
+                                </div>
                               ))}
                         </div>
                       </div>
