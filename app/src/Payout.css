@@ -1,0 +1,13 @@
+.container {
+  display: flex;
+  width: 100%;
+  align-items: center;
+}
+
+.details {
+  flex-grow: 1;
+}
+
+.player-name {
+  text-align: center;
+}

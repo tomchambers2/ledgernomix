@@ -1,17 +1,22 @@
 import Web3 from "web3";
 import { gameConfig } from "./gameConfig";
 import { getNumberWithOrdinal } from "./utils";
+import "./Payout.css";
+import { useState } from "react";
 const { cryptoEntryFee, cryptocurrency } = gameConfig;
 
-export const Payout = ({ players, playerAddress }) => {
-  if (!players) return <div>LOADING...</div>;
-
-  const player = players.find(
+export const Payout = ({ players, userPlayerAddress, getPlayerName }) => {
+  const playerIndex = players.findIndex(
     ({ playerAddress: otherPlayerAddress }) =>
-      otherPlayerAddress === playerAddress
+      otherPlayerAddress === userPlayerAddress
   );
 
-  if (!players) return <div>LOADING...</div>;
+  const [currentPlayerIndex, setCurrentPlayerIndex] = useState(playerIndex);
+
+  const player = players[currentPlayerIndex];
+  console.log({ playerIndex, currentPlayerIndex, players, player });
+
+  if (!players || !player) return <div>LOADING...</div>;
 
   const totalBalance = players.reduce(
     (acc, { balance }) => acc + parseInt(Web3.utils.fromWei(balance)),
@@ -24,7 +29,7 @@ export const Payout = ({ players, playerAddress }) => {
       .sort((p1, p2) => p2.balance - p1.balance)
       .findIndex(
         ({ playerAddress: otherPlayerAddress }) =>
-          otherPlayerAddress === playerAddress
+          otherPlayerAddress === player.playerAddress
       ) + 1;
 
   const totalCryptoPot = cryptoEntryFee * players.length;
@@ -40,35 +45,62 @@ export const Payout = ({ players, playerAddress }) => {
         <div>Player:</div> <div className="join-line"></div>
         <div>{getPlayerName(player.address)}</div>
       </div> */}
-      <div className="split">
-        <div>Place</div> <div className="join-line"></div>
-        <div>{getNumberWithOrdinal(place)}</div>
-      </div>
-      <br></br>
-      <div className="split">
-        <div>Game Tokens</div>
-        <div className="join-line"></div>
-        <div>
-          {Web3.utils.fromWei(player.balance)} {gameConfig.gameCurrency}
+      <div class="container">
+        <button
+          disabled={currentPlayerIndex === 0}
+          onClick={() =>
+            setCurrentPlayerIndex(
+              (currentPlayerIndex) => currentPlayerIndex - 1
+            )
+          }
+        >
+          &lt;
+        </button>
+        <div class="details">
+          <div className="player-name">
+            {getPlayerName(player.playerAddress)}
+          </div>
+          <div className="split">
+            <div>Place</div> <div className="join-line"></div>
+            <div>{getNumberWithOrdinal(place)}</div>
+          </div>
+          <br></br>
+          <div className="split">
+            <div>Game Tokens</div>
+            <div className="join-line"></div>
+            <div>
+              {Web3.utils.fromWei(player.balance)} {gameConfig.gameCurrency}
+            </div>
+          </div>
+          <div className="equals">=</div>
+          <div className="split">
+            <div>Pot Share</div>
+            <div className="join-line"></div>
+            <div>{`${((playerBalance / totalBalance) * 100).toFixed(2)}%`}</div>
+          </div>
+          <div className="equals">=</div>
+          <div className="split">
+            <div>Payout</div>
+            <div className="join-line"></div>
+            <div>
+              {(
+                (Web3.utils.fromWei(player.balance) / totalBalance) *
+                totalCryptoPot
+              ).toFixed(2)}{" "}
+              {cryptocurrency}
+            </div>
+          </div>
         </div>
-      </div>
-      <div className="equals">=</div>
-      <div className="split">
-        <div>Pot Share</div>
-        <div className="join-line"></div>
-        <div>{`${((playerBalance / totalBalance) * 100).toFixed(2)}%`}</div>
-      </div>
-      <div className="equals">=</div>
-      <div className="split">
-        <div>Payout</div>
-        <div className="join-line"></div>
-        <div>
-          {(
-            (Web3.utils.fromWei(player.balance) / totalBalance) *
-            totalCryptoPot
-          ).toFixed(2)}{" "}
-          {cryptocurrency}
-        </div>
+        <button
+          disabled={currentPlayerIndex === players.length - 1}
+          onClick={() =>
+            setCurrentPlayerIndex(
+              (currentPlayerIndex) => currentPlayerIndex + 1
+            )
+          }
+        >
+          &gt;
+        </button>
       </div>
     </div>
   );

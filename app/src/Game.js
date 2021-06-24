@@ -241,7 +241,6 @@ export const Game = ({ web3, account }) => {
   }, [getValue]);
 
   const fetchData = useCallback(async () => {
-    console.log("fetching data");
     await fetchRules();
     await fetchProposals();
     await fetchPlayers();
@@ -373,7 +372,11 @@ export const Game = ({ web3, account }) => {
             <div className="payout panel">
               <div className="background-pattern"></div>
               <OrnateBorder></OrnateBorder>
-              <Payout players={players} playerAddress={account}></Payout>
+              <Payout
+                players={players}
+                userPlayerAddress={account}
+                getPlayerName={getPlayerName}
+              ></Payout>
             </div>
           )}
           <div className="proposals panel">
