@@ -70,13 +70,28 @@ export const GameGrade = ({ players, proposals }) => {
       <h2>Game Grade</h2>
 
       {[
-        { title: "Equality", number: equality(players).toFixed(0) },
+        {
+          title: "Equality",
+          number: equality(players).toFixed(0),
+          description:
+            "Indicates even distribution with a higher score showing a smaller gap between rich and poor",
+        },
         {
           title: "Participation",
           number: participation(proposals, players).toFixed(0),
+          description:
+            "Indicates how frequently playes were able to vote on proposals",
         },
-        { title: "Inflation Rank", number: inflation(players).toFixed(0) },
-        { title: "Vetocracy", number: vetocracy(proposals).toFixed(0) },
+        {
+          title: "Inflation Rank",
+          number: inflation(players).toFixed(0),
+          description: "???",
+        },
+        {
+          title: "Vetocracy",
+          number: vetocracy(proposals).toFixed(0),
+          description: "???",
+        },
       ].map((statistic) => (
         <Statistic key={statistic.title} {...statistic}></Statistic>
       ))}
