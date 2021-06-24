@@ -1,5 +1,6 @@
 export const gameConfig = {
-  cryptoEntryFee: 10,
+  cryptoEntryFee: 5,
   startBalance: 1000,
   cryptocurrency: "xDAI",
+  gameCurrency: "pts",
 };

@@ -403,21 +403,62 @@ describe("Game", () => {
       expect(player.balance.toString()).to.equal("0");
     });
 
-    it("should reject creating a proposal when balance is less than proposal fee", async () => {
+    //
+    it("proposal should be unsuccessful when balance is less than proposal fee", async () => {
       game = await createGame({
-        entryFee: 0,
+        entryFee: 5,
         startBalance: 0,
-        proposalCost: 10,
+        proposalCost: 600,
       });
-      await game.connect(players[1]).joinGame({
-        value: "0",
+      await startAndProposal(4, game);
+
+      const proposal = await game.proposals(0);
+      await expect(proposal.complete).to.equal(true);
+      await expect(proposal.successful).to.equal(false);
+      await expect(proposal.feePaid).to.equal(false);
+    });
+
+    it("should payout correctly even if proposal fee can't be paid on last proposal", async () => {
+      const game = await createGame({
+        maxProposals: 3,
+        reward: 10000,
+        entryFee: 5,
+        startBalance: 1000,
+        proposalCost: 990,
       });
 
-      return expect(
-        game.connect(players[1]).createProposal(0, 500, { gasPrice: 0 })
-      ).to.eventually.be.rejectedWith(
-        "You do not have enough game funds to pay the proposal cost"
+      await game.connect(players[1]).joinGame({
+        value: "5000000000000000000",
+        gasPrice: 0,
+      });
+
+      const player1BalanceStart = ethers.utils.formatEther(
+        await players[0].getBalance()
       );
+      const player2BalanceStart = ethers.utils.formatEther(
+        await players[1].getBalance()
+      );
+
+      await game.connect(players[0]).createProposal(0, 500, { gasPrice: 0 });
+      await game.connect(players[0]).voteOnProposal(0, false, { gasPrice: 0 });
+
+      await game.connect(players[1]).createProposal(0, 501, { gasPrice: 0 });
+      await game.connect(players[0]).voteOnProposal(1, true, { gasPrice: 0 });
+
+      await game.connect(players[0]).createProposal(0, 502, { gasPrice: 0 });
+
+      const player1BalanceEnd = ethers.utils.formatEther(
+        await players[0].getBalance()
+      );
+      const player2BalanceEnd = ethers.utils.formatEther(
+        await players[1].getBalance()
+      );
+
+      const player1Payout = player1BalanceEnd - player1BalanceStart;
+      const player2Payout = player2BalanceEnd - player2BalanceStart;
+
+      expect(player1Payout).to.be.below(0.01);
+      expect(player2Payout).to.be.above(9.99);
     });
 
     it("should apply a proposal fee when a proposal is made", async () => {
@@ -431,6 +472,8 @@ describe("Game", () => {
       await game.createProposal(0, 500, { gasPrice: 0 });
       player = await game.players(0);
       expect(player.balance.toString()).to.equal((3 * ether).toString());
+      const proposal = await game.proposals(0);
+      await expect(proposal.feePaid).to.equal(true);
     });
   });
 
@@ -469,7 +512,7 @@ describe("Game", () => {
       expect(player2Payout).to.equal(3.125);
     });
 
-    it("should payout correctly after 100 rounds", async () => {
+    it("should payout correctly after 10 rounds", async () => {
       const game = await createGame({
         maxProposals: 10,
         reward: 1000000,

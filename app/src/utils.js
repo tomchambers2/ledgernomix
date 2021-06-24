@@ -8,3 +8,11 @@ export function getNumberWithOrdinal(n) {
     v = n % 100;
   return n + (s[(v - 20) % 10] || s[v] || s[0]);
 }
+
+export function formatCurrency(number) {
+  console.log("number is " + number);
+
+  const numberToFixed = number.toFixed();
+
+  return numberToFixed;
+}

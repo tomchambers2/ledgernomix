@@ -48,7 +48,9 @@ export const Payout = ({ players, playerAddress }) => {
       <div className="split">
         <div>Game Tokens</div>
         <div className="join-line"></div>
-        <div>{Web3.utils.fromWei(player.balance)}</div>
+        <div>
+          {Web3.utils.fromWei(player.balance)} {gameConfig.gameCurrency}
+        </div>
       </div>
       <div className="equals">=</div>
       <div className="split">

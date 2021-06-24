@@ -121,20 +121,20 @@ export const Propose = ({
     setIsSubmitting(false);
   }, [proposals]);
 
-  if (isSubmitting) return <div>SUBMITTING PROPOSAL...</div>;
-  if (!players || !proposals) return <div>LOADING...</div>;
+  if (isSubmitting) return <div>Submitting proposal...</div>;
+  if (!players || !proposals) return <div>Loading...</div>;
 
   if (proposals.filter(({ complete }) => complete).length !== proposals.length)
-    return <>Waiting for current proposal to complete</>;
+    return <>Waiting for a quorum of votes on the currrent proposal</>;
 
   return (
     <>
       {!isPlayer && (
         <div className="disabled-panel">Join the game to make proposals</div>
       )}
-
       {isPlayer &&
-        ((proposals.length % players.length === playerIndex() && (
+        (((proposals.length + players.length - 1) % players.length ===
+          playerIndex() && (
           <>
             <div className="proposal-form">
               I propose that{" "}
@@ -186,7 +186,12 @@ export const Propose = ({
             </p>
           </>
         )) || (
-          <>Waiting for {getPlayerName(proposals.length % players.length)}</>
+          <>
+            Waiting for{" "}
+            {getPlayerName(
+              (proposals.length + players.length - 1) % players.length
+            )}
+          </>
         ))}
     </>
   );
