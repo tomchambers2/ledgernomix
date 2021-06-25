@@ -1,6 +1,7 @@
 import Web3 from "web3";
 import classNames from "classnames";
 import { gameConfig } from "./gameConfig";
+import { formatCurrency } from "./utils.js";
 
 export const Scores = ({ players, getPlayerName }) => {
   if (!players) return <div>LOADING...</div>;
@@ -24,7 +25,8 @@ export const Scores = ({ players, getPlayerName }) => {
               <div className="player-score">
                 <div>{getPlayerName(player.playerAddress)}</div>
                 <div>
-                  {Web3.utils.fromWei(player.balance)} {gameConfig.gameCurrency}
+                  {formatCurrency(Web3.utils.fromWei(player.balance))}{" "}
+                  {gameConfig.gameCurrency}
                 </div>
               </div>
               <div

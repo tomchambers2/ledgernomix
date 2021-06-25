@@ -459,7 +459,7 @@ a.button:disabled {
 }
 
 .player-score-bar {
-  background: black;
+  background: var(--game-graphics-primary);
   height: 25px;
   margin-top: 5px;
 }
@@ -538,6 +538,18 @@ input {
 
 .statistic {
   margin: calc(var(--game-border) * 2) var(--game-border);
+}
+
+.number-after-point {
+  font-size: 0.8em;
+  position: relative;
+  top: -0.2em;
+}
+
+.decimal-point {
+  font-size: 1.1em;
+  position: relative;
+  top: -0.1em;
 }
 
 .join-line {
