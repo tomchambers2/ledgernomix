@@ -1,10 +1,13 @@
 import "./Statistic.css";
+import { Helper } from "./Helper";
 
-export const Statistic = ({ title, number, avg }) => {
+export const Statistic = ({ title, number, avg, description }) => {
   return (
     <div className="statistic">
       <div className="data">
-        <div>{title}</div>
+        <div>
+          {title} <Helper text={description}></Helper>
+        </div>
         <div>{number}</div>
       </div>
       <div className="chart">

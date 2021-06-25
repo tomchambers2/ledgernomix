@@ -1,5 +1,6 @@
 import { ruleConfig } from "./ruleConfig";
 import classNames from "classnames";
+import { Helper } from "./Helper";
 
 export const Rules = ({ rules }) => {
   return (
@@ -16,8 +17,10 @@ export const Rules = ({ rules }) => {
             key={i}
             className={classNames("item", rule.updated && "updated")}
           >
-            {ruleConfig.name} is {rule.value}
+            {ruleConfig.name} is {ruleConfig.append}
+            {rule.value}
             {ruleConfig.unit}
+            <Helper text={ruleConfig.description}></Helper>
           </div>
         ))}
     </>

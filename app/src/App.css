@@ -13,6 +13,10 @@ html {
   --game-icon-size: 140px;
 }
 
+.logo {
+  color: var(--game-graphics-primary);
+}
+
 a:link {
   color: var(--game-graphics-accent);
   text-decoration: none;

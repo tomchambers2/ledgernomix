@@ -1,0 +1,15 @@
+.helper {
+  background: var(--game-graphics-primary);
+  border-radius: 100%;
+  color: white;
+  width: 20px;
+  height: 20px;
+  font-size: 14px;
+  text-align: center;
+  display: inline-block;
+  /* margin: 0 1em; */
+}
+
+.helper::after {
+  content: "?";
+}

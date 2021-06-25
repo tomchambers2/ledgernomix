@@ -16,16 +16,19 @@ export const GameList = ({ gamesList, newGameHandler }) => {
       <div className="game-list panel">
         <div className="background-pattern"></div>
         <OrnateBorder></OrnateBorder>
-        <h2>Games</h2>
+        <h2>Most Recent Games</h2>
         {(!gamesList && "Awaiting Metamask...") || (
           <div className="list-of games">
-            {gamesList.map((game) => (
-              <div className="game-list-item">
-                <a className="game-list-button" href={game}>
-                  {game}
-                </a>
-              </div>
-            ))}
+            {gamesList
+              .slice()
+              .reverse()
+              .map((game) => (
+                <div className="game-list-item">
+                  <a className="game-list-button" href={game}>
+                    {game}
+                  </a>
+                </div>
+              ))}
           </div>
         )}
       </div>
