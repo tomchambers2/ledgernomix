@@ -6,6 +6,19 @@ const { intToHex } = require("ethjs-util");
 
 chai.use(chaiAsPromised);
 
+const RuleIndices = {
+  EntryFee: 0,
+  StartBalance: 1,
+  ProposalReward: 2,
+  Majority: 3,
+  Quorum: 4,
+  MaxProposals: 5,
+  PollTax: 6,
+  WealthTax: 7,
+  WealthTaxThreshold: 8,
+  ProposalFee: 9,
+};
+
 describe("Game", () => {
   let Game;
   let game;
@@ -34,7 +47,7 @@ describe("Game", () => {
     createGame = async ({
       entryFee = 5,
       startBalance = 10,
-      reward = 4,
+      proposalReward = 4,
       majority = 50,
       quorum = 50,
       maxProposals = 3,
@@ -47,7 +60,7 @@ describe("Game", () => {
         owner.address,
         entryFee,
         startBalance,
-        reward,
+        proposalReward,
         majority,
         quorum,
         maxProposals,
@@ -421,7 +434,7 @@ describe("Game", () => {
     it("should payout correctly even if proposal fee can't be paid on last proposal", async () => {
       const game = await createGame({
         maxProposals: 3,
-        reward: 10000,
+        proposalReward: 10000,
         entryFee: 5,
         startBalance: 1000,
         proposalCost: 990,
@@ -475,6 +488,52 @@ describe("Game", () => {
       const proposal = await game.proposals(0);
       await expect(proposal.feePaid).to.equal(true);
     });
+
+    it("should immediately pay out new proposal reward when reward is changed", async () => {
+      game = await createGame({
+        startBalance: 5,
+        proposalCost: 0,
+        proposalReward: 0,
+      });
+      let player = await game.players(0);
+      expect(player.balance.toString()).to.equal("5000000000000000000");
+      await game.createProposal(RuleIndices.ProposalReward, 500, {
+        gasPrice: 0,
+      });
+      await game.connect(players[0]).voteOnProposal(0, true);
+      player = await game.players(0);
+      expect(player.balance.toString()).to.equal("505000000000000000000");
+      await game.createProposal(RuleIndices.WealthTaxThreshold, 80, {
+        gasPrice: 0,
+      });
+      await game.connect(players[0]).voteOnProposal(1, true);
+      player = await game.players(0);
+      expect(player.balance.toString()).to.equal("1005000000000000000000");
+    });
+
+    it("should immediately collect new taxes when tax is changed", async () => {
+      game = await createGame({
+        startBalance: 1250,
+        proposalCost: 0,
+        proposalReward: 0,
+        pollTax: 33,
+        wealthTax: 0,
+      });
+      let player = await game.players(0);
+      expect(player.balance.toString()).to.equal("1250000000000000000000");
+      await game.createProposal(RuleIndices.PollTax, 250, {
+        gasPrice: 0,
+      });
+      await game.connect(players[0]).voteOnProposal(0, true);
+      player = await game.players(0);
+      expect(player.balance.toString()).to.equal("1000000000000000000000");
+      await game.createProposal(RuleIndices.WealthTax, 10, {
+        gasPrice: 0,
+      });
+      await game.connect(players[0]).voteOnProposal(1, true);
+      player = await game.players(0);
+      expect(player.balance.toString()).to.equal("650000000000000000000");
+    });
   });
 
   describe("endGame", async () => {
@@ -515,7 +574,7 @@ describe("Game", () => {
     it("should payout correctly after 10 rounds", async () => {
       const game = await createGame({
         maxProposals: 10,
-        reward: 1000000,
+        proposalReward: 1000000,
       });
 
       await game.connect(players[1]).joinGame({
@@ -555,7 +614,7 @@ describe("Game", () => {
     it("should handle the case where payment cannot be made due to rounding", async () => {
       const game = await createGame({
         pollTax: 100,
-        reward: 0,
+        proposalReward: 0,
         proposalCost: 0,
       });
 

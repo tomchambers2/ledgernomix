@@ -43,20 +43,19 @@ contract GameFactory {
             msg.value == Calculations.etherToWei(5),
             "You must send the entry fee (5) to create a game"
         );
-        Game g =
-            new Game{value: msg.value}(
-                msg.sender,
-                5, // entry fee
-                1000, // start balance
-                2000, //Successful Proposal reward
-                50, //Majority
-                65, //Quorum
-                30, //Game length
-                0, //Poll Tax
-                0, //Wealth Tax
-                0, // Wealth Tax Threshold
-                0 //Proposal fee
-            );
+        Game g = new Game{value: msg.value}(
+            msg.sender,
+            5, // entry fee
+            1000, // start balance
+            2000, //Successful Proposal reward
+            50, //Majority
+            65, //Quorum
+            30, //Game length
+            0, //Poll Tax
+            0, //Wealth Tax
+            0, // Wealth Tax Threshold
+            0 //Proposal fee
+        );
         games.push(g);
         emit NewGame(games.length - 1, address(g));
     }
@@ -215,10 +214,9 @@ contract Game {
     }
 
     function subtractProposalFee() private returns (bool) {
-        uint256 proposalFee =
-            Calculations.etherToWei(
-                rules[uint256(RuleIndices.ProposalFee)].value
-            );
+        uint256 proposalFee = Calculations.etherToWei(
+            rules[uint256(RuleIndices.ProposalFee)].value
+        );
         uint256 playerIndex = getPlayer(msg.sender);
         // require(
         //     players[playerIndex].balance >= proposalFee,
@@ -323,10 +321,9 @@ contract Game {
 
     function collectPollTax() private {
         for (uint256 index = 0; index < players.length; index++) {
-            uint256 tax =
-                Calculations.etherToWei(
-                    rules[uint256(RuleIndices.PollTax)].value
-                );
+            uint256 tax = Calculations.etherToWei(
+                rules[uint256(RuleIndices.PollTax)].value
+            );
 
             if (tax > 0) {
                 if (tax > players[index].balance) {
@@ -349,17 +346,15 @@ contract Game {
 
     function collectWealthTax() private {
         for (uint256 index = 0; index < players.length; index++) {
-            uint256 threshold =
-                Calculations.etherToWei(
-                    rules[uint256(RuleIndices.WealthTaxThreshold)].value
-                );
+            uint256 threshold = Calculations.etherToWei(
+                rules[uint256(RuleIndices.WealthTaxThreshold)].value
+            );
 
             if (rules[uint256(RuleIndices.WealthTax)].value > 0) {
                 if (threshold < players[index].balance) {
                     uint256 taxableAmount = players[index].balance - threshold;
-                    uint256 wealthTaxAmount =
-                        ((taxableAmount *
-                            rules[uint256(RuleIndices.WealthTax)].value) / 100);
+                    uint256 wealthTaxAmount = ((taxableAmount *
+                        rules[uint256(RuleIndices.WealthTax)].value) / 100);
                     players[index].balance =
                         players[index].balance -
                         wealthTaxAmount;
@@ -377,11 +372,10 @@ contract Game {
     }
 
     function countVotes(uint256 proposalIndex) private {
-        uint256 quorum =
-            Calculations.calculateQuorum(
-                rules[uint256(RuleIndices.Quorum)].value,
-                players.length
-            );
+        uint256 quorum = Calculations.calculateQuorum(
+            rules[uint256(RuleIndices.Quorum)].value,
+            players.length
+        );
 
         if (
             (proposals[proposalIndex].votes.length >= quorum) ||
@@ -398,18 +392,17 @@ contract Game {
                 ) {
                     if (proposals[proposalIndex].votes[index].vote) yesVotes++;
                 }
-                uint256 majority =
-                    Calculations.calculateMajority(
-                        rules[uint256(RuleIndices.Majority)].value,
-                        proposals[proposalIndex].votes.length
-                    );
+                uint256 majority = Calculations.calculateMajority(
+                    rules[uint256(RuleIndices.Majority)].value,
+                    proposals[proposalIndex].votes.length
+                );
                 bool successful = yesVotes > majority;
                 if (successful) {
                     enactProposal(proposalIndex);
                 }
             }
-            collectPollTax();
             collectWealthTax();
+            collectPollTax();
             endGame();
         }
     }
@@ -423,11 +416,12 @@ contract Game {
     function enactProposal(uint256 proposalIndex) private {
         proposals[proposalIndex].successful = true;
         Proposal memory p = proposals[proposalIndex]; // FIXME: does using memory here use up gas?
-        uint256 playerIndex = getPlayer(p.proposer);
-        uint256 reward =
-            Calculations.etherToWei(rules[uint256(RuleIndices.Reward)].value);
-        players[playerIndex].balance += reward; // FIXME: is there a better way
         rules[p.ruleIndex].value = p.value;
+        uint256 playerIndex = getPlayer(p.proposer);
+        uint256 reward = Calculations.etherToWei(
+            rules[uint256(RuleIndices.Reward)].value
+        );
+        players[playerIndex].balance += reward; // FIXME: is there a better way
         emit LedgerEntry(
             p.proposer,
             reward,
@@ -460,9 +454,8 @@ contract Game {
             }
             for (uint256 index = 0; index < players.length; index++) {
                 if (playerBalancesCopy[index] == 0) continue; // skip players if they have no share
-                uint256 share =
-                    (playerBalancesCopy[index] * thisGameContractBalance) /
-                        balancesSum;
+                uint256 share = (playerBalancesCopy[index] *
+                    thisGameContractBalance) / balancesSum;
                 payable(players[index].playerAddress).transfer(share);
             }
         }
