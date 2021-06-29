@@ -17,10 +17,14 @@ export const Rules = ({ rules }) => {
             key={i}
             className={classNames("item", rule.updated && "updated")}
           >
-            {ruleConfig.name} is {ruleConfig.append}
-            {rule.value}
-            {ruleConfig.unit}
-            <Helper text={ruleConfig.description}></Helper>
+            <div className="rule-text">
+              {ruleConfig.name} is {ruleConfig.append}
+              {rule.value}
+              {ruleConfig.unit}
+            </div>
+            <div className="rule-helper">
+              <Helper text={ruleConfig.description}></Helper>
+            </div>
           </div>
         ))}
     </>

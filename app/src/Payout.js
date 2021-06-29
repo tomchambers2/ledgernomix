@@ -41,44 +41,31 @@ export const Payout = ({ players, userPlayerAddress, getPlayerName }) => {
   return (
     <div>
       <h2>Payout</h2>
-      {/* <div className="split">
-        <div>Player:</div> <div className="join-line"></div>
-        <div>{getPlayerName(player.address)}</div>
-      </div> */}
-      <div className="container">
+      <div className="payout-container">
         <button
-          disabled={currentPlayerIndex === 0}
           onClick={() =>
             setCurrentPlayerIndex(
-              (currentPlayerIndex) => currentPlayerIndex - 1
+              (currentPlayerIndex) =>
+                (((currentPlayerIndex - 1) % players.length) + players.length) %
+                players.length
             )
           }
         >
           &lt;
         </button>
         <div className="details">
-          <div className="player-name">
-            {getPlayerName(player.playerAddress)}
-          </div>
           <div className="split">
-            <div>Payout</div>
-            <div className="join-line"></div>
-            <div>
-              {(
-                (Web3.utils.fromWei(player.balance) / totalBalance) *
-                totalCryptoPot
-              ).toFixed(2)}{" "}
-              {cryptocurrency}
-            </div>
+            <div>Name</div> <div className="join-line"></div>
+            <div>{getPlayerName(player.playerAddress)}</div>
           </div>
-          <div className="equals">=</div>
+          <br></br>
           <div className="split">
             <div>Place</div> <div className="join-line"></div>
             <div>{getNumberWithOrdinal(place)}</div>
           </div>
           <br></br>
           <div className="split">
-            <div>Game Tokens</div>
+            <div>Score</div>
             <div className="join-line"></div>
             <div>
               {Web3.utils.fromWei(player.balance)} {gameConfig.gameCurrency}
@@ -90,12 +77,23 @@ export const Payout = ({ players, userPlayerAddress, getPlayerName }) => {
             <div className="join-line"></div>
             <div>{`${((playerBalance / totalBalance) * 100).toFixed(2)}%`}</div>
           </div>
+          <div className="equals">=</div>
+          <div className="split">
+            <div>Payout</div>
+            <div className="join-line"></div>
+            <div>
+              {(
+                (Web3.utils.fromWei(player.balance) / totalBalance) *
+                totalCryptoPot
+              ).toFixed(2)}{" "}
+              {cryptocurrency}
+            </div>
+          </div>
         </div>
         <button
-          disabled={currentPlayerIndex === players.length - 1}
           onClick={() =>
             setCurrentPlayerIndex(
-              (currentPlayerIndex) => currentPlayerIndex + 1
+              (currentPlayerIndex) => (currentPlayerIndex + 1) % players.length
             )
           }
         >

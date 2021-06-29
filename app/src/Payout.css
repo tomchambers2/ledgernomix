@@ -1,7 +1,8 @@
-.container {
+.payout-container {
   display: flex;
   width: 100%;
   align-items: center;
+  align-content: stretch;
 }
 
 .details {
@@ -10,4 +11,8 @@
 
 .player-name {
   text-align: center;
+}
+
+.payout-container > button {
+  height: 500px;
 }

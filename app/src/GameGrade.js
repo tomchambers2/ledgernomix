@@ -74,23 +74,25 @@ export const GameGrade = ({ players, proposals }) => {
           title: "Equality",
           number: equality(players).toFixed(0),
           description:
-            "Indicates even distribution with a higher score showing a smaller gap between rich and poor",
+            "Graded on how even the ratio is between the highest and lowest player's scores",
         },
         {
           title: "Participation",
           number: participation(proposals, players).toFixed(0),
           description:
-            "Indicates how frequently playes were able to vote on proposals",
+            "Graded on the proportion of players who voted on each proposal",
         },
         {
           title: "Inflation Rank",
           number: inflation(players).toFixed(0),
-          description: "???",
+          description:
+            "As points are awarded or deducted the number of points that represent the same proportion of the total pot can inflate or deflate. Inflation is graded over 50, deflation below 50",
         },
         {
           title: "Vetocracy",
           number: vetocracy(proposals).toFixed(0),
-          description: "???",
+          description:
+            "Graded on the proportion of proposals that were rejected",
         },
       ].map((statistic) => (
         <Statistic key={statistic.title} {...statistic}></Statistic>

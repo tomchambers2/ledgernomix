@@ -12,4 +12,10 @@
 
 .helper::after {
   content: "?";
+  /* font-family: "UnifrakturMaguntia", cursive; */
+}
+
+.rule-helper {
+  background: var(--game-graphics-primary);
+  padding: var(--game-border) 0;
 }

@@ -566,3 +566,20 @@ input {
   border: var(--game-line-width) solid var(--game-graphics-primary);
   /* z-index: 91; */
 }
+
+.setup > img {
+  position: relative;
+  align-self: center;
+  border: var(--game-line-width) solid var(--game-graphics-primary);
+}
+
+.rules > .item {
+  display: flex;
+  flex-direction: row;
+  padding: 0;
+}
+
+.rule-text {
+  flex-grow: 1;
+  padding: var(--game-border) 0;
+}
