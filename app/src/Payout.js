@@ -80,7 +80,9 @@ export const Payout = ({ players, userPlayerAddress, getPlayerName }) => {
           <div className="equals">=</div>
           <div className="split">
             <div>Payout</div>
-            <div className="join-line"></div>
+            <div className="join-line payout-highlight">
+              <div className="join-line payout-dash"></div>
+            </div>
             <div>
               {(
                 (Web3.utils.fromWei(player.balance) / totalBalance) *

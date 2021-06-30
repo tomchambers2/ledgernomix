@@ -6,7 +6,7 @@ export const Statistic = ({ title, number, avg, description }) => {
     <div className="statistic">
       <div className="data">
         <div>
-          {title} <Helper text={description}></Helper>
+          <Helper text={description}></Helper> {title}
         </div>
         <div>{number}</div>
       </div>
