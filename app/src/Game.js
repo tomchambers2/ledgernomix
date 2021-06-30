@@ -14,7 +14,7 @@ import { default as GameContract } from "./contracts/Game.json";
 import Web3 from "web3";
 import { useParams } from "react-router-dom";
 import { useContractBalance } from "./useContractBalance";
-import { weiToEth, getNumberWithOrdinal } from "./utils.js";
+import { weiToEth, getNumberWithOrdinal, formatCurrency } from "./utils.js";
 import { PlayerIcon } from "./PlayerIcon";
 import { Clock } from "./Clock";
 import { ProposalCounter } from "./ProposalCounter";
@@ -337,7 +337,7 @@ export const Game = ({ web3, account }) => {
               <div>
                 {/* {weiToEth(gameBalance).toFixed(2) || 0} {cryptocurrency} // actual pot, wasn't updating */}
                 {(players &&
-                  (players.length * gameConfig.cryptoEntryFee).toFixed(2)) ||
+                  formatCurrency(players.length * gameConfig.cryptoEntryFee)) ||
                   0}{" "}
                 {cryptocurrency}
               </div>

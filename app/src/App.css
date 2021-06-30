@@ -255,6 +255,15 @@ a.button:hover,
   color: var(--game-graphics-primary);
 }
 
+.navigator,
+.navigator:hover {
+  outline: var(--game-line-width) solid var(--game-graphics-accent);
+  outline-offset: -4px;
+  border: 0;
+  background: var(--game-graphics-primary);
+  color: var(--game-graphics-accent);
+}
+
 button:disabled,
 .button:disabled,
 a.button:disabled {
@@ -528,7 +537,7 @@ input {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin: var(--game-border);
+  margin: var(--game-line-width);
 }
 
 .equals {
@@ -584,27 +593,15 @@ input {
   padding: var(--game-border) 0;
 }
 
-.payout-dash {
-  animation: slider 1s linear infinite;
-  background: var(--game-graphics-primary);
-  margin: 0;
-}
-
 .payout-highlight {
-  background: var(--game-foreground);
-  padding: 0;
+  animation: blinker 0.7s step-start infinite;
 }
 
-@keyframes slider {
-  0% {
-    width: 0%;
+@keyframes blinker {
+  25% {
+    opacity: 0%;
   }
-
   50% {
-    width: 100%;
-  }
-
-  0% {
-    width: 0%;
+    opacity: 100%;
   }
 }

@@ -1,6 +1,6 @@
 import Web3 from "web3";
 import { gameConfig } from "./gameConfig";
-import { getNumberWithOrdinal } from "./utils";
+import { getNumberWithOrdinal, formatCurrency } from "./utils";
 import "./Payout.css";
 import { useState } from "react";
 const { cryptoEntryFee, cryptocurrency } = gameConfig;
@@ -43,6 +43,7 @@ export const Payout = ({ players, userPlayerAddress, getPlayerName }) => {
       <h2>Payout</h2>
       <div className="payout-container">
         <button
+          className="navigator"
           onClick={() =>
             setCurrentPlayerIndex(
               (currentPlayerIndex) =>
@@ -51,7 +52,7 @@ export const Payout = ({ players, userPlayerAddress, getPlayerName }) => {
             )
           }
         >
-          &lt;
+          &#123;
         </button>
         <div className="details">
           <div className="split">
@@ -68,38 +69,58 @@ export const Payout = ({ players, userPlayerAddress, getPlayerName }) => {
             <div>Score</div>
             <div className="join-line"></div>
             <div>
-              {Web3.utils.fromWei(player.balance)} {gameConfig.gameCurrency}
+              {formatCurrency(Web3.utils.fromWei(player.balance))}{" "}
+              {gameConfig.gameCurrency}
             </div>
           </div>
           <div className="equals">=</div>
           <div className="split">
             <div>Pot Share</div>
             <div className="join-line"></div>
-            <div>{`${((playerBalance / totalBalance) * 100).toFixed(2)}%`}</div>
+            <div>{`${((playerBalance / totalBalance) * 100).toPrecision(
+              2
+            )}%`}</div>
           </div>
           <div className="equals">=</div>
-          <div className="split">
-            <div>Payout</div>
-            <div className="join-line payout-highlight">
-              <div className="join-line payout-dash"></div>
+          {(playerIndex === currentPlayerIndex && (
+            <div className="split payout-highlight">
+              <div>Payout</div>
+              <div className="join-line">
+                <div className="join-line"></div>
+              </div>
+              <div>
+                {formatCurrency(
+                  (Web3.utils.fromWei(player.balance) / totalBalance) *
+                    totalCryptoPot
+                )}{" "}
+                {cryptocurrency}
+              </div>
             </div>
-            <div>
-              {(
-                (Web3.utils.fromWei(player.balance) / totalBalance) *
-                totalCryptoPot
-              ).toFixed(2)}{" "}
-              {cryptocurrency}
+          )) || (
+            <div className="split">
+              <div>Payout</div>
+              <div className="join-line">
+                <div className="join-line"></div>
+              </div>
+              <div>
+                {formatCurrency(
+                  (Web3.utils.fromWei(player.balance) / totalBalance) *
+                    totalCryptoPot
+                )}{" "}
+                {cryptocurrency}
+              </div>
             </div>
-          </div>
+          )}
         </div>
         <button
+          className="navigator"
           onClick={() =>
             setCurrentPlayerIndex(
               (currentPlayerIndex) => (currentPlayerIndex + 1) % players.length
             )
           }
         >
-          &gt;
+          &#125;
         </button>
       </div>
     </div>
