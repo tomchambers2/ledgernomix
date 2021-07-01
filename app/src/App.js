@@ -167,6 +167,7 @@ function App() {
                     <span style={{ fontVariant: "small-caps" }}>x</span>
                   </h1>
                   <h3>the game of the rules of the game</h3>
+                  <div className="paragraph"></div>
                   <div className="paragraph">
                     Ledgernomix is a game of political economy, played on a
                     blockchain, with real cryptocurrency.
