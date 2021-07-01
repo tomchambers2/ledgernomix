@@ -207,6 +207,7 @@ h1 {
   font-size: 80px;
   margin: 0;
   margin-bottom: 1rem;
+  font-weight: normal;
 }
 
 h2 {
@@ -516,12 +517,14 @@ input {
 }
 
 .setup,
-.game-list {
+.game-list,
+.welcome {
   width: 50%;
   margin: auto;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
+  padding: 64px;
 }
 
 .create-proposal {
