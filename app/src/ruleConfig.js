@@ -15,9 +15,9 @@ export const ruleConfig = {
     unproposable: true,
   },
   "Proposal reward": {
-    name: "Successful proposal reward",
+    name: "Proposal reward",
     description:
-      "The amount given to a player when their proposal is successful",
+      "The amount awarded to a player when their proposal is successful",
     unit: " " + gameConfig.gameCurrency,
     inactive: 0,
   },
@@ -25,7 +25,7 @@ export const ruleConfig = {
     name: "Majority required",
     append: ">",
     description:
-      "The proportion of votes required for a proposal to be enacted",
+      "The proportion of votes that must be exceeded for a proposal to be enacted",
     unit: "%",
   },
   Quorum: {
@@ -42,25 +42,25 @@ export const ruleConfig = {
   },
   "Poll tax": {
     name: "Poll tax",
-    description: "A fixed tax collected on every completed proposal",
+    description: "A fixed tax collected after every completed proposal",
     inactive: 0,
     unit: " " + gameConfig.gameCurrency,
   },
   "Wealth tax": {
     name: "Wealth tax",
-    description: "A percentage tax collected on every completed proposal",
+    description: "A percentage tax collected after every completed proposal",
     unit: "%",
     inactive: 0,
   },
   "Wealth tax threshold": {
     name: "Wealth tax threshold",
-    description: "A percentage tax collected on every completed proposal",
+    description: "A percentage tax collected after every completed proposal",
     unit: " " + gameConfig.gameCurrency,
     inactive: 0,
   },
   "Proposal fee": {
     name: "Proposal fee",
-    description: "A fee collected on newly created proposals",
+    description: "A fee deducted for creating a proposal",
     inactive: 0,
     unit: " " + gameConfig.gameCurrency,
   },

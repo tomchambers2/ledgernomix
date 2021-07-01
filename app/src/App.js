@@ -151,12 +151,40 @@ function App() {
         </div>
         <div className="all-panels-container">
           <div className="background-spacer"></div>
-          <Setup setupStatus={setupStatus}></Setup>
+
           <Switch>
             <Route path="/:gameAddress">
+              <Setup setupStatus={setupStatus}></Setup>
               <Game web3={web3} account={account}></Game>
             </Route>
             <Route path="/">
+              <div className="panel-container">
+                <div className="welcome panel">
+                  <div className="background-pattern"></div>
+                  <OrnateBorder></OrnateBorder>
+                  <h1 className="logo">
+                    Ledgernomi
+                    <span style={{ fontVariant: "small-caps" }}>x</span>
+                  </h1>
+                  <h3>the game of the rules of the game</h3>
+                  <div className="paragraph">
+                    Ledgernomix is a game of political economy, played on a
+                    blockchain, with real cryptocurrency.
+                  </div>
+                  <div className="paragraph">
+                    Play with your friends in real time, like a board game, or
+                    over a longer time, like correspondence chess.
+                  </div>
+                  <div className="paragraph">
+                    Each game of Ledgernomix is a distributed autonomous
+                    organisation, or DAO, governed by a contract that exists on
+                    the blockchain. You can also think of it as a self-contained
+                    model economy and model parliament, with you and your
+                    friends as the members.
+                  </div>
+                </div>
+              </div>
+              <Setup setupStatus={setupStatus}></Setup>
               {newGameAddress && <Redirect to="/" />}
               <GameList
                 gamesList={gamesList}

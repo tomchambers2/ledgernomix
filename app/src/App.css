@@ -15,6 +15,7 @@ html {
 
 .logo {
   color: var(--game-graphics-primary);
+  margin-top: 0;
 }
 
 a:link {
@@ -160,6 +161,10 @@ body {
 }
 
 .vertical-panels-container {
+  display: flex;
+}
+
+.panel-container {
   display: flex;
 }
 
@@ -520,7 +525,8 @@ input {
 .game-list,
 .welcome {
   width: 50%;
-  margin: auto;
+  margin-left: auto;
+  margin-right: auto;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -576,6 +582,7 @@ input {
   position: relative;
   align-self: center;
   border: var(--game-line-width) solid var(--game-graphics-primary);
+  margin: var(--game-border) 0 var(--game-border) 0;
   /* z-index: 91; */
 }
 
@@ -607,4 +614,9 @@ input {
   50% {
     opacity: 100%;
   }
+}
+
+.paragraph {
+  margin: var(--game-border) 0 var(--game-border) 0;
+  display: block;
 }
