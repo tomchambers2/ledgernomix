@@ -211,8 +211,6 @@ export const Game = ({ web3, account }) => {
   const fetchGameEndTime = useCallback(async () => {
     const gameEndTimestamp = await getValue("gameEndTime");
 
-    // Create a new JavaScript Date object based on the timestamp
-    // multiplied by 1000 so that the argument is in milliseconds, not seconds.
     var date = new Date(gameEndTimestamp * 1000);
 
     const numericDate = date.getDate();

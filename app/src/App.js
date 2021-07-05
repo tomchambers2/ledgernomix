@@ -12,6 +12,7 @@ import { default as GameFactoryContract } from "./contracts/GameFactory.json";
 import { config } from "./config";
 import { useContractFn } from "./useContractFn";
 import { OrnateBorder } from "./OrnateBorder";
+import theGameOfImage from "./backgrounds/thegameoftherulesof-Magnuntia.svg";
 import {
   BrowserRouter as Router,
   Switch,
@@ -166,8 +167,11 @@ function App() {
                     Ledgernomi
                     <span style={{ fontVariant: "small-caps" }}>x</span>
                   </h1>
-                  <h3>the game of the rules of the game</h3>
-                  <div className="paragraph"></div>
+                  <img
+                    className="tag-circle"
+                    alt="the game of the rules of the game"
+                    src={theGameOfImage}
+                  ></img>
                   <div className="paragraph">
                     Ledgernomix is a game of political economy, played on a
                     blockchain, with real cryptocurrency.

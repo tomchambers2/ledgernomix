@@ -34,11 +34,23 @@ export function formatCurrency(number) {
 
   const numberAfterPoint = numberStringArray[1];
 
+  console.log(
+    <>
+      <span>
+        {numberToPoint}
+        <span className="decimal-point">.</span>
+        <span className="number-after-point">{numberAfterPoint}</span>
+      </span>
+    </>
+  );
+
   return (
-    <span>
-      {numberToPoint}
-      <span className="decimal-point">.</span>
-      <span className="number-after-point">{numberAfterPoint}</span>
-    </span>
+    <>
+      <span>
+        {numberToPoint}
+        <span className="decimal-point">.</span>
+        <span className="number-after-point">{numberAfterPoint}</span>
+      </span>
+    </>
   );
 }
