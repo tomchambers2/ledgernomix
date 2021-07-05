@@ -39,11 +39,19 @@ export const Setup = ({ setupStatus }) => {
             <div className="background-pattern"></div>
             <OrnateBorder></OrnateBorder>
             <div className="paragraph">
-              Before you can play you need to connect to our test network
+              Before you can play you need to connect Metamask to our test
+              network
             </div>
 
             <div className="paragraph">
-              Click on Metamask, the fox icon to the top right of your browser
+              Your browser extensions can be found to the top right of your
+              browser. Metamask has a fox icon. You may need to click on the
+              puzzle piece first to reveal it
+            </div>
+
+            <div className="paragraph">
+              Click on the fox icon to bring up Metamask, which should appear in
+              the corner of this window
             </div>
 
             <div className="paragraph">
