@@ -13,7 +13,7 @@ import { Loader } from "./Loader";
 import { default as GameContract } from "./contracts/Game.json";
 import Web3 from "web3";
 import { useParams } from "react-router-dom";
-import { useContractBalance } from "./useContractBalance";
+// import { useContractBalance } from "./useContractBalance";
 import { weiToEth, getNumberWithOrdinal, formatCurrency } from "./utils.js";
 import { PlayerIcon } from "./PlayerIcon";
 import { Clock } from "./Clock";
@@ -28,7 +28,7 @@ const FETCH_INTERVAL = 10 * 1000;
 export const Game = ({ web3, account }) => {
   const { gameAddress } = useParams();
   const game = useContract(web3, GameContract.abi, gameAddress);
-  const gameBalance = useContractBalance(web3, gameAddress);
+  // const gameBalance = useContractBalance(web3, gameAddress);
   const [events, setEvents] = useState([]);
   const [rules, setRules] = useState(null);
   const [players, setPlayers] = useState(null);
