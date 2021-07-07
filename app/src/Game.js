@@ -141,9 +141,9 @@ export const Game = ({ web3, account }) => {
           return (
             <>
               {getPlayerName(data.playerAddress)}{" "}
-              {`was ${data.isDeduction ? "deducted" : "awarded"} ${weiToEth(
-                data.amount
-              )} ${gameConfig.gameCurrency} for
+              {`was ${data.isDeduction ? "deducted" : "awarded"} `}
+              {formatCurrency(weiToEth(data.amount))}
+              {` ${gameConfig.gameCurrency} for
               ${data.successfulProposal ? "successful proposal on" : ""} ${
                 rules[data.ruleIndex].name
               }`}
@@ -333,7 +333,7 @@ export const Game = ({ web3, account }) => {
               <div>Pot</div>
               <div className="join-line"></div>
               <div>
-                {/* {weiToEth(gameBalance).toFixed(2) || 0} {cryptocurrency} // actual pot, wasn't updating */}
+                {/* {weiToEth(gameBalance).toFixed(2) || 0} {cryptocurrency} // FIXME: actual pot, wasn't updating as only fetched at game start */}
                 {(players &&
                   formatCurrency(players.length * gameConfig.cryptoEntryFee)) ||
                   0}{" "}

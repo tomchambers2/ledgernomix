@@ -627,8 +627,8 @@ input {
   margin-bottom: 50px;
   margin-left: auto;
   margin-right: auto;
-  animation: spin 3s ease infinite reverse;
-  color: white;
+  /* animation: spin 5s ease infinite reverse; */
+  animation: spin 10s linear infinite reverse;
 }
 
 @keyframes spin {
