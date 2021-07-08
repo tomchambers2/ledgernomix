@@ -3,21 +3,25 @@ import metamaskMenuImage from "./backgrounds/metamaskMenuImage.jpg";
 import networkSettingsImage from "./backgrounds/metamaskNetworkSettings.jpg";
 import networksImage from "./backgrounds/metamaskNetworks.jpg";
 import { useTimeout } from "./useTimeout";
+import { useRef } from "react";
 
 export const Setup = ({ setupStatus }) => {
+  const setupStatusRef = useRef();
+  setupStatusRef.current = setupStatus;
+
   console.log(setupStatus);
   useTimeout(5000, () => {
-    console.log(setupStatus, !setupStatus.metamask && !setupStatus.network);
-    if (!setupStatus.metamask && !setupStatus.network) {
-      console.log("run");
-      // window.location.reload();
+    console.log("CHECK STATUS", setupStatus, setupStatusRef.current);
+    if (setupStatusRef.current !== "complete") {
+      console.log("RELOAD");
+      window.location.reload();
     }
   });
 
   return (
     <>
       {" "}
-      {!setupStatus.metamask && (
+      {setupStatus === "install" && (
         <div className="panel-container">
           <div className="setup panel">
             <div className="background-pattern"></div>
@@ -33,7 +37,7 @@ export const Setup = ({ setupStatus }) => {
           </div>
         </div>
       )}
-      {setupStatus.metamask && !setupStatus.network && (
+      {setupStatus === "setnetwork" && (
         <div className="panel-container">
           <div className="setup panel">
             <div className="background-pattern"></div>

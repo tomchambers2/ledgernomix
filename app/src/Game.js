@@ -158,7 +158,6 @@ export const Game = ({ web3, account }) => {
 
   const fetchVotes = useCallback(
     async (proposals) => {
-      console.log("fetching votes");
       const updatedProposals = await Promise.all(
         proposals.slice().map(async (proposal, i) => {
           const votesLength = await game.methods.getVotesLength(i).call();
@@ -178,13 +177,11 @@ export const Game = ({ web3, account }) => {
   );
 
   const fetchRules = useCallback(async () => {
-    console.log("fetching rules");
     const rules = await getArray("rules", setRules);
     setRules(rules);
   }, [getArray]);
 
   const fetchProposals = useCallback(async () => {
-    console.log("fetching proposals");
     const proposals = await getArray("proposals", setProposals);
     if (proposals) {
       const proposalsWithVotes = await fetchVotes(proposals);
@@ -193,18 +190,15 @@ export const Game = ({ web3, account }) => {
   }, [getArray, fetchVotes]);
 
   const fetchPlayers = useCallback(async () => {
-    console.log("fetching players");
     const players = await getArray("players", setPlayers);
     setPlayers(players);
   }, [getArray]);
 
   const fetchEvents = useCallback(async () => {
-    console.log("fetching events");
     if (!game || !players || !proposals || !rules) return;
     const pastEvents = await game.getPastEvents("allEvents", {
       fromBlock: "earliest",
     });
-    console.log("pastEvents: ", pastEvents);
     setEvents([...pastEvents.map(mapEvent)]);
   }, [game, mapEvent, players, proposals, rules]);
 

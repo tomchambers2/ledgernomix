@@ -50,21 +50,15 @@ function App() {
     config.gameFactoryContract.address
   );
 
-  const [setupStatus, setSetupStatus] = useState({
-    metamask: false,
-    network: false,
-  });
+  const [setupStatus, setSetupStatus] = useState(null);
 
   useEffect(() => {
     const fn = async () => {
-      console.log("check setup");
-      if (!window.ethereum)
-        return setSetupStatus({ metamask: false, network: false });
+      if (!window.ethereum) return setSetupStatus("install");
       const web3 = new Web3(window.ethereum);
       const network = await web3.eth.net.getNetworkType();
-      if (network !== "private")
-        return setSetupStatus({ metamask: true, network: false });
-      setSetupStatus({ metamask: true, network: true });
+      if (network !== "private") return setSetupStatus("setnetwork");
+      setSetupStatus("complete");
       setWeb3(web3);
     };
     fn();
@@ -154,6 +148,21 @@ function App() {
           <div className="background-spacer"></div>
 
           <Switch>
+            <Route path="/about">
+              Ledgernomix was created by Joe Shellard and Tom Chambers in 2021
+            </Route>
+            <Route path="/how-to-play">This is how to play</Route>
+            <Route path="/games">
+              {(setupStatus === "complete" && (
+                <>
+                  {newGameAddress && <Redirect to="/" />}
+                  <GameList
+                    gamesList={gamesList}
+                    newGameHandler={newGameHandler}
+                  ></GameList>
+                </>
+              )) || <Setup setupStatus={setupStatus}></Setup>}
+            </Route>
             <Route path="/:gameAddress">
               <Setup setupStatus={setupStatus}></Setup>
               <Game web3={web3} account={account}></Game>
@@ -189,12 +198,15 @@ function App() {
                   </div>
                 </div>
               </div>
-              <Setup setupStatus={setupStatus}></Setup>
-              {newGameAddress && <Redirect to="/" />}
-              <GameList
-                gamesList={gamesList}
-                newGameHandler={newGameHandler}
-              ></GameList>
+              <div className="panel-container">
+                <div className="setup panel">
+                  <div className="background-pattern"></div>
+                  <OrnateBorder></OrnateBorder>
+                  <Link className="button" to="/games">
+                    <h3>Get started</h3>
+                  </Link>
+                </div>
+              </div>
             </Route>
           </Switch>
         </div>

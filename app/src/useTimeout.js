@@ -8,7 +8,6 @@ export const useTimeout = (time, _callback) => {
   }, [_callback]);
 
   useEffect(() => {
-    console.log("start time");
     const timeoutId = setTimeout(callback.current, time);
     return () => clearTimeout(timeoutId);
   }, [time]);

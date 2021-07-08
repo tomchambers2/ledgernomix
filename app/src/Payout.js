@@ -14,7 +14,6 @@ export const Payout = ({ players, userPlayerAddress, getPlayerName }) => {
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(playerIndex);
 
   const player = players[currentPlayerIndex];
-  console.log({ playerIndex, currentPlayerIndex, players, player });
 
   if (!players || !player) return <div>LOADING...</div>;
 

@@ -46,10 +46,6 @@ const inflation = (players) => {
   );
   const totalEndGameBalance = weiToEth(totalEndGameBalanceWei);
 
-  // console.log("totalEndGameBalanceWei: ", totalEndGameBalanceWei);
-  // console.log("totalEndGameBalance: ", totalEndGameBalance);
-  // console.log("totalStartGameBalance: ", totalStartGameBalance);
-
   const actualInflation =
     (totalEndGameBalance / totalStartGameBalance) * 100 - 100;
   const inflationRankFactor = 0.01;

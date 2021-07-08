@@ -624,9 +624,7 @@ describe("Game", () => {
       });
 
       for (let i = 0; i < 3; i++) {
-        console.log("round");
         await game.connect(players[0]).createProposal(0, 500, { gasPrice: 0 });
-        console.log("vote");
         await game.connect(players[0]).voteOnProposal(i, true, { gasPrice: 0 });
       }
     });

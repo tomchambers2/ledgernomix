@@ -23,7 +23,7 @@ export const GameList = ({ gamesList, newGameHandler }) => {
               .slice()
               .reverse()
               .map((game) => (
-                <div className="game-list-item">
+                <div key={game} className="game-list-item">
                   <a className="game-list-button" href={game}>
                     {game}
                   </a>
