@@ -1,6 +1,8 @@
 import { ruleConfig } from "./ruleConfig";
 import classNames from "classnames";
 import { Helper } from "./Helper";
+import ReactTooltip from "react-tooltip";
+import "./Rules.css";
 
 export const Rules = ({ rules }) => {
   return (
@@ -17,7 +19,13 @@ export const Rules = ({ rules }) => {
             key={i}
             className={classNames("item", rule.updated && "updated")}
           >
-            <div className="rule-text">
+            <ReactTooltip
+              className="tooltip"
+              effect="solid"
+              // place="right"
+              // overridePosition={({ left }) => ({ left: "100%" })}
+            />
+            <div className="rule-text" data-tip={ruleConfig.description}>
               {ruleConfig.name} is {ruleConfig.append}
               {rule.value}
               {ruleConfig.unit}

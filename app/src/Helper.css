@@ -6,13 +6,14 @@
   color: var(--game-graphics-accent);
   width: 20px;
   height: 20px;
-  font-size: 14px;
+  font-size: 20px;
   text-align: center;
   display: inline-block;
 }
 
 .helper::after {
   content: "?";
+  font-size: "30px";
   /* font-family: "UnifrakturMaguntia", cursive; */
 }
 
