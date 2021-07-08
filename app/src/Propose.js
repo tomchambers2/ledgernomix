@@ -157,7 +157,10 @@ export const Propose = ({
                   ruleConfig[proposedRuleOption.label].unit}
               </div>
             </div>
-            <br></br>
+            <p>
+              {proposedRuleOption &&
+                ruleConfig[proposedRuleOption.label].description}
+            </p>
             <div>
               <button
                 className="create-proposal"
