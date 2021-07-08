@@ -17,6 +17,7 @@ const RuleIndices = {
   WealthTax: 7,
   WealthTaxThreshold: 8,
   ProposalFee: 9,
+  Dividend: 10,
 };
 
 describe("Game", () => {
@@ -55,6 +56,7 @@ describe("Game", () => {
       wealthTax = 0,
       wealthTaxThreshold = 0,
       proposalCost = 0,
+      dividend = 0,
     } = {}) => {
       game = await Game.deploy(
         owner.address,
@@ -68,6 +70,7 @@ describe("Game", () => {
         wealthTax,
         wealthTaxThreshold,
         proposalCost,
+        dividend,
         {
           value: intToHex(entryFee * 1000000000000000000),
           // "0x4563918244F40000", // 5 ether in hex
@@ -397,6 +400,17 @@ describe("Game", () => {
 
     it("should apply a wealth tax to all players on complete proposal", async () => {
       game = await createGame({ startBalance: 10, wealthTax: 50 }); //wealth tax is percentage
+      await game.deployed();
+
+      await startAndProposal(4, game);
+      await game.connect(players[0]).voteOnProposal(0, false);
+      await game.connect(players[1]).voteOnProposal(0, false);
+      const player = await game.players(3);
+      expect(player.balance.toString()).to.equal("5000000000000000000");
+    });
+
+    it("should pay out a dividend to all players on complete proposal", async () => {
+      game = await createGame({ startBalance: 10, dividend: 50 }); //wealth tax is percentage
       await game.deployed();
 
       await startAndProposal(4, game);

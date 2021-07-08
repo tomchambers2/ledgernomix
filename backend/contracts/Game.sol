@@ -54,7 +54,8 @@ contract GameFactory {
             0, //Poll Tax
             0, //Wealth Tax
             0, // Wealth Tax Threshold
-            0 //Proposal fee
+            0, //Proposal fee
+            500 // Dividend
         );
         games.push(g);
         emit NewGame(games.length - 1, address(g));
@@ -130,6 +131,7 @@ contract Game {
         WealthTax,
         WealthTaxThreshold,
         ProposalFee
+        // Dividend
     }
 
     constructor(
@@ -143,7 +145,8 @@ contract Game {
         uint256 pollTaxValue,
         uint256 wealthTaxValue,
         uint256 wealthTaxThreshold,
-        uint256 proposalFee
+        uint256 proposalFee,
+        uint256 dividend
     ) payable {
         rules.push(Rule("Entry fee", entryFee, 0, 1000));
         rules.push(Rule("Start balance", startBalance, 0, 1000));
@@ -157,6 +160,7 @@ contract Game {
             Rule("Wealth tax threshold", wealthTaxThreshold, 0, 1000000000)
         );
         rules.push(Rule("Proposal fee", proposalFee, 0, 1000000000));
+        // rules.push(Rule("Dividend", dividend, 0, 1000000000));
         gameFee();
         createPlayer(firstPlayer);
     }
@@ -371,6 +375,21 @@ contract Game {
         }
     }
 
+    // function payDividend() private {
+    //     for (uint256 index = 0; index < players.length; index++) {
+    //         players[index].balance = players[index].balance + rules[uint256(RuleIndices.Dividend)].value;
+    //         emit LedgerEntry(
+    //             players[index].playerAddress,
+    //                     rules[uint256(RuleIndices.Dividend)].value,
+    //                     true,
+    //                     players[index].balance,
+    //                     false,
+    //                     uint256(RuleIndices.Dividend)
+    //                 );
+
+    //     }
+    // }
+
     function countVotes(uint256 proposalIndex) private {
         uint256 quorum = Calculations.calculateQuorum(
             rules[uint256(RuleIndices.Quorum)].value,
@@ -403,6 +422,7 @@ contract Game {
             }
             collectWealthTax();
             collectPollTax();
+            // payDividend();
             endGame();
         }
     }
@@ -412,6 +432,15 @@ contract Game {
             if (players[index].playerAddress == playerAddress) return index;
         }
     }
+
+    // function getPlayer(address playerAddress) private view returns (uint256 playerIndex) {
+    //     for (uint256 index = 0; index < players.length; index++) {
+    //         if (players[index].playerAddress == playerAddress) {
+    //             playerIndex = index;
+    //         }
+    //     }
+    //     return playerIndex;
+    // }
 
     function enactProposal(uint256 proposalIndex) private {
         proposals[proposalIndex].successful = true;
