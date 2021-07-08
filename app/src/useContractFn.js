@@ -19,10 +19,7 @@ export const useContractFn = (contract, name, options) => {
       } catch (e) {
         console.error(e);
         const msg = parseError(e);
-        fireNotification(
-          `${msg}<br><br><em>The blockchain takes a few seconds to update, so your screen may be out of date</em>`,
-          "error"
-        );
+        fireNotification(`${msg}`, "error");
         return false;
       }
     },

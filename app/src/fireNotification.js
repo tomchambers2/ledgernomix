@@ -1,9 +1,9 @@
-import Noty from "noty";
+import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 export const fireNotification = function (text, type) {
-  new Noty({
-    text,
-    type: type || "info",
-    timeout: 10000,
-  }).show();
+  toast(text, {
+    style: { fontSize: "200%", color: "white", backgroundColor: "red" },
+    position: "top-center",
+  });
 };

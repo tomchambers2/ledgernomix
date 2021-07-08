@@ -1,8 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import "./App.css";
 import "./eskapade-fraktur-wakamaifondue.css";
-import "noty/lib/noty.css";
-import "noty/lib/themes/mint.css";
 import { Game } from "./Game";
 import { Setup } from "./Setup";
 import { GameList } from "./GameList";
@@ -13,6 +11,7 @@ import { config } from "./config";
 import { useContractFn } from "./useContractFn";
 import { OrnateBorder } from "./OrnateBorder";
 import theGameOfImage from "./backgrounds/thegameoftherulesof-Magnuntia.svg";
+import { ToastContainer } from "react-toastify";
 import {
   BrowserRouter as Router,
   Switch,
@@ -130,6 +129,7 @@ function App() {
 
   return (
     <Router>
+      <ToastContainer />
       <div className="app">
         <div className="ink-col-effect"></div>
         <div className="background-gradient"></div>
