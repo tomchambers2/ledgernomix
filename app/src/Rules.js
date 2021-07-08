@@ -19,12 +19,6 @@ export const Rules = ({ rules }) => {
             key={i}
             className={classNames("item", rule.updated && "updated")}
           >
-            <ReactTooltip
-              className="tooltip"
-              effect="solid"
-              // place="right"
-              // overridePosition={({ left }) => ({ left: "100%" })}
-            />
             <div className="rule-text" data-tip={ruleConfig.description}>
               {ruleConfig.name} is {ruleConfig.append}
               {rule.value}
