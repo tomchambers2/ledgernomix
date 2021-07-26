@@ -149,6 +149,13 @@ export const Game = ({ web3, account }) => {
               }`}
             </>
           );
+        case "CreatePlayer":
+          return (
+            <>
+              {getPlayerName(data.playerAddress)} entered game with{" "}
+              {formatCurrency(weiToEth(data.balance))} pts
+            </>
+          );
         default:
           return "UNKNOWN EVENT";
       }
@@ -199,6 +206,7 @@ export const Game = ({ web3, account }) => {
     const pastEvents = await game.getPastEvents("allEvents", {
       fromBlock: "earliest",
     });
+    console.log(pastEvents);
     setEvents([...pastEvents.map(mapEvent)]);
   }, [game, mapEvent, players, proposals, rules]);
 

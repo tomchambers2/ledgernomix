@@ -107,7 +107,8 @@ function App() {
     value: Web3.utils.toWei("5"),
   });
   const newGameHandler = async () => {
-    const newGameAddress = await newGame();
+    const result = await newGame();
+    const newGameAddress = result.events.NewGame.returnValues.gameAddress;
     setNewGameAddress(newGameAddress);
   };
 
@@ -126,6 +127,8 @@ function App() {
         if (err) console.error(err);
       });
   }, [gameFactory, gamesList]);
+
+  console.log(newGameAddress);
 
   return (
     <Router>
@@ -155,7 +158,7 @@ function App() {
             <Route path="/games">
               {(setupStatus === "complete" && (
                 <>
-                  {newGameAddress && <Redirect to="/" />}
+                  {newGameAddress && <Redirect to={`/${newGameAddress}`} />}
                   <GameList
                     gamesList={gamesList}
                     newGameHandler={newGameHandler}

@@ -114,6 +114,8 @@ contract Game {
         uint256 ruleIndex
     );
 
+    event CreatePlayer(address playerAddress, uint balance);
+
     struct Vote {
         address player;
         bool vote;
@@ -198,6 +200,7 @@ contract Game {
         Player storage p = players.push();
         p.playerAddress = playerAddress;
         p.balance = rules[uint256(RuleIndices.StartBalance)].value * eth;
+        emit CreatePlayer(p.playerAddress, p.balance);
     }
 
     modifier isPlayer() {
