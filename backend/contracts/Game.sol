@@ -147,7 +147,8 @@ contract Game {
         PollTax,
         WealthTax,
         WealthTaxThreshold,
-        ProposalFee
+        ProposalFee,
+        Dividend
     }
 
     constructor(
@@ -382,6 +383,12 @@ contract Game {
         }
     }
 
+    function payDividend() private {
+        for (uint256 index = 0; index < players.length; index++) {
+            players[index].balance += Calculations.etherToWei(rules[uint256(RuleIndices.Dividend)].value);
+        }
+    }
+
     function countVotes(uint256 proposalIndex) private {
         uint256 quorum = Calculations.calculateQuorum(
             rules[uint256(RuleIndices.Quorum)].value,
@@ -414,6 +421,7 @@ contract Game {
             }
             collectWealthTax();
             collectPollTax();
+            payDividend();
             endGame();
         }
     }

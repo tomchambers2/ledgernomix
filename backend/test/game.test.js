@@ -19,6 +19,10 @@ const RuleIndices = {
   ProposalFee: 9,
 };
 
+const weiToEth = (wei) => {
+  return new web3.BigNumber(wei).times(1e18).toNumber();
+};
+
 describe("Game", () => {
   let Game;
   let game;
@@ -418,6 +422,15 @@ describe("Game", () => {
       await game.connect(players[1]).voteOnProposal(0, false);
       const player = await game.players(0);
       expect(player.balance.toString()).to.equal("0");
+    });
+
+    it.only("should apply a poll tax to all players on complete proposal", async () => {
+      const game = await createGame({ dividend: 6 });
+      await startAndProposal(4, game);
+      await game.connect(players[0]).voteOnProposal(0, false);
+      await game.connect(players[1]).voteOnProposal(0, false);
+      const player = await game.players(0);
+      expect(ethers.utils.formatEther(player.balance)).to.equal("16.0");
     });
 
     //
