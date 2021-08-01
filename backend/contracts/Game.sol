@@ -27,6 +27,20 @@ library Calculations {
     function etherToWei(uint256 etherAmount) public pure returns (uint256) {
         return etherAmount * 10**18;
     }
+
+    struct GameParams {
+            uint entryFee;
+            uint startBalance;
+            uint successfulProposalReward;
+            uint majority;
+            uint quorum;
+            uint maxProposals;
+            uint pollTax;
+            uint wealthTax;
+            uint wealthTaxThreshold;
+            uint proposalFee;
+            uint dividend;
+    }
 }
 
 contract GameFactory {
@@ -45,7 +59,7 @@ contract GameFactory {
         );
         Game g = new Game{value: msg.value}(
             msg.sender,
-            5, // entry fee
+            Calculations.GameParams(5, // entry fee
             1000, // start balance
             2000, //Successful Proposal reward
             50, //Majority
@@ -54,7 +68,9 @@ contract GameFactory {
             0, //Poll Tax
             0, //Wealth Tax
             0, // Wealth Tax Threshold
-            0 //Proposal fee
+            0, //Proposal fee
+            0 // dividend
+            )
         );
         games.push(g);
         emit NewGame(games.length - 1, address(g));
@@ -136,29 +152,21 @@ contract Game {
 
     constructor(
         address firstPlayer,
-        uint256 entryFee,
-        uint256 startBalance,
-        uint256 rewardValue,
-        uint256 majorityValue,
-        uint256 quorumValue,
-        uint256 maxProposalsValue,
-        uint256 pollTaxValue,
-        uint256 wealthTaxValue,
-        uint256 wealthTaxThreshold,
-        uint256 proposalFee
+        Calculations.GameParams memory gameParams
     ) payable {
-        rules.push(Rule("Entry fee", entryFee, 0, 1000));
-        rules.push(Rule("Start balance", startBalance, 0, 1000));
-        rules.push(Rule("Proposal reward", rewardValue, 0, 1000000000));
-        rules.push(Rule("Majority", majorityValue, 0, 100));
-        rules.push(Rule("Quorum", quorumValue, 0, 100));
-        rules.push(Rule("Game length", maxProposalsValue, 1, 100));
-        rules.push(Rule("Poll tax", pollTaxValue, 1, 1000000000));
-        rules.push(Rule("Wealth tax", wealthTaxValue, 1, 100));
+        rules.push(Rule("Entry fee", gameParams.entryFee, 0, 1000));
+        rules.push(Rule("Start balance", gameParams.startBalance, 0, 1000));
+        rules.push(Rule("Proposal reward", gameParams.successfulProposalReward, 0, 1000000000));
+        rules.push(Rule("Majority", gameParams.majority, 0, 100));
+        rules.push(Rule("Quorum", gameParams.quorum, 0, 100));
+        rules.push(Rule("Game length", gameParams.maxProposals, 1, 100));
+        rules.push(Rule("Poll tax", gameParams.pollTax, 1, 1000000000));
+        rules.push(Rule("Wealth tax", gameParams.wealthTax, 1, 100));
         rules.push(
-            Rule("Wealth tax threshold", wealthTaxThreshold, 0, 1000000000)
+            Rule("Wealth tax threshold", gameParams.wealthTaxThreshold, 0, 1000000000)
         );
-        rules.push(Rule("Proposal fee", proposalFee, 0, 1000000000));
+        rules.push(Rule("Proposal fee", gameParams.proposalFee, 0, 1000000000));
+        rules.push(Rule("Dividend", gameParams.dividend, 0, 1000000000));
         gameFee();
         createPlayer(firstPlayer);
     }

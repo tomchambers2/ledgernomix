@@ -206,7 +206,6 @@ export const Game = ({ web3, account }) => {
     const pastEvents = await game.getPastEvents("allEvents", {
       fromBlock: "earliest",
     });
-    console.log(pastEvents);
     setEvents([...pastEvents.map(mapEvent)]);
   }, [game, mapEvent, players, proposals, rules]);
 

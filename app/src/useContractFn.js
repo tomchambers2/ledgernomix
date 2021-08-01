@@ -14,7 +14,6 @@ export const useContractFn = (contract, name, options) => {
     async (...args) => {
       try {
         const result = await contract.methods[name](...args).send(options);
-        fireNotification(`${name} request sent`, "warning");
         return result;
       } catch (e) {
         console.error(e);

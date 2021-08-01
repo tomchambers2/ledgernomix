@@ -55,19 +55,23 @@ describe("Game", () => {
       wealthTax = 0,
       wealthTaxThreshold = 0,
       proposalCost = 0,
+      dividend = 0,
     } = {}) => {
       game = await Game.deploy(
         owner.address,
-        entryFee,
-        startBalance,
-        proposalReward,
-        majority,
-        quorum,
-        maxProposals,
-        pollTax,
-        wealthTax,
-        wealthTaxThreshold,
-        proposalCost,
+        [
+          entryFee,
+          startBalance,
+          proposalReward,
+          majority,
+          quorum,
+          maxProposals,
+          pollTax,
+          wealthTax,
+          wealthTaxThreshold,
+          proposalCost,
+          dividend,
+        ],
         {
           value: intToHex(entryFee * 1000000000000000000),
           // "0x4563918244F40000", // 5 ether in hex

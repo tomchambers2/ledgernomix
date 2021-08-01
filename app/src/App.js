@@ -49,16 +49,20 @@ function App() {
     config.gameFactoryContract.address
   );
 
-  const [setupStatus, setSetupStatus] = useState(null);
+  const [setupStatus, setSetupStatus] = useState("setnetwork");
 
   useEffect(() => {
     const fn = async () => {
       if (!window.ethereum) return setSetupStatus("install");
       const web3 = new Web3(window.ethereum);
-      const network = await web3.eth.net.getNetworkType();
-      if (network !== "private") return setSetupStatus("setnetwork");
-      setSetupStatus("complete");
-      setWeb3(web3);
+      try {
+        const network = await web3.eth.net.getNetworkType();
+        if (network !== "private") return setSetupStatus("setnetwork");
+        setSetupStatus("complete");
+        setWeb3(web3);
+      } catch (e) {
+        console.log(e);
+      }
     };
     fn();
   }, []);
@@ -107,9 +111,13 @@ function App() {
     value: Web3.utils.toWei("5"),
   });
   const newGameHandler = async () => {
-    const result = await newGame();
-    const newGameAddress = result.events.NewGame.returnValues.gameAddress;
-    setNewGameAddress(newGameAddress);
+    try {
+      const result = await newGame();
+      const newGameAddress = result.events.NewGame.returnValues.gameAddress;
+      setNewGameAddress(newGameAddress);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   useEffect(() => {
@@ -127,8 +135,6 @@ function App() {
         if (err) console.error(err);
       });
   }, [gameFactory, gamesList]);
-
-  console.log(newGameAddress);
 
   return (
     <Router>

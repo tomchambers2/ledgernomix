@@ -20,7 +20,6 @@ export const Setup = ({ setupStatus }) => {
 
   return (
     <>
-      {" "}
       {setupStatus === "install" && (
         <div className="panel-container">
           <div className="setup panel">
