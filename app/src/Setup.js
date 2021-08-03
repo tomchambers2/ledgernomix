@@ -4,6 +4,8 @@ import networkSettingsImage from "./backgrounds/metamaskNetworkSettings.jpg";
 import networksImage from "./backgrounds/metamaskNetworks.jpg";
 import { useTimeout } from "./useTimeout";
 import { useRef } from "react";
+import installMetamaskVideo from "./videos/install-metamask.mp4";
+import updateMetamaskVideo from "./videos/update-metamask.mp4";
 
 export const Setup = ({ setupStatus }) => {
   const setupStatusRef = useRef();
@@ -28,11 +30,13 @@ export const Setup = ({ setupStatus }) => {
             <a
               className="button"
               target="_blank"
-              href="https://metamask.io/download.html"
+              href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn"
               rel="noreferrer"
             >
               <h3>First install Metamask browser extension</h3>
             </a>
+
+            <video controls src={installMetamaskVideo} />
           </div>
         </div>
       )}
@@ -41,6 +45,8 @@ export const Setup = ({ setupStatus }) => {
           <div className="setup panel">
             <div className="background-pattern"></div>
             <OrnateBorder></OrnateBorder>
+            <video controls src={updateMetamaskVideo} />
+
             <div className="paragraph">
               Before you can play you need to connect Metamask to our test
               network
