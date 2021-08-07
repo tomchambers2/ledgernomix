@@ -6,6 +6,8 @@ import { useContractFn } from "./useContractFn";
 import { default as GameContract } from "./contracts/Game.json";
 import { useParams } from "react-router-dom";
 import { ruleConfig } from "./ruleConfig";
+import { Helper } from "./Helper";
+import ReactTooltip from "react-tooltip";
 
 export const Proposals = ({
   rules,
@@ -59,18 +61,26 @@ export const Proposals = ({
             <div
               className={classNames("title", proposal.complete && "complete")}
             >
-              {getPlayerName(proposal.proposer)}{" "}
-              {proposal.complete
-                ? proposal.successful
-                  ? "successfully proposed"
-                  : proposal.feePaid
-                  ? "unsuccessfully proposed"
-                  : "tried to propose"
-                : "proposes"}
-              :<br></br> "{rules[proposal.ruleIndex].name} should be{" "}
-              {proposal.value}
-              {ruleConfig[rules[proposal.ruleIndex].name].unit}"
+              <ReactTooltip className="tooltip" effect="solid" />
+              <span
+                data-tip={
+                  ruleConfig[rules[proposal.ruleIndex].name].description
+                }
+              >
+                {getPlayerName(proposal.proposer)}{" "}
+                {proposal.complete
+                  ? proposal.successful
+                    ? "successfully proposed"
+                    : proposal.feePaid
+                    ? "unsuccessfully proposed"
+                    : "tried to propose"
+                  : "proposes"}
+                :<br></br> "{rules[proposal.ruleIndex].name} should be{" "}
+                {proposal.value}
+                {ruleConfig[rules[proposal.ruleIndex].name].unit}"
+              </span>
             </div>
+
             {(!proposal.feePaid && <div> but could not afford fee</div>) || (
               <div className="votes">
                 {proposal.pending && "Submitting vote..."}

@@ -5,12 +5,7 @@ import "./Helper.css";
 export const Helper = ({ text }) => {
   return (
     <>
-      <ReactTooltip
-        className="tooltip"
-        effect="solid"
-        // place="right"
-        // overridePosition={({ left }) => ({ left: "100%" })}
-      />
+      <ReactTooltip className="tooltip" effect="solid" />
       <span className="helper" data-tip={text}></span>
     </>
   );
