@@ -583,13 +583,11 @@ input {
   align-self: center;
   border: var(--game-line-width) solid var(--game-graphics-primary);
   margin: var(--game-border) 0 var(--game-border) 0;
-  /* z-index: 91; */
 }
 
-.setup > img {
-  position: relative;
-  align-self: center;
+.setup > video {
   border: var(--game-line-width) solid var(--game-graphics-primary);
+  z-index: 91;
 }
 
 .rules > .item {
