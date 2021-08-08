@@ -6,7 +6,6 @@ import { useContractFn } from "./useContractFn";
 import { default as GameContract } from "./contracts/Game.json";
 import { useParams } from "react-router-dom";
 import { ruleConfig } from "./ruleConfig";
-import { Helper } from "./Helper";
 import ReactTooltip from "react-tooltip";
 
 export const Proposals = ({

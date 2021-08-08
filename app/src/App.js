@@ -12,6 +12,7 @@ import { useContractFn } from "./useContractFn";
 import { OrnateBorder } from "./OrnateBorder";
 import theGameOfImage from "./backgrounds/thegameoftherulesof-Magnuntia.svg";
 import { ToastContainer } from "react-toastify";
+import { About } from "./About";
 import {
   BrowserRouter as Router,
   Switch,
@@ -149,8 +150,12 @@ function App() {
             </h2>
           </Link>
           <div className="links">
-            <h3>How to Play</h3>
-            <h3>About</h3>
+            <Link to="/how-to-play">
+              <h3>How to Play</h3>
+            </Link>
+            <Link to="/about">
+              <h3>About</h3>
+            </Link>
           </div>
         </div>
         <div className="all-panels-container">
@@ -158,7 +163,7 @@ function App() {
 
           <Switch>
             <Route path="/about">
-              Ledgernomix was created by Joe Shellard and Tom Chambers in 2021
+              <About></About>
             </Route>
             <Route path="/how-to-play">This is how to play</Route>
             <Route path="/games">

@@ -226,6 +226,10 @@ h3 {
   margin: 0;
 }
 
+a h3 {
+  color: var(--game-graphics-primary);
+}
+
 .game-icons-container {
   display: flex;
   justify-content: center;
