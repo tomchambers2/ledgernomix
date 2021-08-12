@@ -226,7 +226,7 @@ h3 {
   margin: 0;
 }
 
-a h3 {
+.links a h3 {
   color: var(--game-graphics-primary);
 }
 
