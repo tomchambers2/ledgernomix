@@ -13,6 +13,7 @@ import { OrnateBorder } from "./OrnateBorder";
 import theGameOfImage from "./backgrounds/thegameoftherulesof-Magnuntia.svg";
 import { ToastContainer } from "react-toastify";
 import { About } from "./About";
+import { HowToPlay } from "./HowToPlay";
 import {
   BrowserRouter as Router,
   Switch,
@@ -165,7 +166,9 @@ function App() {
             <Route path="/about">
               <About></About>
             </Route>
-            <Route path="/how-to-play">This is how to play</Route>
+            <Route path="/how-to-play">
+              <HowToPlay></HowToPlay>
+            </Route>
             <Route path="/games">
               {(setupStatus === "complete" && (
                 <>
