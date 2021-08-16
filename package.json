@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/tomchambers2/nomdao#readme",
   "dependencies": {
-    "hardhat": "^2.3.0"
+    "hardhat": "^2.3.0",
+    "wordhash": "^1.0.1"
   }
 }

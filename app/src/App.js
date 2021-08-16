@@ -102,6 +102,7 @@ function App() {
     const fn = async () => {
       if (!gameFactory) return;
       const gamesList = await getArray("games");
+      console.log(gamesList);
       setGamesList(gamesList);
     };
     fn();
