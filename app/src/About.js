@@ -69,6 +69,10 @@ export const About = () => {
         observe the changing relationships between rules and people, and to
         watch the gap between intent and effect.
       </div>
+      <div className="paragraph">
+        Contact the creators at{" "}
+        <a href="mailto:ledgernomix@gmail.com">ledgernomix@gmail.com</a>
+      </div>
     </div>
   );
 };
