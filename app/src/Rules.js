@@ -1,6 +1,5 @@
 import { ruleConfig } from "./ruleConfig";
 import classNames from "classnames";
-import { Helper } from "./Helper";
 import "./Rules.css";
 import ReactTooltip from "react-tooltip";
 
