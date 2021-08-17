@@ -17,8 +17,10 @@ export const HowToPlay = () => {
         you can find ways to break the game and make your cryptocurrency
         unrecoverable, or at least unrecoverable without the cooperation of a
         particular player. If your cryptocurrency gets stuck in the game, it's
-        just gone, and nobody else has it. Only play with amounts where you'd
-        all be content to laugh off such a loss.
+        just gone, and nobody else has it. If you tell us about it, maybe we can
+        close the loophole for the next set of players, but we can't get you
+        your money back. Only play with amounts where you'd all be content to
+        laugh off such a loss.
       </div>
       <div className="paragraph">
         If you're playing on our test network, the currency isn't worth anything
