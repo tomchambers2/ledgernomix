@@ -22,6 +22,7 @@ import { OrnateBorder } from "./OrnateBorder";
 import { GameGrade } from "./GameGrade";
 import { Payout } from "./Payout";
 import { gameConfig } from "./gameConfig";
+import ReactTooltip from "react-tooltip";
 
 const { cryptocurrency } = gameConfig;
 const FETCH_INTERVAL = 10 * 1000;
@@ -315,7 +316,8 @@ export const Game = ({ web3, account }) => {
           <div className="game-name">
             {game && (
               <h2>
-                <span className="game-address">
+                <ReactTooltip className="tooltip" effect="solid" />
+                <span className="game-address" data-tip={gameAddress}>
                   Game '
                   {gameAddress.substr(
                     gameAddress.length - 6,
