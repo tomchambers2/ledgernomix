@@ -22,9 +22,6 @@ import { OrnateBorder } from "./OrnateBorder";
 import { GameGrade } from "./GameGrade";
 import { Payout } from "./Payout";
 import { gameConfig } from "./gameConfig";
-import Wordhash from "wordhash";
-
-const wordhash = Wordhash({ length: 3 });
 
 const { cryptocurrency } = gameConfig;
 const FETCH_INTERVAL = 10 * 1000;
@@ -319,7 +316,7 @@ export const Game = ({ web3, account }) => {
             {game && (
               <h2>
                 <span className="game-address">
-                  {wordhash.hash(gameAddress)}
+                  Game '
                   {gameAddress.substr(
                     gameAddress.length - 6,
                     gameAddress.length
