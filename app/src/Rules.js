@@ -2,12 +2,13 @@ import { ruleConfig } from "./ruleConfig";
 import classNames from "classnames";
 import { Helper } from "./Helper";
 import "./Rules.css";
+import ReactTooltip from "react-tooltip";
 
 export const Rules = ({ rules }) => {
   return (
     <>
       <h2>Rules</h2>
-
+      <ReactTooltip className="tooltip" effect="solid" />
       {rules
         .map((rule) => ({ rule, ruleConfig: ruleConfig[rule.name] }))
         .filter(
@@ -23,9 +24,9 @@ export const Rules = ({ rules }) => {
               {rule.value}
               {ruleConfig.unit}
             </div>
-            <div className="rule-helper">
+            {/* <div className="rule-helper">
               <Helper text={ruleConfig.description}></Helper>
-            </div>
+            </div> */}
           </div>
         ))}
     </>

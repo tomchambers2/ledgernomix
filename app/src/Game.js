@@ -279,6 +279,7 @@ export const Game = ({ web3, account }) => {
 
   return (
     <>
+      <ReactTooltip className="tooltip" effect="solid" />
       {gameActive && !isPlayer && (
         <div className="game-icons-container">
           <div className="game-icon-panel">
@@ -316,7 +317,6 @@ export const Game = ({ web3, account }) => {
           <div className="game-name">
             {game && (
               <h2>
-                <ReactTooltip className="tooltip" effect="solid" />
                 <span className="game-address" data-tip={gameAddress}>
                   Game '
                   {gameAddress.substr(
