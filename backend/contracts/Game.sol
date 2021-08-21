@@ -384,17 +384,19 @@ contract Game {
     }
 
     function payDividend() private {
-        uint dividendAmount = rules[uint256(RuleIndices.Dividend)].value;
+        uint dividendAmount = Calculations.etherToWei(rules[uint256(RuleIndices.Dividend)].value);
         for (uint256 index = 0; index < players.length; index++) {
-            players[index].balance += Calculations.etherToWei(dividendAmount);
-            emit LedgerEntry(
-                players[index].playerAddress,
-                dividendAmount,
-                true,
-                players[index].balance,
-                false,
-                uint256(RuleIndices.Dividend)
-            );
+            players[index].balance += dividendAmount;
+            if (dividendAmount > 0) {
+                emit LedgerEntry(
+                    players[index].playerAddress,
+                    dividendAmount,
+                    false,
+                    players[index].balance,
+                    false,
+                    uint256(RuleIndices.Dividend)
+                );
+            }
         }
     }
 

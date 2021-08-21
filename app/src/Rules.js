@@ -23,9 +23,6 @@ export const Rules = ({ rules }) => {
               {rule.value}
               {ruleConfig.unit}
             </div>
-            {/* <div className="rule-helper">
-              <Helper text={ruleConfig.description}></Helper>
-            </div> */}
           </div>
         ))}
     </>

@@ -82,7 +82,8 @@ export const GameGrade = ({ players, proposals }) => {
           title: "Inflation Rank",
           number: inflation(players).toFixed(0),
           description:
-            "As points are awarded or deducted the number of points that represent the same proportion of the total pot can inflate or deflate. Inflation is graded over 50, deflation below 50",
+            //As points are awarded or deducted the number of points that represent the same proportion of the total pot can inflate or deflate.
+            "Inflation is graded over 50, deflation below 50",
         },
         {
           title: "Vetocracy",
