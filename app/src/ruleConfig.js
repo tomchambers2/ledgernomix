@@ -68,5 +68,6 @@ export const ruleConfig = {
     name: "Dividend",
     description: "A payment awarded to all players each round",
     unit: " " + gameConfig.gameCurrency,
+    inactive: 0,
   },
 };

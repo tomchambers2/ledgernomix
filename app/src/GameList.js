@@ -1,7 +1,4 @@
 import { OrnateBorder } from "./OrnateBorder";
-import Wordhash from "wordhash";
-
-const wordhash = Wordhash({ length: 3 });
 
 export const GameList = ({ gamesList, newGameHandler }) => {
   return (
@@ -28,7 +25,7 @@ export const GameList = ({ gamesList, newGameHandler }) => {
               .map((game) => (
                 <div key={game} className="game-list-item">
                   <a className="game-list-button" href={game}>
-                    {wordhash.hash(game)} {game}
+                    Game '{game.slice(game.length - 6)}
                   </a>
                 </div>
               ))}

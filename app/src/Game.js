@@ -22,9 +22,7 @@ import { OrnateBorder } from "./OrnateBorder";
 import { GameGrade } from "./GameGrade";
 import { Payout } from "./Payout";
 import { gameConfig } from "./gameConfig";
-import Wordhash from "wordhash";
-
-const wordhash = Wordhash({ length: 3 });
+import ReactTooltip from "react-tooltip";
 
 const { cryptocurrency } = gameConfig;
 const FETCH_INTERVAL = 10 * 1000;
@@ -281,6 +279,7 @@ export const Game = ({ web3, account }) => {
 
   return (
     <>
+      <ReactTooltip className="tooltip" effect="solid" />
       {gameActive && !isPlayer && (
         <div className="game-icons-container">
           <div className="game-icon-panel">
@@ -318,8 +317,8 @@ export const Game = ({ web3, account }) => {
           <div className="game-name">
             {game && (
               <h2>
-                <span className="game-address">
-                  {wordhash.hash(gameAddress)}
+                <span className="game-address" data-tip={gameAddress}>
+                  Game '
                   {gameAddress.substr(
                     gameAddress.length - 6,
                     gameAddress.length
