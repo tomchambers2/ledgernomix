@@ -70,6 +70,11 @@ export const HowToPlay = () => {
         exchanging messages to discuss proposals.
       </div>
       <div className="paragraph">
+        After the final proposal, one last round of payments and deductions
+        happens, and if the final proposal was successful, that rule change will
+        be in effect.
+      </div>
+      <div className="paragraph">
         At the end of the game, a Payout panel will appear, showing what you've
         won as an individual, and the game's pot will be distributed out back
         into player's accounts - Metamask won't notify you of this, but if you
