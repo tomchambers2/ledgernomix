@@ -73,6 +73,12 @@ export const About = () => {
         Contact the creators at{" "}
         <a href="mailto:ledgernomix@gmail.com">ledgernomix@gmail.com</a>
       </div>
+      <div className="paragraph">
+        All the code can be viewed at
+        <a href="https://github.com/tomchambers2/ledgernomix">
+          https://github.com/tomchambers2/ledgernomix
+        </a>
+      </div>
     </div>
   );
 };
