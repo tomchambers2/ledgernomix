@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from "react";
-import "./App.css";
 import "./eskapade-fraktur-wakamaifondue.css";
 import { Game } from "./Game";
 import { Setup } from "./Setup";
@@ -12,6 +11,7 @@ import { useContractFn } from "./useContractFn";
 import { OrnateBorder } from "./OrnateBorder";
 import theGameOfImage from "./backgrounds/thegameoftherulesof-Magnuntia.svg";
 import { ToastContainer } from "react-toastify";
+import "./App.css";
 import { About } from "./About";
 import { HowToPlay } from "./HowToPlay";
 import {
@@ -21,6 +21,7 @@ import {
   Redirect,
   Link,
 } from "react-router-dom";
+import "./Toast.css";
 
 const Web3 = require("web3");
 
@@ -221,7 +222,12 @@ function App() {
                   <div className="background-pattern"></div>
                   <OrnateBorder></OrnateBorder>
                   <Link className="button" to="/games">
-                    <h3>Get started</h3>
+                    <h3
+                    // onClick={() => {
+                    //   fireNotification(`Test Notification`);}}
+                    >
+                      Get started
+                    </h3>
                   </Link>
                 </div>
               </div>

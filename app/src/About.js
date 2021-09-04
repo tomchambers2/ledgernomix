@@ -49,7 +49,7 @@ export const About = () => {
         There is no "house" running this game, and the redistribution is done by
         a smart contract on a blockchain. Currently, that blockchain is just our
         test network, but the plan is to move to a chain where the currency has
-        real value.
+        real value, but where energy consumption and transaction fees are low, eg. xDAI.
       </div>
       <div className="paragraph">
         As all games are recorded on the blockchain, they can be ranked on

@@ -25,13 +25,13 @@ export const ruleConfig = {
     name: "Majority required",
     append: ">",
     description:
-      "The proportion of votes that must be exceeded for a proposal to be enacted",
+      "The proportion of Yes votes that must be exceeded for a proposal to be enacted",
     unit: "%",
   },
   Quorum: {
     name: "Quorum required",
     description:
-      "The proportion of players required for a proposal to complete",
+      "The proportion of players votes required for a proposal to complete",
     unit: "%",
   },
   "Game length": {
@@ -54,7 +54,8 @@ export const ruleConfig = {
   },
   "Wealth tax threshold": {
     name: "Wealth tax threshold",
-    description: "A percentage tax collected after every completed proposal",
+    description:
+      "Only a player's points above this score will be subject to any wealth tax",
     unit: " " + gameConfig.gameCurrency,
     inactive: 0,
   },
