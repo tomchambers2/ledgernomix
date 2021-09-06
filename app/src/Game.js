@@ -317,7 +317,10 @@ export const Game = ({ web3, account }) => {
           <div className="game-name">
             {game && (
               <h2>
-                <span className="game-address" data-tip={gameAddress}>
+                <span
+                  className="game-address"
+                  data-tip={"Game Address: " + gameAddress}
+                >
                   Game '
                   {gameAddress.substr(
                     gameAddress.length - 6,
