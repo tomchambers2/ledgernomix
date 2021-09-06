@@ -220,11 +220,76 @@ function App() {
                 <div className="setup panel">
                   <div className="background-pattern"></div>
                   <OrnateBorder></OrnateBorder>
+
+                  <h1 className="logo">Playtest</h1>
+
+                  <div id="mc_embed_signup">
+                    <form
+                      action="https://vercel.us5.list-manage.com/subscribe/post?u=eb3bf72ef330a9ffb75f7e687&amp;id=082ec84faf"
+                      method="post"
+                      id="mc-embedded-subscribe-form"
+                      name="mc-embedded-subscribe-form"
+                      class="validate"
+                      target="_blank"
+                      novalidate
+                    >
+                      <div id="mc_embed_signup_scroll">
+                        <h2>Subscribe</h2>
+                        <div class="mc-field-group">
+                          <label for="mce-EMAIL">Email Address </label>
+                          <input
+                            type="email"
+                            name="EMAIL"
+                            class="required email"
+                            id="mce-EMAIL"
+                          />
+                        </div>
+                        <div id="mce-responses" class="clear">
+                          <div
+                            class="response"
+                            id="mce-error-response"
+                            style={{ display: "none" }}
+                          ></div>
+                          <div
+                            class="response"
+                            id="mce-success-response"
+                            style={{ display: "none" }}
+                          ></div>
+                        </div>
+                        <div
+                          style={{ position: "absolute", left: "-5000px" }}
+                          aria-hidden="true"
+                        >
+                          <input
+                            type="text"
+                            name="b_eb3bf72ef330a9ffb75f7e687_082ec84faf"
+                            tabindex="-1"
+                          />
+                        </div>
+                        <div class="clear">
+                          <input
+                            type="submit"
+                            value="Subscribe"
+                            name="subscribe"
+                            id="mc-embedded-subscribe"
+                            class="button"
+                          />
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+
+              {/* <div className="panel-container">
+                <div className="setup panel">
+                  <div className="background-pattern"></div>
+                  <OrnateBorder></OrnateBorder>
                   <Link className="button" to="/games">
                     <h3>Get started</h3>
                   </Link>
                 </div>
-              </div>
+              </div> */}
             </Route>
           </Switch>
         </div>

@@ -337,6 +337,17 @@ a.button:disabled {
   justify-content: space-between;
 }
 
+@media only screen and (max-width: 600px) {
+  .intro {
+    flex-direction: column;
+  }
+
+  .links {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
 .intro > div {
   flex-basis: 33%;
 }
@@ -528,7 +539,7 @@ input {
 .setup,
 .game-list,
 .welcome {
-  width: 50%;
+  width: 53%;
   margin-left: auto;
   margin-right: auto;
   display: flex;
@@ -621,6 +632,7 @@ input {
 .paragraph {
   margin: var(--game-border) 0 var(--game-border) 0;
   display: block;
+  word-break: break-word;
 }
 
 .paragraph a {
