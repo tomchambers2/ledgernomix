@@ -22,6 +22,7 @@ import {
   Link,
 } from "react-router-dom";
 import "./Toast.css";
+import "./playtest.css";
 
 const Web3 = require("web3");
 
@@ -221,10 +222,10 @@ function App() {
                 <div className="setup panel">
                   <div className="background-pattern"></div>
                   <OrnateBorder></OrnateBorder>
-
                   <h1 className="logo">Playtest</h1>
-
-                  <div id="mc_embed_signup">
+                  Sign up below to become part of our exclusive group of
+                  playtesters who will help test and shape the game
+                  <div id="mc_embed_signup" className="">
                     <form
                       action="https://vercel.us5.list-manage.com/subscribe/post?u=eb3bf72ef330a9ffb75f7e687&amp;id=082ec84faf"
                       method="post"
@@ -235,8 +236,7 @@ function App() {
                       novalidate
                     >
                       <div id="mc_embed_signup_scroll">
-                        <h2>Subscribe</h2>
-                        <div class="mc-field-group">
+                        <div className="mc-field-group playtest-inputs">
                           <label for="mce-EMAIL">Email Address </label>
                           <input
                             type="email"
@@ -268,13 +268,15 @@ function App() {
                           />
                         </div>
                         <div class="clear">
-                          <input
+                          <button
                             type="submit"
                             value="Subscribe"
                             name="subscribe"
                             id="mc-embedded-subscribe"
-                            class="button"
-                          />
+                            className="button"
+                          >
+                            Subscribe
+                          </button>
                         </div>
                       </div>
                     </form>

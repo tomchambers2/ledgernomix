@@ -1,0 +1,9 @@
+.playtest-inputs {
+  display: flex;
+  align-items: center;
+  margin: var(--game-border) 0 var(--game-border) 0;
+}
+
+.playtest-inputs > * {
+  flex-grow: 1;
+}
