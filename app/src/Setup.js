@@ -2,7 +2,6 @@ import { OrnateBorder } from "./OrnateBorder";
 import metamaskMenuImage from "./backgrounds/metamaskMenuImage.jpg";
 import networkSettingsImage from "./backgrounds/metamaskNetworkSettings.jpg";
 import networksImage from "./backgrounds/metamaskNetworks.jpg";
-import { useTimeout } from "./useTimeout";
 import { useRef } from "react";
 import installMetamaskVideo from "./videos/install-metamask.mp4";
 import updateMetamaskVideo from "./videos/update-metamask.mp4";
@@ -10,15 +9,6 @@ import updateMetamaskVideo from "./videos/update-metamask.mp4";
 export const Setup = ({ setupStatus }) => {
   const setupStatusRef = useRef();
   setupStatusRef.current = setupStatus;
-
-  console.log(setupStatus);
-  useTimeout(5000, () => {
-    console.log("CHECK STATUS", setupStatus, setupStatusRef.current);
-    if (setupStatusRef.current !== "complete") {
-      console.log("RELOAD");
-      window.location.reload();
-    }
-  });
 
   return (
     <>

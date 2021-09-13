@@ -173,10 +173,7 @@ contract Game {
     }
 
     modifier gameActive() {
-        uint8 completedProposals;
-        for (uint256 index = 0; index < proposals.length; index++) {
-            if (proposals[index].complete) completedProposals++;
-        }
+        uint8 completedProposals = getCompletedProposals();
         require(
             completedProposals < rules[uint256(RuleIndices.MaxProposals)].value,
             "You cannot interact with this game because it has ended"
@@ -253,6 +250,14 @@ contract Game {
         return true;
     }
 
+    function getCompletedProposals() internal view returns (uint8) {
+        uint8 count = 0;
+        for (uint i = 0; i < proposals.length; i++) {
+            if (proposals[i].complete) count++;
+        }
+        return count;
+    }
+
     function createProposal(uint256 ruleIndex, uint256 value)
         external
         gameActive
@@ -267,6 +272,13 @@ contract Game {
                 value >= rules[ruleIndex].lowerBound,
             "Proposal value must be within rule bounds"
         );
+        uint256 playerIndex = getPlayer(msg.sender);
+        uint8 completedProposals = getCompletedProposals();
+        require(
+            (completedProposals + players.length - 1) % players.length == playerIndex,
+            "You may not create a proposal because it is not your turn"
+        );
+        require(completedProposals == proposals.length, "You may not create a proposal because there is currently an incomplete proposal");
 
         Proposal storage p = proposals.push(); // TODO: does this need to be storage, or can it be memory?
         p.proposer = msg.sender;

@@ -95,7 +95,7 @@ describe("Game", () => {
           value: "5000000000000000000",
         });
       }
-      await game.connect(players[0]).createProposal(0, 12);
+      await game.connect(players[numPlayers - 1]).createProposal(0, 12);
     };
 
     playGameToEnd = async () => {
@@ -106,7 +106,7 @@ describe("Game", () => {
         value: "5000000000000000000",
       });
       for (let i = 0; i < 3; i++) {
-        await game.createProposal(0, 12);
+        await game.connect(players[(i + 2) % 3]).createProposal(0, 12);
         await game.connect(players[0]).voteOnProposal(i, false);
         await game.connect(players[1]).voteOnProposal(i, false);
       }
@@ -208,13 +208,37 @@ describe("Game", () => {
       );
     });
 
+    it("should reject a proposal when it is not the players turn in 2 player game", async () => {
+      await game.connect(players[1]).joinGame({
+        value: "5000000000000000000",
+      });
+      await expect(game.createProposal(0, 10)).to.eventually.be.rejectedWith(
+        "You may not create a proposal because it is not your turn"
+      );
+      // last player to join can vote
+      await game.connect(players[1]).createProposal(0, 10);
+      // // first player to join cannot vote
+      await expect(game.createProposal(0, 10)).to.eventually.be.rejectedWith(
+        "You may not create a proposal because it is not your turn"
+      );
+      // last player to join cannot make another proposal
+      await expect(
+        game.connect(players[1]).createProposal(0, 10)
+      ).to.eventually.be.rejectedWith(
+        "You may not create a proposal because there is currently an incomplete proposal"
+      );
+      await game.connect(players[1]).voteOnProposal(0, true);
+      // first player should be able to vote once proposal is complete
+      await game.connect(players[0]).createProposal(0, 10);
+    });
+
     it("should create a new proposal", async () => {
       await game.connect(players[1]).joinGame({
         value: "5000000000000000000",
       });
-      await game.createProposal(0, 12);
+      await game.connect(players[1]).createProposal(0, 12);
       const proposal = await game.proposals(0);
-      await expect(proposal.proposer).to.equal(owner.address);
+      await expect(proposal.proposer).to.equal(players[1].address);
       await expect(proposal.value).to.equal(12);
       await expect(proposal.ruleIndex).to.equal(0);
     });
@@ -225,7 +249,7 @@ describe("Game", () => {
       await game.connect(players[1]).joinGame({
         value: "5000000000000000000",
       });
-      await game.createProposal(0, 12);
+      await game.connect(players[1]).createProposal(0, 12);
 
       await expect(
         game.connect(players[2]).voteOnProposal(0, true)
@@ -249,7 +273,7 @@ describe("Game", () => {
         value: "5000000000000000000",
       });
 
-      await game.createProposal(0, 12);
+      await game.connect(players[2]).createProposal(0, 12);
 
       await game.connect(players[0]).voteOnProposal(0, true);
       await game.connect(players[1]).voteOnProposal(0, true);
@@ -281,7 +305,7 @@ describe("Game", () => {
       await game.connect(players[1]).joinGame({
         value: "5000000000000000000",
       });
-      await game.createProposal(0, 12);
+      await game.connect(players[1]).createProposal(0, 12);
       await game.voteOnProposal(0, true);
       const vote = await game.functions.getVote(0, 0);
       await expect(vote[0]).to.equal(owner.address);
@@ -292,7 +316,7 @@ describe("Game", () => {
       await game.connect(players[1]).joinGame({
         value: "5000000000000000000",
       });
-      await game.createProposal(0, 12);
+      await game.connect(players[1]).createProposal(0, 12);
       await game.voteOnProposal(0, true);
       const proposal = await game.proposals(0);
       await expect(proposal.complete).to.equal(true);
@@ -305,7 +329,7 @@ describe("Game", () => {
       await game.connect(players[2]).joinGame({
         value: "5000000000000000000",
       });
-      await game.createProposal(0, 12);
+      await game.connect(players[2]).createProposal(0, 12);
       await game.connect(players[0]).voteOnProposal(0, true);
       await game.connect(players[1]).voteOnProposal(0, true);
       const proposal = await game.proposals(0);
@@ -325,7 +349,7 @@ describe("Game", () => {
       await startAndProposal(4, game);
       await game.connect(players[1]).voteOnProposal(0, true);
       await game.connect(players[2]).voteOnProposal(0, true);
-      const player = await game.players(0);
+      const player = await game.players(3);
       expect(player.balance.toString()).to.equal("14000000000000000000");
     });
 
@@ -376,17 +400,17 @@ describe("Game", () => {
       await game.connect(players[1]).joinGame({
         value: "5000000000000000000",
       });
-      await game.connect(players[3]).joinGame({
+      await game.connect(players[2]).joinGame({
         value: "5000000000000000000",
       });
       for (let i = 0; i < 3; i++) {
-        await game.createProposal(0, 12);
+        await game.connect(players[(i + 2) % 3]).createProposal(0, 12);
         await game.connect(players[0]).voteOnProposal(i, false);
         await game.connect(players[1]).voteOnProposal(i, false);
       }
       const p = await game.proposals(0);
       await expect(
-        game.connect(players[3]).voteOnProposal(0, true)
+        game.connect(players[2]).voteOnProposal(0, true)
       ).to.eventually.be.rejectedWith(
         "You cannot interact with this game because it has ended"
       );
@@ -424,7 +448,7 @@ describe("Game", () => {
       expect(player.balance.toString()).to.equal("0");
     });
 
-    it.only("should apply a poll tax to all players on complete proposal", async () => {
+    it("should apply a poll tax to all players on complete proposal", async () => {
       const game = await createGame({ dividend: 6 });
       await startAndProposal(4, game);
       await game.connect(players[0]).voteOnProposal(0, false);
@@ -469,13 +493,13 @@ describe("Game", () => {
         await players[1].getBalance()
       );
 
-      await game.connect(players[0]).createProposal(0, 500, { gasPrice: 0 });
-      await game.connect(players[0]).voteOnProposal(0, false, { gasPrice: 0 });
+      await game.connect(players[1]).createProposal(0, 500, { gasPrice: 0 });
+      await game.connect(players[1]).voteOnProposal(0, false, { gasPrice: 0 });
 
-      await game.connect(players[1]).createProposal(0, 501, { gasPrice: 0 });
+      await game.connect(players[0]).createProposal(0, 501, { gasPrice: 0 });
       await game.connect(players[0]).voteOnProposal(1, true, { gasPrice: 0 });
 
-      await game.connect(players[0]).createProposal(0, 502, { gasPrice: 0 });
+      await game.connect(players[1]).createProposal(0, 502, { gasPrice: 0 });
 
       const player1BalanceEnd = ethers.utils.formatEther(
         await players[0].getBalance()
@@ -487,18 +511,23 @@ describe("Game", () => {
       const player1Payout = player1BalanceEnd - player1BalanceStart;
       const player2Payout = player2BalanceEnd - player2BalanceStart;
 
-      expect(player1Payout).to.be.below(0.01);
-      expect(player2Payout).to.be.above(9.99);
+      expect(player1Payout).to.be.above(9.99);
+      expect(player2Payout).to.be.below(0.01);
     });
 
     it("should apply a proposal fee when a proposal is made", async () => {
-      game = await createGame({ startBalance: 5, proposalCost: 1 });
+      game = await createGame({
+        startBalance: 5,
+        proposalCost: 1,
+        proposalReward: 0,
+      });
 
       let player = await game.players(0);
       expect(player.balance.toString()).to.equal("5000000000000000000");
       await game.createProposal(0, 500, { gasPrice: 0 });
       player = await game.players(0);
       expect(player.balance.toString()).to.equal("4000000000000000000");
+      await game.voteOnProposal(0, true);
       await game.createProposal(0, 500, { gasPrice: 0 });
       player = await game.players(0);
       expect(player.balance.toString()).to.equal((3 * ether).toString());
@@ -568,12 +597,11 @@ describe("Game", () => {
       );
 
       for (let i = 0; i < 3; i++) {
-        await game.connect(players[0]).createProposal(0, 500, { gasPrice: 0 });
+        await game
+          .connect(players[(i + 1) % 2])
+          .createProposal(0, 500, { gasPrice: 0 });
         await game.connect(players[0]).voteOnProposal(i, true, { gasPrice: 0 });
       }
-
-      const player1 = await game.players(0);
-      const player2 = await game.players(1);
 
       const player1BalanceEnd = ethers.utils.formatEther(
         await players[0].getBalance()
@@ -584,8 +612,8 @@ describe("Game", () => {
 
       const player1Payout = player1BalanceEnd - player1BalanceStart;
       const player2Payout = player2BalanceEnd - player2BalanceStart;
-      expect(player1Payout).to.equal(6.875);
-      expect(player2Payout).to.equal(3.125);
+      expect(player1Payout).to.equal(4.375);
+      expect(player2Payout).to.equal(5.625);
     });
 
     it("should payout correctly after 10 rounds", async () => {
@@ -607,12 +635,14 @@ describe("Game", () => {
       );
 
       for (let i = 0; i < 10; i++) {
-        await game.connect(players[0]).createProposal(0, 500, { gasPrice: 0 });
-        await game.connect(players[0]).voteOnProposal(i, true, { gasPrice: 0 });
+        await game
+          .connect(players[(i + 1) % 2])
+          .createProposal(0, 500, { gasPrice: 0 });
+        await game
+          .connect(players[0])
+          // player 1 wins every round to make score ratio close to 100%/0%
+          .voteOnProposal(i, (i + 1) % 2 == 0 ? true : false, { gasPrice: 0 });
       }
-
-      const player1 = await game.players(0);
-      const player2 = await game.players(1);
 
       const player1BalanceEnd = ethers.utils.formatEther(
         await players[0].getBalance()
@@ -640,10 +670,14 @@ describe("Game", () => {
         gasPrice: 0,
       });
 
-      for (let i = 0; i < 3; i++) {
-        await game.connect(players[0]).createProposal(0, 500, { gasPrice: 0 });
-        await game.connect(players[0]).voteOnProposal(i, true, { gasPrice: 0 });
-      }
+      await game.connect(players[1]).createProposal(0, 500, { gasPrice: 0 });
+      await game.connect(players[0]).voteOnProposal(0, true, { gasPrice: 0 });
+
+      await game.connect(players[0]).createProposal(0, 500, { gasPrice: 0 });
+      await game.connect(players[0]).voteOnProposal(1, true, { gasPrice: 0 });
+
+      await game.connect(players[1]).createProposal(0, 500, { gasPrice: 0 });
+      await game.connect(players[0]).voteOnProposal(2, true, { gasPrice: 0 });
     });
   });
 
