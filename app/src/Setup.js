@@ -3,8 +3,7 @@ import metamaskMenuImage from "./backgrounds/metamaskMenuImage.jpg";
 import networkSettingsImage from "./backgrounds/metamaskNetworkSettings.jpg";
 import networksImage from "./backgrounds/metamaskNetworks.jpg";
 import { useRef } from "react";
-import installMetamaskVideo from "./videos/install-metamask.mp4";
-import updateMetamaskVideo from "./videos/update-metamask.mp4";
+import setup2 from "./videos/setup2.mp4";
 
 export const Setup = ({ setupStatus }) => {
   const setupStatusRef = useRef();
@@ -25,8 +24,6 @@ export const Setup = ({ setupStatus }) => {
             >
               <h3>First install Metamask browser extension</h3>
             </a>
-
-            <video controls src={installMetamaskVideo} />
           </div>
         </div>
       )}
@@ -35,7 +32,7 @@ export const Setup = ({ setupStatus }) => {
           <div className="setup panel">
             <div className="background-pattern"></div>
             <OrnateBorder></OrnateBorder>
-            <video controls src={updateMetamaskVideo} />
+            <video controls src={setup2} />
 
             <div className="paragraph">
               Before you can play you need to connect Metamask to our test
