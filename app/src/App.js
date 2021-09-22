@@ -224,66 +224,66 @@ function App() {
                   <OrnateBorder></OrnateBorder>
                   <h1 className="logo">Playtest</h1>
                   <div className="paragraph">
-                    Sign up below to become part of our playtest group who will
-                    help test and shape the game
+                    Enter your email below to join the mailing list for our
+                    playtest group who will help test and shape the game
                   </div>
-                  <div className="paragraph">
-                    <div id="mc_embed_signup" className="">
-                      <form
-                        action="https://vercel.us5.list-manage.com/subscribe/post?u=eb3bf72ef330a9ffb75f7e687&amp;id=082ec84faf"
-                        method="post"
-                        id="mc-embedded-subscribe-form"
-                        name="mc-embedded-subscribe-form"
-                        class="validate"
-                        target="_blank"
-                        novalidate
-                      >
-                        <div id="mc_embed_signup_scroll">
-                          <div className="mc-field-group playtest-inputs">
-                            <label for="mce-EMAIL">Email Address </label>
-                            <input
-                              type="email"
-                              name="EMAIL"
-                              class="required email"
-                              id="mce-EMAIL"
-                            />
-                          </div>
-                          <div id="mce-responses" class="clear">
-                            <div
-                              class="response"
-                              id="mce-error-response"
-                              style={{ display: "none" }}
-                            ></div>
-                            <div
-                              class="response"
-                              id="mce-success-response"
-                              style={{ display: "none" }}
-                            ></div>
-                          </div>
-                          <div
-                            style={{ position: "absolute", left: "-5000px" }}
-                            aria-hidden="true"
-                          >
-                            <input
-                              type="text"
-                              name="b_eb3bf72ef330a9ffb75f7e687_082ec84faf"
-                              tabindex="-1"
-                            />
-                          </div>
-                          <div class="clear">
-                            <button
-                              type="submit"
-                              value="Subscribe"
-                              name="subscribe"
-                              id="mc-embedded-subscribe"
-                              className="button"
-                            >
-                              Subscribe
-                            </button>
-                          </div>
+                  <div id="mc_embed_signup" className="email-signup">
+                    <form
+                      action="https://vercel.us5.list-manage.com/subscribe/post?u=eb3bf72ef330a9ffb75f7e687&amp;id=082ec84faf"
+                      method="post"
+                      id="mc-embedded-subscribe-form"
+                      name="mc-embedded-subscribe-form"
+                      className="validate"
+                      target="_blank"
+                      noValidate
+                    >
+                      <div id="mc_embed_signup_scroll">
+                        <label for="mce-EMAIL">Email Address: </label>
+                        <div className="mc-field-group playtest-inputs">
+                          <input
+                            type="email"
+                            name="EMAIL"
+                            className="required email"
+                            id="mce-EMAIL"
+                          />
                         </div>
-                      </form>
-                    </div>
+                        <div id="mce-responses" className="clear">
+                          <div
+                            className="response"
+                            id="mce-error-response"
+                            style={{ display: "none" }}
+                          ></div>
+                          <div
+                            className="response"
+                            id="mce-success-response"
+                            style={{ display: "none" }}
+                          ></div>
+                        </div>
+
+                        <div
+                          style={{ position: "absolute", left: "-5000px" }}
+                          aria-hidden="true"
+                        >
+                          <input
+                            type="text"
+                            name="b_eb3bf72ef330a9ffb75f7e687_082ec84faf"
+                            tabIndex="-1"
+                          />
+                        </div>
+
+                        <div className="clear">
+                          <button
+                            type="submit"
+                            value="Subscribe"
+                            name="subscribe"
+                            id="mc-embedded-subscribe"
+                            className="subscribe button"
+                          >
+                            Subscribe
+                          </button>
+                        </div>
+                      </div>
+                    </form>
                   </div>
                 </div>
               </div>
