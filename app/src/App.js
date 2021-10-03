@@ -9,7 +9,7 @@ import { default as GameFactoryContract } from "./contracts/GameFactory.json";
 import { config } from "./config";
 import { useContractFn } from "./useContractFn";
 import { OrnateBorder } from "./OrnateBorder";
-import theGameOfImage from "./backgrounds/thegameoftherulesof-Magnuntia.svg";
+import theGameOfImage from "./backgrounds/TheGameOfTheRulesOf-Coin05.svg";
 import { ToastContainer } from "react-toastify";
 import "./App.css";
 import { About } from "./About";

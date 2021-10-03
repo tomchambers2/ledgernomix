@@ -644,13 +644,15 @@ input {
 }
 
 .tag-circle {
-  width: 215px;
-  margin-top: 50px;
-  margin-bottom: 50px;
+  width: 300px;
+  margin-top: 0px;
+  margin-bottom: 0px;
   margin-left: auto;
   margin-right: auto;
-  /* animation: spin 5s ease infinite reverse; */
-  animation: spin 10s linear infinite reverse;
+  animation: spin 5s ease infinite reverse;
+  /* animation: spin 10s linear infinite reverse; */
+  aspect-ratio: 3/4;
+  object-fit: contain;
 }
 
 @keyframes spin {

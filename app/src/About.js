@@ -1,5 +1,5 @@
 import { OrnateBorder } from "./OrnateBorder";
-import theGameOfImage from "./backgrounds/thegameoftherulesof-Magnuntia.svg";
+import theGameOfImage from "./backgrounds/TheGameOfTheRulesOf-Coin05.svg";
 export const About = () => {
   return (
     <div className="setup panel">
@@ -49,7 +49,8 @@ export const About = () => {
         There is no "house" running this game, and the redistribution is done by
         a smart contract on a blockchain. Currently, that blockchain is just our
         test network, but the plan is to move to a chain where the currency has
-        real value, but where energy consumption and transaction fees are low, eg. xDAI.
+        real value, but where energy consumption and transaction fees are low,
+        eg. xDAI.
       </div>
       <div className="paragraph">
         As all games are recorded on the blockchain, they can be ranked on
