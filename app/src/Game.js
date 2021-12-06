@@ -25,7 +25,7 @@ import { gameConfig } from "./gameConfig";
 import ReactTooltip from "react-tooltip";
 
 const { cryptocurrency } = gameConfig;
-const FETCH_INTERVAL = 10 * 1000;
+const FETCH_INTERVAL = 5 * 1000;
 
 export const Game = ({ web3, account }) => {
   const { gameAddress } = useParams();

@@ -21,7 +21,9 @@ export const Clock = ({ blockInterval, timeoutCallback }) => {
   useInterval(advance, tick);
 
   const portionRemaining = remainingTime / blockInterval;
-  const stringRemaining = String(portionRemaining * 10).padStart(2, "0");
+  const stringRemaining = String(
+    (portionRemaining * blockInterval) / 1000
+  ).padStart(2, "0");
 
   return (
     <div className="clock-container">
