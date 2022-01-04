@@ -44,6 +44,34 @@ const useAccount = (web3) => {
   return account;
 };
 
+function connectToNetwork(web3) {
+  const params = {
+    chainId: "0x64", // A 0x-prefixed hexadecimal string
+    chainName: "xDai",
+    nativeCurrency: {
+      name: "xDai",
+      symbol: "xDai", // 2-6 characters long
+      decimals: 18,
+    },
+    rpcUrls: ["https://rpc.xdaichain.com/"],
+    blockExplorerUrls: ["https://blockscout.com/xdai/mainnet/"],
+  };
+
+  web3.eth.requestAccounts((error, accounts) => {
+    window.ethereum
+      .request({
+        method: "wallet_addEthereumChain",
+        params: [params, accounts[0]],
+      })
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  });
+}
+
 function App() {
   const [web3, setWeb3] = useState(null);
   const account = useAccount(web3);
@@ -59,9 +87,17 @@ function App() {
     const fn = async () => {
       if (!window.ethereum) return setSetupStatus("install");
       const web3 = new Web3(window.ethereum);
+
       try {
-        const network = await web3.eth.net.getNetworkType();
-        if (network !== "private") return setSetupStatus("setnetwork");
+        const networkId = await web3.eth.net.getId();
+        console.log({ networkId });
+
+        // 100 is gnosis chain/xDai
+        if (networkId !== 100) {
+          console.log("wrong id");
+          return connectToNetwork(web3);
+        }
+
         setSetupStatus("complete");
         setWeb3(web3);
       } catch (e) {
