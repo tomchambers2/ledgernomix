@@ -39,5 +39,15 @@ describe("GameFactory", () => {
       expect(playersLength).to.equal(1);
       expect(player.playerAddress).to.equal(signer.address);
     });
+
+    it("should create a new game with an entry fee that is the value of the transaction", async () => {
+      await gameFactory.connect(signer).newGame({
+        value: "10000000000000000000",
+      });
+      const game = await gameFactory.games(0);
+      const gameContract = new ethers.Contract(game, gameAbi.abi, signer);
+      const rule = await gameContract.rules(0);
+      await expect(rule.value).to.equal("10000000000000000000");
+    });
   });
 });

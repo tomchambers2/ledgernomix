@@ -4,7 +4,7 @@ import { Web3Context } from "./web3context";
 import { useState, useEffect, useContext, useCallback } from "react";
 import { default as GameFactoryContract } from "./contracts/GameFactory.json";
 import { config } from "./config";
-import { useContractFn } from "./useContractFn";
+import { contractFn } from "./useContractFn";
 import { fireNotification } from "./fireNotification";
 import { useAccount } from "./useAccount";
 import { Redirect } from "react-router-dom";
@@ -77,14 +77,14 @@ export const GameList = () => {
       });
   }, [gameFactory, gamesList]);
 
-  const newGame = useContractFn(gameFactory, "newGame", {
-    from: account,
-    value: Web3.utils.toWei("5"),
-  });
-
-  const newGameHandler = async () => {
+  const newGameHandler = (gameFee) => async () => {
     try {
-      const result = await newGame();
+      console.log("val", Web3.utils.toWei(gameFee));
+      const result = await contractFn(gameFactory, "newGame", {
+        from: account,
+        value: Web3.utils.toWei(gameFee),
+      });
+
       const newGameAddress = result.events.NewGame.returnValues.gameAddress;
       setNewGameAddress(newGameAddress);
     } catch (e) {
@@ -100,15 +100,9 @@ export const GameList = () => {
       <div className="game-icons-container">
         <div className="game-icon-panel">
           <div className="background-pattern"></div>
-          <button className="game-button" onClick={newGameHandler}>
+          <button className="game-button" onClick={newGameHandler("0.05")}>
             <div>
               Create <br></br>$0.05<br></br> Game
-            </div>
-          </button>
-
-          <button className="game-button" onClick={newGameHandler}>
-            <div>
-              Create <br></br>$5.00<br></br> Game
             </div>
           </button>
         </div>

@@ -54,12 +54,12 @@ contract GameFactory {
 
     function newGame() public payable {
         require(
-            msg.value == Calculations.etherToWei(5),
-            "You must send the entry fee (5) to create a game"
+            msg.value > 0,
+            "You must send an entry fee to create a game"
         );
         Game g = new Game{value: msg.value}(
             msg.sender,
-            Calculations.GameParams(5, // entry fee
+            Calculations.GameParams(msg.value, // entry fee
             1000, // start balance
             2000, //Successful Proposal reward
             50, //Majority
@@ -183,9 +183,8 @@ contract Game {
 
     function gameFee() private view {
         // is a function because the entry fee rule won't exist when this is called
-        uint256 eth = 1 ether;
         require(
-            msg.value == rules[uint256(RuleIndices.EntryFee)].value * eth,
+            msg.value == rules[uint256(RuleIndices.EntryFee)].value,
             "You must send required entry fee to join the game"
         );
     }

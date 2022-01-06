@@ -24,6 +24,11 @@ export const Setup = () => {
             >
               First install Metamask browser extension
             </a>
+
+            <div className="paragraph">
+              Once you have Metamask installed, this panel should disappear. You
+              might need to refresh this page (Control or Command + R)
+            </div>
           </div>
         </div>
       )}
