@@ -609,6 +609,10 @@ input {
   z-index: 91;
 }
 
+.setup-button {
+  font-size: 30px;
+}
+
 .rules > .item {
   display: flex;
   flex-direction: row;

@@ -3,7 +3,7 @@ import "./Game.css";
 import "./eskapade-fraktur-wakamaifondue.css";
 import { useContract } from "./useContract";
 import { useContractFn } from "./useContractFn";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useContext } from "react";
 import { useGameActive } from "./useGameActive";
 import { fireNotification } from "./fireNotification";
 import { Scores } from "./Scores";
@@ -23,12 +23,17 @@ import { GameGrade } from "./GameGrade";
 import { Payout } from "./Payout";
 import { gameConfig } from "./gameConfig";
 import ReactTooltip from "react-tooltip";
+import { Web3Context } from "./web3context";
+import { useAccount } from "./useAccount";
+import { Setup } from "./Setup";
 
 const { cryptocurrency } = gameConfig;
 const FETCH_INTERVAL = 5 * 1000;
 
-export const Game = ({ web3, account }) => {
+export const Game = () => {
   const { gameAddress } = useParams();
+  const { web3, setupStatus } = useContext(Web3Context);
+  const account = useAccount(web3);
   const game = useContract(web3, GameContract.abi, gameAddress);
   // const gameBalance = useContractBalance(web3, gameAddress);
   const [events, setEvents] = useState([]);
@@ -276,6 +281,8 @@ export const Game = ({ web3, account }) => {
   };
 
   const gameActive = useGameActive(proposals, getRuleValue("Game length"));
+
+  if (setupStatus !== "complete") return <Setup />;
 
   return (
     <>

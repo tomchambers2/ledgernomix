@@ -2,12 +2,12 @@ import { OrnateBorder } from "./OrnateBorder";
 import metamaskMenuImage from "./backgrounds/metamaskMenuImage.jpg";
 import networkSettingsImage from "./backgrounds/metamaskNetworkSettings.jpg";
 import networksImage from "./backgrounds/metamaskNetworks.jpg";
-import { useRef } from "react";
 import setup2 from "./videos/setup2.mp4";
+import { useContext } from "react";
+import { Web3Context } from "./web3context";
 
-export const Setup = ({ setupStatus }) => {
-  const setupStatusRef = useRef();
-  setupStatusRef.current = setupStatus;
+export const Setup = () => {
+  const { setupStatus, connect } = useContext(Web3Context);
 
   return (
     <>
@@ -22,7 +22,7 @@ export const Setup = ({ setupStatus }) => {
               href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn"
               rel="noreferrer"
             >
-              <h3>First install Metamask browser extension</h3>
+              First install Metamask browser extension
             </a>
           </div>
         </div>
@@ -32,57 +32,23 @@ export const Setup = ({ setupStatus }) => {
           <div className="setup panel">
             <div className="background-pattern"></div>
             <OrnateBorder></OrnateBorder>
-            <video controls src={setup2} />
-
             <div className="paragraph">
-              Before you can play you need to connect Metamask to our test
-              network
+              Before you can view or play games you need to connect Metamask to
+              Gnosis network
             </div>
-
+            <div className="paragraph"></div>
+            <a
+              className="button setup-button"
+              target="_blank"
+              rel="noreferrer"
+              onClick={connect}
+            >
+              Connect Metamask to Gnosis
+            </a>
+            <div className="paragraph"></div>
             <div className="paragraph">
-              Your browser extensions can be found to the top right of your
-              browser. Metamask has a fox icon. You may need to click on the
-              puzzle piece first to reveal it
-            </div>
-
-            <div className="paragraph">
-              Click on the fox icon to bring up Metamask, which should appear in
-              the corner of this window
-            </div>
-
-            <div className="paragraph">
-              By default, Metamask is set up for Ethereum
-            </div>
-
-            <div className="paragraph">
-              Click on "Ethereum Mainnet" to change networks
-            </div>
-
-            <img alt="network" src={metamaskMenuImage} width="359"></img>
-
-            <div className="paragraph">
-              Select "Custom RPC" from the list of networks
-            </div>
-
-            <img alt="network" src={networksImage} width="308"></img>
-
-            <div className="paragraph">Enter our network settings as below</div>
-
-            <div className="paragraph">Network Name: ngrok</div>
-
-            <div className="paragraph">
-              New RPC URL: https://ledgerblockchain.ngrok.io
-            </div>
-
-            <div className="paragraph">Chain ID: 1337</div>
-            <img alt="network" src={networkSettingsImage} width="352"></img>
-
-            <div className="paragraph">Save and close the network settings</div>
-
-            <div className="paragraph">These instructions should disappear</div>
-
-            <div className="paragraph">
-              Try refreshing the page (Control or Command + R)
+              Once you have connected, refresh the page (Control or Command + R)
+              to see the list of games
             </div>
           </div>
         </div>
