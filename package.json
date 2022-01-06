@@ -7,6 +7,7 @@
     "test": "cd backend && yarn test",
     "start": "cd app && npm start",
     "deploy": "cd backend && npx hardhat run scripts/deploy.js --network localhost",
+    "deploy:mainnet": "cd backend && npx hardhat run scripts/deploy.js",
     "public": "ngrok start ledgergame ledgerblockchain"
   },
   "repository": {
