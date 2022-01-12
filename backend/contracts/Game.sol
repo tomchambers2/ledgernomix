@@ -29,17 +29,17 @@ library Calculations {
     }
 
     struct GameParams {
-            uint entryFee;
-            uint startBalance;
-            uint successfulProposalReward;
-            uint majority;
-            uint quorum;
-            uint maxProposals;
-            uint pollTax;
-            uint wealthTax;
-            uint wealthTaxThreshold;
-            uint proposalFee;
-            uint dividend;
+        uint256 entryFee;
+        uint256 startBalance;
+        uint256 successfulProposalReward;
+        uint256 majority;
+        uint256 quorum;
+        uint256 maxProposals;
+        uint256 pollTax;
+        uint256 wealthTax;
+        uint256 wealthTaxThreshold;
+        uint256 proposalFee;
+        uint256 dividend;
     }
 }
 
@@ -55,17 +55,18 @@ contract GameFactory {
     function newGame() public payable {
         Game g = new Game{value: msg.value}(
             msg.sender,
-            Calculations.GameParams(msg.value, // entry fee
-            1000, // start balance
-            2000, //Successful Proposal reward
-            50, //Majority
-            65, //Quorum
-            30, //Game length
-            0, //Poll Tax
-            0, //Wealth Tax
-            0, // Wealth Tax Threshold
-            0, //Proposal fee
-            0 // dividend
+            Calculations.GameParams(
+                msg.value, // entry fee
+                1000, // start balance
+                2000, //Successful Proposal reward
+                50, //Majority
+                65, //Quorum
+                30, //Game length
+                0, //Poll Tax
+                0, //Wealth Tax
+                0, // Wealth Tax Threshold
+                0, //Proposal fee
+                0 // dividend
             )
         );
         games.push(g);
@@ -89,7 +90,7 @@ contract Game {
 
     function getPendingPlayersLength() external view returns (uint256) {
         return pendingPlayers.length;
-    }    
+    }
 
     struct Rule {
         string name;
@@ -131,7 +132,7 @@ contract Game {
         uint256 ruleIndex
     );
 
-    event CreatePlayer(address playerAddress, uint balance);
+    event CreatePlayer(address playerAddress, uint256 balance);
 
     struct Vote {
         address player;
@@ -152,28 +153,33 @@ contract Game {
         Dividend
     }
 
-    constructor(
-        address firstPlayer,
-        Calculations.GameParams memory gameParams
-    ) payable {
-        require(
-            msg.value > 0,
-            "Must send an entry fee to create game"
-        );
-        require(
-            msg.value < 100 * 1 ether,
-            "Amount must be < 100"
-        );
+    constructor(address firstPlayer, Calculations.GameParams memory gameParams)
+        payable
+    {
+        require(msg.value > 0, "Must send an entry fee to create game");
+        require(msg.value < 100 * 1 ether, "Amount must be < 100");
         rules.push(Rule("Entry fee", gameParams.entryFee, 0, 100 * 1 ether));
         rules.push(Rule("Start balance", gameParams.startBalance, 0, 1000));
-        rules.push(Rule("Proposal reward", gameParams.successfulProposalReward, 0, 1000000000));
+        rules.push(
+            Rule(
+                "Proposal reward",
+                gameParams.successfulProposalReward,
+                0,
+                1000000000
+            )
+        );
         rules.push(Rule("Majority", gameParams.majority, 0, 100));
         rules.push(Rule("Quorum", gameParams.quorum, 0, 100));
         rules.push(Rule("Game length", gameParams.maxProposals, 1, 100));
         rules.push(Rule("Poll tax", gameParams.pollTax, 1, 1000000000));
         rules.push(Rule("Wealth tax", gameParams.wealthTax, 1, 100));
         rules.push(
-            Rule("Wealth tax threshold", gameParams.wealthTaxThreshold, 0, 1000000000)
+            Rule(
+                "Wealth tax threshold",
+                gameParams.wealthTaxThreshold,
+                0,
+                1000000000
+            )
         );
         rules.push(Rule("Proposal fee", gameParams.proposalFee, 0, 1000000000));
         rules.push(Rule("Dividend", gameParams.dividend, 0, 1000000000));
@@ -184,7 +190,8 @@ contract Game {
 
     modifier gameActive() {
         require(
-            getCompletedProposals() < rules[uint256(RuleIndices.MaxProposals)].value,
+            getCompletedProposals() <
+                rules[uint256(RuleIndices.MaxProposals)].value,
             "Game has ended"
         );
         _;
@@ -205,7 +212,7 @@ contract Game {
                 msg.sender != pendingPlayers[index].playerAddress,
                 "Already proposed to join this game"
             );
-        }        
+        }
         for (uint256 index = 0; index < players.length; index++) {
             require(
                 msg.sender != players[index].playerAddress,
@@ -263,7 +270,7 @@ contract Game {
 
     function getCompletedProposals() internal view returns (uint8) {
         uint8 count = 0;
-        for (uint i = 0; i < proposals.length; i++) {
+        for (uint256 i = 0; i < proposals.length; i++) {
             if (proposals[i].complete) count++;
         }
         return count;
@@ -286,10 +293,14 @@ contract Game {
         uint256 playerIndex = getPlayer(msg.sender);
         uint8 completedProposals = getCompletedProposals();
         require(
-            (completedProposals + players.length - 1) % players.length == playerIndex,
+            (completedProposals + players.length - 1) % players.length ==
+                playerIndex,
             "Not your turn"
         );
-        require(completedProposals == proposals.length, "Outstanding incomplete proposal");
+        require(
+            completedProposals == proposals.length,
+            "Outstanding incomplete proposal"
+        );
 
         Proposal storage p = proposals.push(); // TODO: does this need to be storage, or can it be memory?
         p.proposer = msg.sender;
@@ -302,9 +313,11 @@ contract Game {
         }
     }
 
-    function getVotesLength(
-        uint256 proposalIndex
-    ) external view returns (uint256) {
+    function getVotesLength(uint256 proposalIndex)
+        external
+        view
+        returns (uint256)
+    {
         return proposals[proposalIndex].votes.length;
     }
 
@@ -407,7 +420,9 @@ contract Game {
     }
 
     function payDividend() private {
-        uint dividendAmount = Calculations.etherToWei(rules[uint256(RuleIndices.Dividend)].value);
+        uint256 dividendAmount = Calculations.etherToWei(
+            rules[uint256(RuleIndices.Dividend)].value
+        );
         for (uint256 index = 0; index < players.length; index++) {
             players[index].balance += dividendAmount;
             if (dividendAmount > 0) {
@@ -460,7 +475,11 @@ contract Game {
         }
     }
 
-    function getPendingPlayer(address playerAddress) private view returns (uint256) {
+    function getPendingPlayer(address playerAddress)
+        private
+        view
+        returns (uint256)
+    {
         bool foundPlayer = false;
         for (uint256 index = 0; index < pendingPlayers.length; index++) {
             if (pendingPlayers[index].playerAddress == playerAddress) {
@@ -468,7 +487,10 @@ contract Game {
                 return index;
             }
         }
-        require(foundPlayer, "Operation requested for pending player with unknown address");
+        require(
+            foundPlayer,
+            "Operation requested for pending player with unknown address"
+        );
     }
 
     function getPlayer(address playerAddress) private view returns (uint256) {
@@ -479,7 +501,10 @@ contract Game {
                 return index;
             }
         }
-        require(foundPlayer, "Operation requested for player with unknown address");
+        require(
+            foundPlayer,
+            "Operation requested for player with unknown address"
+        );
     }
 
     function enactProposal(uint256 proposalIndex) private {

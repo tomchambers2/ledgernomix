@@ -19,6 +19,7 @@ export const Proposals = ({
   web3,
   account,
   players,
+  pendingPlayers,
   playerIndex,
 }) => {
   const { gameAddress } = useParams();
@@ -30,6 +31,18 @@ export const Proposals = ({
   return (
     <>
       <h2>Proposals</h2>
+      {pendingPlayers &&
+        pendingPlayers.slice().map((pendingPlayer, i) => (
+          <div key={i} className={classNames("item button")}>
+            <div>Admit new player</div>
+            <div>
+              {" "}
+              {pendingPlayer.playerAddress.substring(0, 5)}...
+              {pendingPlayer.playerAddress.substring(38, 42)}
+            </div>
+          </div>
+        ))}
+
       {(!rules.length && "LOADING...") ||
         (gameActive && (
           <div className="item">

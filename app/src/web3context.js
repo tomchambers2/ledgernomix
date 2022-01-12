@@ -49,19 +49,19 @@ export const Web3Provider = ({ children }) => {
       console.log("Gas");
       web3.eth.getGasPrice().then(console.log);
 
-      try {
-        const networkId = await web3.eth.net.getId();
+      // try {
+      //   const networkId = await web3.eth.net.getId();
 
-        // 100 is gnosis chain/xDai
-        if (networkId !== 100) {
-          console.log("wrong network");
-          return setSetupStatus("setnetwork");
-        }
+      //   // 100 is gnosis chain/xDai
+      //   if (networkId !== 100) {
+      //     console.log("wrong network");
+      //     return setSetupStatus("setnetwork");
+      //   }
 
-        setSetupStatus("complete");
-      } catch (e) {
-        console.log(e);
-      }
+      setSetupStatus("complete");
+      // } catch (e) {
+      //   console.log(e);
+      // }
     };
     fn();
   }, []);

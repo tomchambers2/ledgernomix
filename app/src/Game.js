@@ -39,6 +39,7 @@ export const Game = () => {
   const [events, setEvents] = useState([]);
   const [rules, setRules] = useState(null);
   const [players, setPlayers] = useState(null);
+  const [pendingPlayers, setPendingPlayers] = useState(null);
   const [proposals, setProposals] = useState(null);
   const [isPlayer, setIsPlayer] = useState(null);
   const [initialDataLoaded, setInitialDataLoaded] = useState(false);
@@ -61,7 +62,7 @@ export const Game = () => {
 
   const joinGame = useContractFn(game, "joinGame", {
     from: account,
-    value: rules && Web3.utils.toWei(getRuleValue("Entry fee")),
+    value: rules && getRuleValue("Entry fee"),
   });
 
   const joinGameHandler = () => {
@@ -208,6 +209,11 @@ export const Game = () => {
     setPlayers(players);
   }, [getArray]);
 
+  const fetchPendingPlayers = useCallback(async () => {
+    const pendingPlayers = await getArray("pendingPlayers", setPendingPlayers);
+    setPendingPlayers(pendingPlayers);
+  }, [getArray]);
+
   const fetchEvents = useCallback(async () => {
     if (!game || !players || !proposals || !rules) return;
     const pastEvents = await game.getPastEvents("allEvents", {
@@ -251,8 +257,15 @@ export const Game = () => {
     await fetchRules();
     await fetchProposals();
     await fetchPlayers();
+    await fetchPendingPlayers();
     await fetchGameEndTime();
-  }, [fetchRules, fetchProposals, fetchPlayers, fetchGameEndTime]);
+  }, [
+    fetchRules,
+    fetchProposals,
+    fetchPlayers,
+    fetchPendingPlayers,
+    fetchGameEndTime,
+  ]);
 
   useEffect(() => {
     const fetch = async () => {
@@ -407,6 +420,7 @@ export const Game = () => {
                 web3={web3}
                 account={account}
                 players={players}
+                pendingPlayers={pendingPlayers}
                 playerIndex={getPlayerIndex}
               ></Proposals>
             )) || <Loader></Loader>}
