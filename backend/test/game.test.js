@@ -116,6 +116,17 @@ describe("Game", () => {
     };
   });
 
+  describe("create a game", () => {
+    it("should not allow a game to be created with an out of bounds entry fee", async () => {
+      await expect(createGame({ entryFee: 0 })).to.eventually.be.rejectedWith(
+        "Must send an entry fee to create game"
+      );
+      await expect(
+        createGame({ entryFee: intToHex(100 * 1000000000000000000) })
+      ).to.eventually.be.rejectedWith("Amount must be < 100");
+    });
+  });
+
   describe("joinGame", () => {
     it("should allow the creating player to perform actions immediately after joining", async () => {
       await createGame();
@@ -133,7 +144,7 @@ describe("Game", () => {
 
     it("should require a joining fee as specified on game creation", async () => {
       const game = await createGame({
-        entryFee: intToHex(100 * 1000000000000000000),
+        entryFee: intToHex(99 * 1000000000000000000),
       });
       await expect(
         game
@@ -144,7 +155,7 @@ describe("Game", () => {
       );
       await game
         .connect(players[1])
-        .joinGame({ value: intToHex(100 * 1000000000000000000) });
+        .joinGame({ value: intToHex(99 * 1000000000000000000) });
     });
 
     it("should reject the call if the player is pending to join game", async () => {

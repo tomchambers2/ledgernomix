@@ -53,10 +53,6 @@ contract GameFactory {
     }
 
     function newGame() public payable {
-        require(
-            msg.value > 0,
-            "Must send an entry fee to create game"
-        );
         Game g = new Game{value: msg.value}(
             msg.sender,
             Calculations.GameParams(msg.value, // entry fee
@@ -160,6 +156,14 @@ contract Game {
         address firstPlayer,
         Calculations.GameParams memory gameParams
     ) payable {
+        require(
+            msg.value > 0,
+            "Must send an entry fee to create game"
+        );
+        require(
+            msg.value < 100 * 1 ether,
+            "Amount must be < 100"
+        );
         rules.push(Rule("Entry fee", gameParams.entryFee, 0, 100 * 1 ether));
         rules.push(Rule("Start balance", gameParams.startBalance, 0, 1000));
         rules.push(Rule("Proposal reward", gameParams.successfulProposalReward, 0, 1000000000));
