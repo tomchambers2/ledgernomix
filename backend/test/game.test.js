@@ -128,13 +128,23 @@ describe("Game", () => {
         game.connect(players[3]).joinGame({
           value: "5000000000000000000",
         })
-      ).to.eventually.be.rejectedWith(
-        "You cannot interact with this game because it has ended"
-      );
+      ).to.eventually.be.rejectedWith("Game has ended");
     });
 
     it("should require a joining fee as specified on game creation", async () => {
-      // TODO: write test
+      const game = await createGame({
+        entryFee: intToHex(100 * 1000000000000000000),
+      });
+      await expect(
+        game
+          .connect(players[1])
+          .joinGame({ value: intToHex(5 * 1000000000000000000) })
+      ).to.eventually.be.rejectedWith(
+        "Must send required entry fee to join the game"
+      );
+      await game
+        .connect(players[1])
+        .joinGame({ value: intToHex(100 * 1000000000000000000) });
     });
 
     it("should reject the call if the player is pending to join game", async () => {
@@ -145,9 +155,7 @@ describe("Game", () => {
         game.connect(players[1]).joinGame({
           value: "5000000000000000000",
         })
-      ).to.eventually.be.rejectedWith(
-        "You have already proposed to join this game"
-      );
+      ).to.eventually.be.rejectedWith("Already proposed to join this game");
     });
 
     it("should reject the call if the player is already in the game", async () => {
@@ -162,14 +170,14 @@ describe("Game", () => {
       ).to.eventually.be.rejectedWith("You have already joined this game");
     });
 
-    it("should reject the call if value is wrong", async () => {
+    it("should reject the call if entry fee is wrong", async () => {
       try {
         await game.connect(players[1]).joinGame({
           value: "1000000000000000000",
         });
       } catch (e) {
-        await expect(e.message).to.equal(
-          "VM Exception while processing transaction: revert You must send required entry fee to join the game"
+        await expect(e.message).to.include(
+          "Must send required entry fee to join the game"
         );
       }
     });
@@ -199,7 +207,7 @@ describe("Game", () => {
         await expect(
           game.connect(players[1]).createProposal(0, 0)
         ).to.eventually.be.rejectedWith(
-          "You must have joined the game to call this function"
+          "Must have joined the game to call this function"
         );
       });
 
@@ -208,13 +216,13 @@ describe("Game", () => {
         await expect(
           game.connect(players[1]).voteOnProposal(0, true)
         ).to.eventually.be.rejectedWith(
-          "You cannot vote on proposals because you have not been admitted"
+          "Must have joined the game to call this function"
         );
       });
 
       it("should not prevent a turn from proceeding if players have not been admitted", async () => {
         // FIXME: needs to give players permission
-        startAndProposal(2);
+        await startAndProposal(2, game);
         await game.connect(players[2]).joinGame({
           value: "5000000000000000000",
         });
@@ -225,7 +233,7 @@ describe("Game", () => {
 
     describe("admitting players", () => {
       it("should admit the game creating player automatically", async () => {
-        await game.createProposal(0, 0);
+        await game.createProposal(0, 30);
       });
 
       it("should allow a player in the game to admit a player", async () => {
@@ -235,9 +243,11 @@ describe("Game", () => {
         await game.admitPlayer(players[1].address);
       });
 
-      it("should fail when attempting to admit an unrecognised player address", () => {
-        expect(game.admitPlayer(players[1].address)).to.eventually.rejectedWith(
-          "blah"
+      it("should fail when attempting to admit an unrecognised player address", async () => {
+        await expect(
+          game.admitPlayer(players[1].address)
+        ).to.eventually.rejectedWith(
+          "Operation requested for pending player with unknown address"
         );
       });
 
@@ -251,7 +261,7 @@ describe("Game", () => {
         await expect(
           game.connect(players[1]).admitPlayer(players[2].address)
         ).to.eventually.rejectedWith(
-          "You must have joined the game to call this function"
+          "Must have joined the game to call this function"
         );
       });
 
@@ -262,7 +272,7 @@ describe("Game", () => {
         await expect(
           game.connect(players[2]).admitPlayer(players[1].address)
         ).to.eventually.rejectedWith(
-          "You must have joined the game to call this function"
+          "Must have joined the game to call this function"
         );
       });
     });
@@ -272,7 +282,7 @@ describe("Game", () => {
     it("should reject the call if the game has ended", async () => {
       await playGameToEnd();
       expect(game.createProposal(0, 0)).to.eventually.be.rejectedWith(
-        "You cannot interact with this game because it has ended"
+        "Game has ended"
       );
     });
 
@@ -280,14 +290,14 @@ describe("Game", () => {
       await expect(
         game.connect(players[1]).createProposal(0, 0)
       ).to.eventually.be.rejectedWith(
-        "You must have joined the game to call this function"
+        "Must have joined the game to call this function"
       );
     });
 
     it("should reject the call if the game has reached the maximum number of proposals", async () => {
       await playGameToEnd();
       await expect(game.createProposal(0, 0)).to.eventually.be.rejectedWith(
-        "You cannot interact with this game because it has ended"
+        "Game has ended"
       );
     });
 
@@ -297,9 +307,7 @@ describe("Game", () => {
       });
       await expect(
         game.createProposal(12, 999999)
-      ).to.eventually.be.rejectedWith(
-        "Proposal must apply to an existing rule"
-      );
+      ).to.eventually.be.rejectedWith("Proposal must apply to existing rule");
     });
 
     it("should reject a proposal that has an out of bounds value", async () => {
@@ -307,10 +315,8 @@ describe("Game", () => {
         value: "5000000000000000000",
       });
       await expect(
-        game.createProposal(0, 999999)
-      ).to.eventually.be.rejectedWith(
-        "Proposal value must be within rule bounds"
-      );
+        game.createProposal(1, 999999)
+      ).to.eventually.be.rejectedWith("Proposal value must be within bounds");
     });
 
     it("should reject a proposal when it is not the players turn in 2 player game", async () => {
@@ -319,20 +325,18 @@ describe("Game", () => {
       });
       await game.admitPlayer(players[1].address);
       await expect(game.createProposal(0, 10)).to.eventually.be.rejectedWith(
-        "You may not create a proposal because it is not your turn"
+        "Not your turn"
       );
       // last player to join can vote
       await game.connect(players[1]).createProposal(0, 10);
       // first player to join cannot vote
       await expect(game.createProposal(0, 10)).to.eventually.be.rejectedWith(
-        "You may not create a proposal because it is not your turn"
+        "Not your turn"
       );
       // last player to join cannot make another proposal
       await expect(
         game.connect(players[1]).createProposal(0, 10)
-      ).to.eventually.be.rejectedWith(
-        "You may not create a proposal because there is currently an incomplete proposal"
-      );
+      ).to.eventually.be.rejectedWith("Outstanding incomplete proposal");
       await game.connect(players[1]).voteOnProposal(0, true);
       // first player should be able to vote once proposal is complete
       await game.connect(players[0]).createProposal(0, 10);
@@ -362,14 +366,14 @@ describe("Game", () => {
       await expect(
         game.connect(players[2]).voteOnProposal(0, true)
       ).to.eventually.be.rejectedWith(
-        "You must have joined the game to call this function"
+        "Must have joined the game to call this function"
       );
     });
 
     it("should reject the call if the game has ended", async () => {
       await playGameToEnd();
       await expect(game.voteOnProposal(0, true)).to.eventually.be.rejectedWith(
-        "You cannot interact with this game because it has ended"
+        "Game has ended"
       );
     });
 
@@ -390,7 +394,7 @@ describe("Game", () => {
 
       await expect(
         game.connect(players[2]).voteOnProposal(0, true)
-      ).to.eventually.be.rejectedWith("You may not vote on completed proposal");
+      ).to.eventually.be.rejectedWith("Cannot vote on completed proposal");
     });
 
     it("should reject if the proposal does not exist", async () => {
@@ -528,9 +532,7 @@ describe("Game", () => {
       const p = await game.proposals(0);
       await expect(
         game.connect(players[2]).voteOnProposal(0, true)
-      ).to.eventually.be.rejectedWith(
-        "You cannot interact with this game because it has ended"
-      );
+      ).to.eventually.be.rejectedWith("Game has ended");
     });
   });
 
@@ -574,10 +576,8 @@ describe("Game", () => {
       expect(ethers.utils.formatEther(player.balance)).to.equal("16.0");
     });
 
-    //
     it("proposal should be unsuccessful when balance is less than proposal fee", async () => {
       game = await createGame({
-        entryFee: 5,
         startBalance: 0,
         proposalCost: 600,
       });
@@ -593,7 +593,6 @@ describe("Game", () => {
       const game = await createGame({
         maxProposals: 3,
         proposalReward: 10000,
-        entryFee: 5,
         startBalance: 1000,
         proposalCost: 990,
       });

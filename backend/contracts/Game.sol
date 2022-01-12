@@ -160,7 +160,7 @@ contract Game {
         address firstPlayer,
         Calculations.GameParams memory gameParams
     ) payable {
-        rules.push(Rule("Entry fee", gameParams.entryFee, 0, 1000));
+        rules.push(Rule("Entry fee", gameParams.entryFee, 0, 100 * 1 ether));
         rules.push(Rule("Start balance", gameParams.startBalance, 0, 1000));
         rules.push(Rule("Proposal reward", gameParams.successfulProposalReward, 0, 1000000000));
         rules.push(Rule("Majority", gameParams.majority, 0, 100));
