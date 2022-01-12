@@ -28,7 +28,7 @@ describe("Game", () => {
   let game;
   let calculations;
   let players;
-  let owner, addr1;
+  let owner;
   let startAndProposal;
   let playGameToEnd;
   let createGame;
@@ -49,7 +49,7 @@ describe("Game", () => {
     });
 
     createGame = async ({
-      entryFee = 5,
+      entryFee = intToHex(5 * 1000000000000000000),
       startBalance = 10,
       proposalReward = 4,
       majority = 50,
@@ -77,7 +77,7 @@ describe("Game", () => {
           dividend,
         ],
         {
-          value: intToHex(entryFee * 1000000000000000000),
+          value: entryFee,
           // "0x4563918244F40000", // 5 ether in hex
           gasPrice: 0,
         }
@@ -94,6 +94,7 @@ describe("Game", () => {
         await game.connect(players[index]).joinGame({
           value: "5000000000000000000",
         });
+        await game.admitPlayer(players[index].address);
       }
       await game.connect(players[numPlayers - 1]).createProposal(0, 12);
     };
@@ -102,9 +103,11 @@ describe("Game", () => {
       await game.connect(players[1]).joinGame({
         value: "5000000000000000000",
       });
+      await game.admitPlayer(players[1].address);
       await game.connect(players[2]).joinGame({
         value: "5000000000000000000",
       });
+      await game.admitPlayer(players[2].address);
       for (let i = 0; i < 3; i++) {
         await game.connect(players[(i + 2) % 3]).createProposal(0, 12);
         await game.connect(players[0]).voteOnProposal(i, false);
@@ -114,6 +117,11 @@ describe("Game", () => {
   });
 
   describe("joinGame", () => {
+    it("should allow the creating player to perform actions immediately after joining", async () => {
+      await createGame();
+      await game.createProposal(0, 12);
+    });
+
     it("should reject the call if the game has ended", async () => {
       await playGameToEnd();
       await expect(
@@ -125,10 +133,28 @@ describe("Game", () => {
       );
     });
 
-    it("should reject the call if the player is already in the game", async () => {
-      game.connect(players[1]).joinGame({
+    it("should require a joining fee as specified on game creation", async () => {
+      // TODO: write test
+    });
+
+    it("should reject the call if the player is pending to join game", async () => {
+      await game.connect(players[1]).joinGame({
         value: "5000000000000000000",
       });
+      await expect(
+        game.connect(players[1]).joinGame({
+          value: "5000000000000000000",
+        })
+      ).to.eventually.be.rejectedWith(
+        "You have already proposed to join this game"
+      );
+    });
+
+    it("should reject the call if the player is already in the game", async () => {
+      await game.connect(players[1]).joinGame({
+        value: "5000000000000000000",
+      });
+      await game.admitPlayer(players[1].address);
       await expect(
         game.connect(players[1]).joinGame({
           value: "5000000000000000000",
@@ -160,6 +186,85 @@ describe("Game", () => {
       });
       const player = await game.players(0);
       expect(player.playerAddress).to.equal(owner.address);
+    });
+  });
+
+  describe("playerPermission", () => {
+    describe("disallowed actions", () => {
+      it("should not allow a player to propose to join again if they are pending", async () => {});
+
+      it("should not allow a player to propose to join if they are a player", async () => {});
+
+      it("should not allow a player to propose if the player has not been admitted", async () => {
+        await expect(
+          game.connect(players[1]).createProposal(0, 0)
+        ).to.eventually.be.rejectedWith(
+          "You must have joined the game to call this function"
+        );
+      });
+
+      it("should not allow a player to vote if the player has not been admitted", async () => {
+        await game.createProposal(0, 12);
+        await expect(
+          game.connect(players[1]).voteOnProposal(0, true)
+        ).to.eventually.be.rejectedWith(
+          "You cannot vote on proposals because you have not been admitted"
+        );
+      });
+
+      it("should not prevent a turn from proceeding if players have not been admitted", async () => {
+        // FIXME: needs to give players permission
+        startAndProposal(2);
+        await game.connect(players[2]).joinGame({
+          value: "5000000000000000000",
+        });
+        await expect(game.voteOnProposal(0, true));
+        // fixme: do all of these
+      });
+    });
+
+    describe("admitting players", () => {
+      it("should admit the game creating player automatically", async () => {
+        await game.createProposal(0, 0);
+      });
+
+      it("should allow a player in the game to admit a player", async () => {
+        await game.connect(players[1]).joinGame({
+          value: "5000000000000000000",
+        });
+        await game.admitPlayer(players[1].address);
+      });
+
+      it("should fail when attempting to admit an unrecognised player address", () => {
+        expect(game.admitPlayer(players[1].address)).to.eventually.rejectedWith(
+          "blah"
+        );
+      });
+
+      it("should not allow a pending player to admit a player", async () => {
+        await game.connect(players[1]).joinGame({
+          value: "5000000000000000000",
+        });
+        await game.connect(players[2]).joinGame({
+          value: "5000000000000000000",
+        });
+        await expect(
+          game.connect(players[1]).admitPlayer(players[2].address)
+        ).to.eventually.rejectedWith(
+          "You must have joined the game to call this function"
+        );
+      });
+
+      it("should not allow an unknown address to admit a player", async () => {
+        await game.connect(players[1]).joinGame({
+          value: "5000000000000000000",
+        });
+        await expect(
+          game.connect(players[2]).admitPlayer(players[1].address)
+        ).to.eventually.rejectedWith(
+          "You must have joined the game to call this function"
+        );
+      });
     });
   });
 
@@ -212,12 +317,13 @@ describe("Game", () => {
       await game.connect(players[1]).joinGame({
         value: "5000000000000000000",
       });
+      await game.admitPlayer(players[1].address);
       await expect(game.createProposal(0, 10)).to.eventually.be.rejectedWith(
         "You may not create a proposal because it is not your turn"
       );
       // last player to join can vote
       await game.connect(players[1]).createProposal(0, 10);
-      // // first player to join cannot vote
+      // first player to join cannot vote
       await expect(game.createProposal(0, 10)).to.eventually.be.rejectedWith(
         "You may not create a proposal because it is not your turn"
       );
@@ -236,6 +342,7 @@ describe("Game", () => {
       await game.connect(players[1]).joinGame({
         value: "5000000000000000000",
       });
+      await game.admitPlayer(players[1].address);
       await game.connect(players[1]).createProposal(0, 12);
       const proposal = await game.proposals(0);
       await expect(proposal.proposer).to.equal(players[1].address);
@@ -249,6 +356,7 @@ describe("Game", () => {
       await game.connect(players[1]).joinGame({
         value: "5000000000000000000",
       });
+      await game.admitPlayer(players[1].address);
       await game.connect(players[1]).createProposal(0, 12);
 
       await expect(
@@ -269,9 +377,11 @@ describe("Game", () => {
       await game.connect(players[1]).joinGame({
         value: "5000000000000000000",
       });
+      await game.admitPlayer(players[1].address);
       await game.connect(players[2]).joinGame({
         value: "5000000000000000000",
       });
+      await game.admitPlayer(players[2].address);
 
       await game.connect(players[2]).createProposal(0, 12);
 
@@ -287,6 +397,7 @@ describe("Game", () => {
       await game.connect(players[1]).joinGame({
         value: "5000000000000000000",
       });
+      await game.admitPlayer(players[1].address);
       await expect(
         game.connect(players[0]).voteOnProposal(99, true)
       ).to.eventually.be.rejectedWith("Voted on non-existent proposal");
@@ -305,6 +416,7 @@ describe("Game", () => {
       await game.connect(players[1]).joinGame({
         value: "5000000000000000000",
       });
+      await game.admitPlayer(players[1].address);
       await game.connect(players[1]).createProposal(0, 12);
       await game.voteOnProposal(0, true);
       const vote = await game.functions.getVote(0, 0);
@@ -316,6 +428,7 @@ describe("Game", () => {
       await game.connect(players[1]).joinGame({
         value: "5000000000000000000",
       });
+      await game.admitPlayer(players[1].address);
       await game.connect(players[1]).createProposal(0, 12);
       await game.voteOnProposal(0, true);
       const proposal = await game.proposals(0);
@@ -326,9 +439,11 @@ describe("Game", () => {
       await game.connect(players[1]).joinGame({
         value: "5000000000000000000",
       });
+      await game.admitPlayer(players[1].address);
       await game.connect(players[2]).joinGame({
         value: "5000000000000000000",
       });
+      await game.admitPlayer(players[2].address);
       await game.connect(players[2]).createProposal(0, 12);
       await game.connect(players[0]).voteOnProposal(0, true);
       await game.connect(players[1]).voteOnProposal(0, true);
@@ -400,9 +515,11 @@ describe("Game", () => {
       await game.connect(players[1]).joinGame({
         value: "5000000000000000000",
       });
+      await game.admitPlayer(players[1].address);
       await game.connect(players[2]).joinGame({
         value: "5000000000000000000",
       });
+      await game.admitPlayer(players[2].address);
       for (let i = 0; i < 3; i++) {
         await game.connect(players[(i + 2) % 3]).createProposal(0, 12);
         await game.connect(players[0]).voteOnProposal(i, false);
@@ -485,6 +602,7 @@ describe("Game", () => {
         value: "5000000000000000000",
         gasPrice: 0,
       });
+      await game.admitPlayer(players[1].address);
 
       const player1BalanceStart = ethers.utils.formatEther(
         await players[0].getBalance()
@@ -588,6 +706,7 @@ describe("Game", () => {
         value: "5000000000000000000",
         gasPrice: 0,
       });
+      await game.admitPlayer(players[1].address);
 
       const player1BalanceStart = ethers.utils.formatEther(
         await players[0].getBalance()
@@ -626,6 +745,7 @@ describe("Game", () => {
         value: "5000000000000000000",
         gasPrice: 0,
       });
+      await game.admitPlayer(players[1].address);
 
       const player1BalanceStart = ethers.utils.formatEther(
         await players[0].getBalance()
@@ -669,6 +789,7 @@ describe("Game", () => {
         value: "5000000000000000000",
         gasPrice: 0,
       });
+      await game.admitPlayer(players[1].address);
 
       await game.connect(players[1]).createProposal(0, 500, { gasPrice: 0 });
       await game.connect(players[0]).voteOnProposal(0, true, { gasPrice: 0 });

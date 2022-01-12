@@ -27,7 +27,7 @@ describe("GameFactory", () => {
   });
 
   describe("newGame", () => {
-    it("should create a new game and add to the list of addresses", async () => {
+    it.only("should create a new game and add to the list of addresses", async () => {
       await gameFactory.connect(signer).newGame({
         value: "5000000000000000000",
       });

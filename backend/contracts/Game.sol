@@ -55,7 +55,7 @@ contract GameFactory {
     function newGame() public payable {
         require(
             msg.value > 0,
-            "You must send an entry fee to create a game"
+            "Must send an entry fee to create game"
         );
         Game g = new Game{value: msg.value}(
             msg.sender,
@@ -84,11 +84,16 @@ contract Game {
         address playerAddress;
         uint256 balance;
     }
+    Player[] public pendingPlayers;
     Player[] public players;
 
     function getPlayersLength() external view returns (uint256) {
         return players.length;
     }
+
+    function getPendingPlayersLength() external view returns (uint256) {
+        return pendingPlayers.length;
+    }    
 
     struct Rule {
         string name;
@@ -168,15 +173,15 @@ contract Game {
         );
         rules.push(Rule("Proposal fee", gameParams.proposalFee, 0, 1000000000));
         rules.push(Rule("Dividend", gameParams.dividend, 0, 1000000000));
-        gameFee();
-        createPlayer(firstPlayer);
+        Player storage p = players.push();
+        p.playerAddress = firstPlayer;
+        p.balance = rules[uint256(RuleIndices.StartBalance)].value * 1 ether;
     }
 
     modifier gameActive() {
-        uint8 completedProposals = getCompletedProposals();
         require(
-            completedProposals < rules[uint256(RuleIndices.MaxProposals)].value,
-            "You cannot interact with this game because it has ended"
+            getCompletedProposals() < rules[uint256(RuleIndices.MaxProposals)].value,
+            "Game has ended"
         );
         _;
     }
@@ -185,27 +190,34 @@ contract Game {
         // is a function because the entry fee rule won't exist when this is called
         require(
             msg.value == rules[uint256(RuleIndices.EntryFee)].value,
-            "You must send required entry fee to join the game"
+            "Must send required entry fee to join the game"
         );
     }
 
     function joinGame() external payable gameActive {
         gameFee();
+        for (uint256 index = 0; index < pendingPlayers.length; index++) {
+            require(
+                msg.sender != pendingPlayers[index].playerAddress,
+                "Already proposed to join this game"
+            );
+        }        
         for (uint256 index = 0; index < players.length; index++) {
             require(
                 msg.sender != players[index].playerAddress,
                 "You have already joined this game"
             );
         }
-        createPlayer(msg.sender);
+        Player storage p = pendingPlayers.push();
+        p.playerAddress = msg.sender;
+        emit CreatePlayer(p.playerAddress, p.balance);
     }
 
-    function createPlayer(address playerAddress) private {
-        uint256 eth = 1 ether;
+    function admitPlayer(address playerAddress) external gameActive isPlayer {
         Player storage p = players.push();
         p.playerAddress = playerAddress;
-        p.balance = rules[uint256(RuleIndices.StartBalance)].value * eth;
-        emit CreatePlayer(p.playerAddress, p.balance);
+        p.balance = rules[uint256(RuleIndices.StartBalance)].value * 1 ether;
+        delete pendingPlayers[getPendingPlayer(playerAddress)];
     }
 
     modifier isPlayer() {
@@ -217,7 +229,7 @@ contract Game {
                 break;
             }
         }
-        require(valid, "You must have joined the game to call this function");
+        require(valid, "Must have joined the game to call this function");
         _;
     }
 
@@ -226,10 +238,6 @@ contract Game {
             rules[uint256(RuleIndices.ProposalFee)].value
         );
         uint256 playerIndex = getPlayer(msg.sender);
-        // require(
-        //     players[playerIndex].balance >= proposalFee,
-        //     "You do not have enough game funds to pay the proposal cost"
-        // );
         if (proposalFee > players[playerIndex].balance) {
             return false;
         } else {
@@ -264,20 +272,20 @@ contract Game {
     {
         require(
             ruleIndex < rules.length,
-            "Proposal must apply to an existing rule"
+            "Proposal must apply to existing rule"
         );
         require(
             value <= rules[ruleIndex].upperBound &&
                 value >= rules[ruleIndex].lowerBound,
-            "Proposal value must be within rule bounds"
+            "Proposal value must be within bounds"
         );
         uint256 playerIndex = getPlayer(msg.sender);
         uint8 completedProposals = getCompletedProposals();
         require(
             (completedProposals + players.length - 1) % players.length == playerIndex,
-            "You may not create a proposal because it is not your turn"
+            "Not your turn"
         );
-        require(completedProposals == proposals.length, "You may not create a proposal because there is currently an incomplete proposal");
+        require(completedProposals == proposals.length, "Outstanding incomplete proposal");
 
         Proposal storage p = proposals.push(); // TODO: does this need to be storage, or can it be memory?
         p.proposer = msg.sender;
@@ -291,7 +299,7 @@ contract Game {
     }
 
     function getVotesLength(
-        uint256 proposalIndex // TODO: test
+        uint256 proposalIndex
     ) external view returns (uint256) {
         return proposals[proposalIndex].votes.length;
     }
@@ -326,7 +334,7 @@ contract Game {
         );
         require(
             !proposals[proposalIndex].complete,
-            "You may not vote on completed proposal"
+            "Cannot vote on completed proposal"
         );
         for (
             uint256 index = 0;
@@ -448,10 +456,26 @@ contract Game {
         }
     }
 
-    function getPlayer(address playerAddress) private view returns (uint256) {
-        for (uint256 index = 0; index < players.length; index++) {
-            if (players[index].playerAddress == playerAddress) return index;
+    function getPendingPlayer(address playerAddress) private view returns (uint256) {
+        bool foundPlayer = false;
+        for (uint256 index = 0; index < pendingPlayers.length; index++) {
+            if (pendingPlayers[index].playerAddress == playerAddress) {
+                foundPlayer = true;
+                return index;
+            }
         }
+        require(foundPlayer, "Operation requested for pending player with unknown address");
+    }
+
+    function getPlayer(address playerAddress) private view returns (uint256) {
+        bool foundPlayer = false;
+        for (uint256 index = 0; index < players.length; index++) {
+            if (players[index].playerAddress == playerAddress) {
+                foundPlayer = true;
+                return index;
+            }
+        }
+        require(foundPlayer, "Operation requested for player with unknown address");
     }
 
     function enactProposal(uint256 proposalIndex) private {
