@@ -1,23 +1,14 @@
 import { createContext, useState, useEffect } from "react";
+import { gameConfig } from "./gameConfig";
 
 const Web3 = require("web3");
 
 export const Web3Context = createContext();
 
-function connectToNetwork(web3) {
-  const params = {
-    chainId: "0x64", // A 0x-prefixed hexadecimal string
-    chainName: "Gnosis Chain",
-    nativeCurrency: {
-      name: "xDai",
-      symbol: "xDai", // 2-6 characters long
-      decimals: 18,
-    },
-    rpcUrls: ["https://rpc.xdaichain.com/"],
-    blockExplorerUrls: ["https://blockscout.com/xdai/mainnet/"],
-  };
+const network = gameConfig.networks.local;
 
-  console.log(web3);
+function connectToNetwork(web3) {
+  const params = network.params;
 
   web3.eth.requestAccounts((error, accounts) => {
     window.ethereum
@@ -46,22 +37,18 @@ export const Web3Provider = ({ children }) => {
       const web3 = new Web3(window.ethereum);
       setWeb3(web3);
 
-      console.log("Gas");
-      web3.eth.getGasPrice().then(console.log);
+      try {
+        const networkId = await web3.eth.net.getId();
 
-      // try {
-      //   const networkId = await web3.eth.net.getId();
+        if (networkId !== network.networkId) {
+          console.log("wrong network");
+          return setSetupStatus("setnetwork");
+        }
 
-      //   // 100 is gnosis chain/xDai
-      //   if (networkId !== 100) {
-      //     console.log("wrong network");
-      //     return setSetupStatus("setnetwork");
-      //   }
-
-      setSetupStatus("complete");
-      // } catch (e) {
-      //   console.log(e);
-      // }
+        setSetupStatus("complete");
+      } catch (e) {
+        console.log(e);
+      }
     };
     fn();
   }, []);
