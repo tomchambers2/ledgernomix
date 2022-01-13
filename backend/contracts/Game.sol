@@ -221,7 +221,6 @@ contract Game {
         }
         Player storage p = pendingPlayers.push();
         p.playerAddress = msg.sender;
-        emit CreatePlayer(p.playerAddress, p.balance);
     }
 
     function admitPlayer(address playerAddress) external gameActive isPlayer {
@@ -229,6 +228,7 @@ contract Game {
         p.playerAddress = playerAddress;
         p.balance = rules[uint256(RuleIndices.StartBalance)].value * 1 ether;
         delete pendingPlayers[getPendingPlayer(playerAddress)];
+        emit CreatePlayer(p.playerAddress, p.balance);
     }
 
     modifier isPlayer() {
