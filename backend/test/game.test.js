@@ -247,7 +247,7 @@ describe("Game", () => {
         await game.createProposal(0, 30);
       });
 
-      it("should allow a player in the game to admit a player", async () => {
+      it.only("should allow a player in the game to admit a player", async () => {
         await game.connect(players[1]).joinGame({
           value: "5000000000000000000",
         });

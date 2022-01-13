@@ -24,24 +24,39 @@ export const Proposals = ({
 }) => {
   const { gameAddress } = useParams();
   const game = useContract(web3, GameContract.abi, gameAddress);
+
   const createProposal = useContractFn(game, "createProposal", {
+    from: account,
+  });
+
+  const admitPlayer = useContractFn(game, "admitPlayer", {
     from: account,
   });
 
   return (
     <>
       <h2>Proposals</h2>
-      {pendingPlayers &&
-        pendingPlayers.slice().map((pendingPlayer, i) => (
-          <div key={i} className={classNames("item button")}>
-            <div>Admit new player</div>
-            <div>
-              {" "}
-              {pendingPlayer.playerAddress.substring(0, 5)}...
-              {pendingPlayer.playerAddress.substring(38, 42)}
+      {isPlayer &&
+        pendingPlayers &&
+        pendingPlayers
+          .filter(
+            ({ playerAddress }) =>
+              playerAddress !== "0x0000000000000000000000000000000000000000"
+          )
+          .map((pendingPlayer, i) => (
+            <div
+              key={i}
+              className={classNames("item button")}
+              onClick={() => admitPlayer(pendingPlayer.playerAddress)}
+            >
+              <div>Admit new player</div>
+              <div>
+                {" "}
+                {pendingPlayer.playerAddress.substring(0, 5)}...
+                {pendingPlayer.playerAddress.substring(38, 42)}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
 
       {(!rules.length && "LOADING...") ||
         (gameActive && (
