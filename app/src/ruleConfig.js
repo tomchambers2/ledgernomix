@@ -6,6 +6,7 @@ export const ruleConfig = {
     description: "The amount in xDAI to buy into the game",
     inactive: 5,
     unproposable: true,
+    hidden: true,
   },
   "Start balance": {
     name: "Start balance",
