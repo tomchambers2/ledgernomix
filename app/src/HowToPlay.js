@@ -7,47 +7,47 @@ export const HowToPlay = () => {
       <h2>How to Play</h2>
       <div className="paragraph">
         The first thing you'll need to do is follow our setup instructions for
-        Metamask. Click on the Ledgernomix logo in the top left to get to our
-        main page, and follow the instructions from there. If you can see the
-        list of games, you're ready!
+        Metamask. Follow the instructions from the games page. If you can see
+        the list of games, you're ready!
       </div>
       <div className="paragraph">
-        Next, you'll need some cryptocurrency. But first, a warning: As this is
-        a game where the players can change the rules, it is very likely that
-        you can find ways to break the game and make your cryptocurrency
+        Next, you'll need some xDAI cryptocurrency. But first, a warning: As
+        this is a game where the players can change the rules, it is very likely
+        that you can find ways to break the game and make your cryptocurrency
         unrecoverable, or at least unrecoverable without the cooperation of a
-        particular player. If your cryptocurrency gets stuck in the game, it's
-        just gone, and nobody else has it. If you tell us about it, maybe we can
-        close the loophole for the next set of players, but we can't get you
-        your money back. Only play with amounts where you'd all be content to
-        laugh off such a loss.
+        particular player. If your money gets stuck in the game, it's just gone,
+        and nobody else has it. If you tell us about it, maybe we can close the
+        loophole for the next set of players, but we can't get you your money
+        back. Only play with amounts where you'd all be content to laugh off
+        such a loss.
       </div>
       <div className="paragraph">
         To get some xDAI, you could copy your address, which can be found under
         the account name near the top of the Metamask window, and send it to
         someone who already has some xDAI, who can make a transfer to you.
-        Alternatively, you can buy xDAI using Ramp or Mt Pellerin. We'd
-        recommend a balance of around 6.00 to play - 5.00 for the game pot and
-        1.00 to be sure of covering all the transaction fees you're likely to
-        incur as you play.
+        Alternatively, you can buy xDAI using Ramp or Mt Pellerin. xDAI is
+        stablised to the dollar, so $1.00 = 1.00xDAI. We'd recommend a balance
+        of around 6.00xDAI to play - 5 for the game pot and 1 more to be sure of
+        covering all the transaction fees you're likely to incur as you play.
       </div>
       <div className="paragraph">
-        One player needs to start the game. This will generate a game name and a
-        URL. You can invite other players by sending them the URL or having them
-        click on the game name in the list of games accessible from the main
-        page. Players join by clicking the round Join Game button at the top of
-        the game page. To keep out any uninvited guests, prospective players
-        have to be admitted by the existing players, who can do this by clicking
-        on the Admit buttons in the proposals panel, which show each prospective
-        player's address. Players should confirm their addresses. Check that you
-        have the number of players you expect before you start playing.
+        One player needs to create the game. This will generate a game name and
+        a URL. You can invite other players by sending them the URL or having
+        them click on the game name in the list of games accessible from the
+        main page. Players join by clicking the round Join Game button at the
+        top of the game page. To keep out any uninvited guests, prospective
+        players have to be admitted by the existing players, who can do this by
+        clicking on the Admit buttons in the proposals panel, which show each
+        prospective player's address. Players should confirm their addresses.
+        Check that you have the number of players you expect before you start
+        making proposals.
       </div>
       <div className="paragraph">
         You may find that you need to refresh a few times, close and re-open
         Metamask, or even sign in to Metamask again to get it to work. That's
         normal. Don't expect the game to be instantly responsive. Things will
         take a few seconds to go through to the blockchain, and a little longer
-        to show up again in your browser. The page is set to refresh every 10
+        to show up again in your browser. The page is set to refresh every 5
         seconds. Sometimes, the voting on a proposal might have finished on the
         blockchain, while you're still trying to send your vote in your browser.
         In that case, the transaction will be rejected - that's normal too.

@@ -42,15 +42,13 @@ export const About = () => {
       <div className="paragraph">
         At the end of the game, the original pot of cryptocurrency is
         redistributed in proportion to the distribution of points in the game -
-        so if one player has 100 points and the others all have zero, that
+        so if one player has 1000 points and the others all have zero, that
         player gets 100% of the pot.
       </div>
       <div className="paragraph">
         There is no "house" running this game, and the redistribution is done by
-        a smart contract on a blockchain. Currently, that blockchain is just our
-        test network, but the plan is to move to a chain where the currency has
-        real value, but where energy consumption and transaction fees are low,
-        eg. xDAI.
+        a smart contract on the Gnosis blockchain, where energy consumption and
+        transaction fees are low.
       </div>
       <div className="paragraph">
         As all games are recorded on the blockchain, they can be ranked on
