@@ -11,9 +11,7 @@ import { Rules } from "./Rules";
 import { Proposals } from "./Proposals";
 import { Loader } from "./Loader";
 import { default as GameContract } from "./contracts/Game.json";
-import Web3 from "web3";
 import { useParams } from "react-router-dom";
-// import { useContractBalance } from "./useContractBalance";
 import { weiToEth, getNumberWithOrdinal, formatCurrency } from "./utils.js";
 import { PlayerIcon } from "./PlayerIcon";
 import { Clock } from "./Clock";
@@ -26,6 +24,7 @@ import ReactTooltip from "react-tooltip";
 import { Web3Context } from "./web3context";
 import { useAccount } from "./useAccount";
 import { Setup } from "./Setup";
+import { getContractBalance } from "./useContractBalance";
 
 const { cryptocurrency } = gameConfig;
 const FETCH_INTERVAL = 5 * 1000;
@@ -35,7 +34,6 @@ export const Game = () => {
   const { web3, setupStatus } = useContext(Web3Context);
   const account = useAccount(web3);
   const game = useContract(web3, GameContract.abi, gameAddress);
-  // const gameBalance = useContractBalance(web3, gameAddress);
   const [events, setEvents] = useState([]);
   const [rules, setRules] = useState(null);
   const [players, setPlayers] = useState(null);
@@ -44,6 +42,7 @@ export const Game = () => {
   const [isPlayer, setIsPlayer] = useState(null);
   const [initialDataLoaded, setInitialDataLoaded] = useState(false);
   const [gameEndTime, setGameEndTime] = useState(0);
+  const [contractBalance, setContractBalance] = useState(0);
 
   useEffect(() => {
     if (!account || !players) return;
@@ -253,18 +252,26 @@ export const Game = () => {
     );
   }, [getValue]);
 
+  const fetchContractBalance = useCallback(async () => {
+    if (!gameAddress) return;
+    const contractBalance = await getContractBalance(web3, gameAddress);
+    setContractBalance(contractBalance);
+  }, [gameAddress, web3]);
+
   const fetchData = useCallback(async () => {
     await fetchRules();
     await fetchProposals();
     await fetchPlayers();
     await fetchPendingPlayers();
     await fetchGameEndTime();
+    await fetchContractBalance();
   }, [
     fetchRules,
     fetchProposals,
     fetchPlayers,
     fetchPendingPlayers,
     fetchGameEndTime,
+    fetchContractBalance,
   ]);
 
   useEffect(() => {
@@ -360,11 +367,7 @@ export const Game = () => {
               <div>Pot</div>
               <div className="join-line"></div>
               <div>
-                {/* {weiToEth(gameBalance).toFixed(2) || 0} {cryptocurrency} // FIXME: actual pot, wasn't updating as only fetched at game start */}
-                {(players &&
-                  formatCurrency(players.length * gameConfig.cryptoEntryFee)) ||
-                  0}{" "}
-                {cryptocurrency}
+                {weiToEth(contractBalance).toFixed(2) || 0} {cryptocurrency}
               </div>
             </div>
           </div>
