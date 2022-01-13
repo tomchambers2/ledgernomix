@@ -5,7 +5,7 @@ const Web3 = require("web3");
 
 export const Web3Context = createContext();
 
-const network = gameConfig.networks.local;
+const network = gameConfig.networks.gnosis;
 
 function connectToNetwork(web3) {
   const params = network.params;
