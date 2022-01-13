@@ -3,9 +3,14 @@ import { gameConfig } from "./gameConfig";
 import { getNumberWithOrdinal, formatCurrency } from "./utils";
 import "./Payout.css";
 import { useState } from "react";
-const { cryptoEntryFee, cryptocurrency } = gameConfig;
+const { cryptocurrency } = gameConfig;
 
-export const Payout = ({ players, userPlayerAddress, getPlayerName }) => {
+export const Payout = ({
+  players,
+  userPlayerAddress,
+  getPlayerName,
+  contractBalance,
+}) => {
   const playerIndex = players.findIndex(
     ({ playerAddress: otherPlayerAddress }) =>
       otherPlayerAddress === userPlayerAddress
@@ -30,8 +35,6 @@ export const Payout = ({ players, userPlayerAddress, getPlayerName }) => {
         ({ playerAddress: otherPlayerAddress }) =>
           otherPlayerAddress === player.playerAddress
       ) + 1;
-
-  const totalCryptoPot = cryptoEntryFee * players.length;
 
   if (!player) return <div></div>;
 
@@ -90,7 +93,7 @@ export const Payout = ({ players, userPlayerAddress, getPlayerName }) => {
               <div>
                 {formatCurrency(
                   (Web3.utils.fromWei(player.balance) / totalBalance) *
-                    totalCryptoPot
+                    Web3.utils.fromWei(contractBalance)
                 )}{" "}
                 {cryptocurrency}
               </div>
@@ -104,7 +107,7 @@ export const Payout = ({ players, userPlayerAddress, getPlayerName }) => {
               <div>
                 {formatCurrency(
                   (Web3.utils.fromWei(player.balance) / totalBalance) *
-                    totalCryptoPot
+                    Web3.utils.fromWei(contractBalance)
                 )}{" "}
                 {cryptocurrency}
               </div>

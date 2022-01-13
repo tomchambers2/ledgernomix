@@ -313,7 +313,8 @@ export const Game = () => {
             <div className="background-pattern"></div>
             <button className="game-button" onClick={joinGameHandler}>
               <div>
-                Join <br></br>$5.00<br></br> Game
+                Join <div>${formatCurrency(weiToEth(contractBalance))}</div>
+                Game
               </div>
             </button>
           </div>
@@ -405,6 +406,7 @@ export const Game = () => {
                 players={players}
                 userPlayerAddress={account}
                 getPlayerName={getPlayerName}
+                contractBalance={contractBalance}
               ></Payout>
             </div>
           )}

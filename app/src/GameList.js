@@ -9,6 +9,10 @@ import { fireNotification } from "./fireNotification";
 import { useAccount } from "./useAccount";
 import { Redirect } from "react-router-dom";
 import { Setup } from "./Setup";
+import { gameConfig } from "./gameConfig";
+import { formatCurrency } from "./utils.js";
+const { cryptoEntryFee } = gameConfig;
+
 const Web3 = require("web3");
 
 export const GameList = () => {
@@ -100,9 +104,14 @@ export const GameList = () => {
       <div className="game-icons-container">
         <div className="game-icon-panel">
           <div className="background-pattern"></div>
-          <button className="game-button" onClick={newGameHandler("0.05")}>
+          <button
+            className="game-button"
+            onClick={newGameHandler(String(cryptoEntryFee))}
+          >
             <div>
-              Create <br></br>$0.05<br></br> Game
+              Create
+              <div>${formatCurrency(cryptoEntryFee)}</div>
+              Game
             </div>
           </button>
         </div>
