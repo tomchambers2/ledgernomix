@@ -60,9 +60,11 @@ export const Game = () => {
   }, [account, pendingPlayers]);
 
   const getRuleValue = useCallback(
-    (name) =>
-      rules &&
-      rules.find(({ name: ruleName }) => name === ruleName).value.toString(),
+    (name) => {
+      if (!rules) return;
+      const rule = rules.find(({ name: ruleName }) => name === ruleName);
+      if (rule) return rule.value.toString();
+    },
     [rules]
   );
 
@@ -272,12 +274,14 @@ export const Game = () => {
   }, [getValue]);
 
   const fetchData = useCallback(async () => {
+    // if (setupStatus !== "complete") return;
     await fetchRules();
     await fetchProposals();
     await fetchPlayers();
     await fetchPendingPlayers();
     await fetchGameEndTime();
   }, [
+    // setupStatus,
     fetchRules,
     fetchProposals,
     fetchPlayers,
@@ -315,7 +319,7 @@ export const Game = () => {
   return (
     <>
       <ReactTooltip className="tooltip" effect="solid" />
-      {gameActive && !isPlayer && !isPendingPlayer && (
+      {gameActive && !isPlayer && !isPendingPlayer && rules && (
         <div className="game-icons-container">
           <div className="game-icon-panel">
             <div className="background-pattern"></div>
