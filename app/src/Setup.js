@@ -1,8 +1,4 @@
 import { OrnateBorder } from "./OrnateBorder";
-import metamaskMenuImage from "./backgrounds/metamaskMenuImage.jpg";
-import networkSettingsImage from "./backgrounds/metamaskNetworkSettings.jpg";
-import networksImage from "./backgrounds/metamaskNetworks.jpg";
-import setup2 from "./videos/setup2.mp4";
 import { useContext } from "react";
 import { Web3Context } from "./web3context";
 
@@ -42,14 +38,14 @@ export const Setup = () => {
               Gnosis network
             </div>
             <div className="paragraph"></div>
-            <a
+            <button
               className="button setup-button"
               target="_blank"
               rel="noreferrer"
               onClick={connect}
             >
               Connect Metamask to Gnosis
-            </a>
+            </button>
             <div className="paragraph"></div>
             <div className="paragraph">
               Once you have connected, refresh the page (Control or Command + R)

@@ -43,7 +43,6 @@ export const Game = () => {
   const [isPendingPlayer, setIsPendingPlayer] = useState(null);
   const [initialDataLoaded, setInitialDataLoaded] = useState(false);
   const [gameEndTime, setGameEndTime] = useState(0);
-  const [contractBalance, setContractBalance] = useState(0);
 
   useEffect(() => {
     if (!account || !players) return;
@@ -273,26 +272,18 @@ export const Game = () => {
     );
   }, [getValue]);
 
-  const fetchContractBalance = useCallback(async () => {
-    if (!gameAddress) return;
-    const contractBalance = await getContractBalance(web3, gameAddress);
-    setContractBalance(contractBalance);
-  }, [gameAddress, web3]);
-
   const fetchData = useCallback(async () => {
     await fetchRules();
     await fetchProposals();
     await fetchPlayers();
     await fetchPendingPlayers();
     await fetchGameEndTime();
-    await fetchContractBalance();
   }, [
     fetchRules,
     fetchProposals,
     fetchPlayers,
     fetchPendingPlayers,
     fetchGameEndTime,
-    fetchContractBalance,
   ]);
 
   useEffect(() => {
