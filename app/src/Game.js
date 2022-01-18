@@ -40,6 +40,7 @@ export const Game = () => {
   const [pendingPlayers, setPendingPlayers] = useState(null);
   const [proposals, setProposals] = useState(null);
   const [isPlayer, setIsPlayer] = useState(null);
+  const [isPendingPlayer, setIsPendingPlayer] = useState(null);
   const [initialDataLoaded, setInitialDataLoaded] = useState(false);
   const [gameEndTime, setGameEndTime] = useState(0);
   const [contractBalance, setContractBalance] = useState(0);
@@ -51,6 +52,14 @@ export const Game = () => {
     );
     setIsPlayer(result);
   }, [account, players]);
+
+  useEffect(() => {
+    if (!account || !pendingPlayers) return;
+    const result = pendingPlayers.some(
+      ({ playerAddress }) => account === playerAddress
+    );
+    setIsPendingPlayer(result);
+  }, [account, pendingPlayers]);
 
   const getRuleValue = useCallback(
     (name) =>
@@ -80,7 +89,19 @@ export const Game = () => {
         typeof identifier === "number"
           ? identifier
           : players.findIndex((p) => p.playerAddress === identifier);
-      if (index < 0) return <span>SPECTATOR</span>;
+      if (index < 0) {
+        if (isPendingPlayer)
+          return (
+            <div>
+              WAITING
+              <div>
+                {account.substring(0, 5)}...
+                {account.substring(38, 42)}
+              </div>
+            </div>
+          );
+        else return <span>SPECTATOR</span>;
+      }
       return (
         <>
           PLAYER{" "}
@@ -90,7 +111,7 @@ export const Game = () => {
         </>
       );
     },
-    [players]
+    [players, isPendingPlayer, account]
   );
 
   const getPlayerIndex = useCallback(() => {
@@ -302,18 +323,26 @@ export const Game = () => {
 
   const gameActive = useGameActive(proposals, getRuleValue("Game length"));
 
+  const gamePot =
+    (pendingPlayers &&
+      (pendingPlayers.length + 1) * getRuleValue("Entry fee")) ||
+    0;
+
   if (setupStatus !== "complete") return <Setup />;
 
   return (
     <>
       <ReactTooltip className="tooltip" effect="solid" />
-      {gameActive && !isPlayer && (
+      {gameActive && !isPlayer && !isPendingPlayer && (
         <div className="game-icons-container">
           <div className="game-icon-panel">
             <div className="background-pattern"></div>
             <button className="game-button" onClick={joinGameHandler}>
               <div>
-                Join <div>${formatCurrency(weiToEth(contractBalance))}</div>
+                Join{" "}
+                <div>
+                  ${formatCurrency(weiToEth(getRuleValue("Entry fee")))}
+                </div>
                 Game
               </div>
             </button>
@@ -368,7 +397,7 @@ export const Game = () => {
               <div>Pot</div>
               <div className="join-line"></div>
               <div>
-                {weiToEth(contractBalance).toFixed(2) || 0} {cryptocurrency}
+                {weiToEth(gamePot).toFixed(2) || 0} {cryptocurrency}
               </div>
             </div>
           </div>
@@ -406,7 +435,7 @@ export const Game = () => {
                 players={players}
                 userPlayerAddress={account}
                 getPlayerName={getPlayerName}
-                contractBalance={contractBalance}
+                gamePot={gamePot}
               ></Payout>
             </div>
           )}
@@ -420,6 +449,7 @@ export const Game = () => {
                 getPlayerName={getPlayerName}
                 voteOnProposal={voteOnProposalHandler}
                 isPlayer={isPlayer}
+                isPendingPlayer={isPendingPlayer}
                 gameActive={gameActive}
                 playerAddress={account}
                 web3={web3}

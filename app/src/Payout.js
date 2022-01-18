@@ -9,7 +9,7 @@ export const Payout = ({
   players,
   userPlayerAddress,
   getPlayerName,
-  contractBalance,
+  gamePot,
 }) => {
   const playerIndex = players.findIndex(
     ({ playerAddress: otherPlayerAddress }) =>
@@ -92,8 +92,8 @@ export const Payout = ({
               </div>
               <div>
                 {formatCurrency(
-                  (Web3.utils.fromWei(player.balance) / totalBalance) *
-                    Web3.utils.fromWei(contractBalance)
+                  (playerBalance / totalBalance) *
+                    Web3.utils.fromWei(String(gamePot))
                 )}{" "}
                 {cryptocurrency}
               </div>
@@ -106,8 +106,8 @@ export const Payout = ({
               </div>
               <div>
                 {formatCurrency(
-                  (Web3.utils.fromWei(player.balance) / totalBalance) *
-                    Web3.utils.fromWei(contractBalance)
+                  (playerBalance / totalBalance) *
+                    Web3.utils.fromWei(String(gamePot))
                 )}{" "}
                 {cryptocurrency}
               </div>

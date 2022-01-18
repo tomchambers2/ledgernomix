@@ -34,7 +34,7 @@ export const HowToPlay = () => {
         One player needs to create the game. This will generate a game name and
         a URL. You can invite other players by sending them the URL or having
         them click on the game name in the list of games accessible from the
-        main page. Players join by clicking the round Join Game button at the
+        games page. Players join by clicking the round Join Game button at the
         top of the game page. To keep out any uninvited guests, prospective
         players have to be admitted by the existing players, who can do this by
         clicking on the Admit buttons in the proposals panel, which show each
@@ -56,7 +56,8 @@ export const HowToPlay = () => {
         Your player name (eg. Player A, B, C) is displayed in the panel on the
         top right. The Proposals panel in the lower centre will show whose turn
         it is to start or, if it's you, you'll have an input panel allowing you
-        to select different rules to propose changes to.
+        to select different rules to propose changes to. Note: you can vote on
+        your own proposals.
       </div>
       <div className="paragraph">
         Most of the panels you see in the game have extra information available

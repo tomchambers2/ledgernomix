@@ -15,6 +15,7 @@ export const Proposals = ({
   getPlayerName,
   playerAddress,
   isPlayer,
+  isPendingPlayer,
   gameActive,
   web3,
   account,
@@ -66,6 +67,7 @@ export const Proposals = ({
                 rules={rules}
                 createProposal={createProposal}
                 isPlayer={isPlayer}
+                isPendingPlayer={isPendingPlayer}
                 gameActive={gameActive}
                 players={players}
                 proposals={proposals}

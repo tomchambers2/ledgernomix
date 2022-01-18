@@ -8,6 +8,7 @@ export const Propose = ({
   rules,
   createProposal,
   isPlayer,
+  isPendingPlayer,
   gameActive,
   proposals,
   players,
@@ -129,8 +130,11 @@ export const Propose = ({
 
   return (
     <>
-      {!isPlayer && (
+      {!isPlayer && !isPendingPlayer && (
         <div className="disabled-panel">Join the game to make proposals</div>
+      )}
+      {!isPlayer && isPendingPlayer && (
+        <div className="disabled-panel">Ask existing players to admit you</div>
       )}
       {isPlayer &&
         (((proposals.length + players.length - 1) % players.length ===
