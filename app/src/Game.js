@@ -24,7 +24,6 @@ import ReactTooltip from "react-tooltip";
 import { Web3Context } from "./web3context";
 import { useAccount } from "./useAccount";
 import { Setup } from "./Setup";
-import { getContractBalance } from "./useContractBalance";
 
 const { cryptocurrency } = gameConfig;
 const FETCH_INTERVAL = 5 * 1000;
