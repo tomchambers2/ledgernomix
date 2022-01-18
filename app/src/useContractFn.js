@@ -1,4 +1,3 @@
-import { ContractFunction } from "hardhat/internal/hardhat-network/stack-traces/model";
 import { useCallback } from "react";
 import { fireNotification } from "./fireNotification";
 
