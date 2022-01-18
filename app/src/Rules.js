@@ -10,6 +10,7 @@ export const Rules = ({ rules }) => {
       <ReactTooltip className="tooltip" effect="solid" />
       {rules
         .map((rule) => ({ rule, ruleConfig: ruleConfig[rule.name] }))
+        .filter(({ ruleConfig }) => !ruleConfig.hidden)
         .filter(
           ({ rule, ruleConfig }) => parseInt(rule.value) !== ruleConfig.inactive
         )

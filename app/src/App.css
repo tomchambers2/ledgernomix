@@ -413,6 +413,7 @@ a.button:disabled {
   align-items: center;
   font-size: 30px;
   line-height: 1;
+  flex-direction: column;
 }
 
 .game-button:hover {
