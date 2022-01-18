@@ -302,14 +302,6 @@ export const Game = () => {
   const voteOnProposal = useContractFn(game, "voteOnProposal", {
     from: account,
   });
-  const voteOnProposalHandler = async (proposalIndex, vote) => {
-    const result = await voteOnProposal(proposalIndex, vote);
-    if (result) {
-      const updatedProposals = proposals.slice();
-      updatedProposals[proposalIndex].pending = true;
-      setProposals(updatedProposals);
-    }
-  };
 
   const gameActive = useGameActive(proposals, getRuleValue("Game length"));
 
@@ -437,7 +429,7 @@ export const Game = () => {
                 proposals={proposals}
                 rules={rules}
                 getPlayerName={getPlayerName}
-                voteOnProposal={voteOnProposalHandler}
+                voteOnProposal={voteOnProposal}
                 isPlayer={isPlayer}
                 isPendingPlayer={isPendingPlayer}
                 gameActive={gameActive}

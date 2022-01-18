@@ -114,19 +114,28 @@ export const Propose = ({
       setProposedValue(0);
       setProposedRuleOption(null);
     } else {
+      console.log("transaction cancelled, end submitting");
       setIsSubmitting(false);
     }
   };
 
-  useEffect(() => {
-    setIsSubmitting(false);
-  }, [proposals]);
+  const isPlayersTurn =
+    players &&
+    (proposals.length + players.length - 1) % players.length === playerIndex();
 
-  if (isSubmitting) return <div>Submitting proposal...</div>;
+  useEffect(() => {
+    if (!isPlayersTurn) {
+      console.log("turn off submitting, not players tur");
+      setIsSubmitting(false);
+    }
+  }, [proposals, isPlayersTurn]);
+
   if (!players || !proposals) return <div>Loading...</div>;
 
   if (proposals.filter(({ complete }) => complete).length !== proposals.length)
     return <>Waiting for a quorum of votes on the currrent proposal</>;
+
+  if (isSubmitting) return <div>Submitting proposal...</div>;
 
   return (
     <>
@@ -137,8 +146,7 @@ export const Propose = ({
         <div className="disabled-panel">Ask existing players to admit you</div>
       )}
       {isPlayer &&
-        (((proposals.length + players.length - 1) % players.length ===
-          playerIndex() && (
+        ((isPlayersTurn && (
           <>
             <div className="proposal-form">
               I propose that{" "}
