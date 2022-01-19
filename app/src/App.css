@@ -256,6 +256,10 @@ a.button,
   line-height: 2.5;
 }
 
+.game-list-button {
+  padding: calc(2 * var(--game-line-width)) 150px;
+}
+
 button:hover,
 .button:hover,
 a.button:hover,
