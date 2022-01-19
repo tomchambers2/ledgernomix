@@ -82,6 +82,17 @@ function App() {
                     </div>
                   </div>
                 </div>
+
+                <div className="panel-container">
+                  <div className="setup panel">
+                    <div className="background-pattern"></div>
+                    <OrnateBorder></OrnateBorder>
+                    <Link className="button" to="/games">
+                      <h3>Go to Games</h3>
+                    </Link>
+                  </div>
+                </div>
+
                 <div className="panel-container">
                   <div className="setup panel">
                     <div className="background-pattern"></div>
@@ -151,21 +162,6 @@ function App() {
                     </div>
                   </div>
                 </div>
-
-                {/* <div className="panel-container">
-                <div className="setup panel">
-                  <div className="background-pattern"></div>
-                  <OrnateBorder></OrnateBorder>
-                  <Link className="button" to="/games">
-                    <h3
-                    // onClick={() => {
-                    //   fireNotification(`Test Notification`);}}
-                    >
-                      Get started
-                    </h3>
-                  </Link>
-                </div>
-              </div> */}
               </Route>
             </Switch>
           </div>
