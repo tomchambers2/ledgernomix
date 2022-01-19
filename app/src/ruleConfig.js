@@ -32,7 +32,7 @@ export const ruleConfig = {
   Quorum: {
     name: "Quorum required",
     description:
-      "The proportion of players votes required for a proposal to complete",
+      "The proportion of players required to vote for a proposal to complete",
     unit: "%",
   },
   "Game length": {
@@ -43,13 +43,15 @@ export const ruleConfig = {
   },
   "Poll tax": {
     name: "Poll tax",
-    description: "A fixed tax collected after every completed proposal",
+    description:
+      "A fixed tax collected from all players after every completed proposal",
     inactive: 0,
     unit: " " + gameConfig.gameCurrency,
   },
   "Wealth tax": {
     name: "Wealth tax",
-    description: "A percentage tax collected after every completed proposal",
+    description:
+      "A percentage tax collected from all players after every completed proposal",
     unit: "%",
     inactive: 0,
   },
@@ -68,7 +70,8 @@ export const ruleConfig = {
   },
   Dividend: {
     name: "Dividend",
-    description: "A payment awarded to all players each round",
+    description:
+      "A payment awarded to all players after every completed proposal",
     unit: " " + gameConfig.gameCurrency,
     inactive: 0,
   },

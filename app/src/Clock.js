@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import useInterval from "./useInterval";
 import "./Clock.css";
+import ReactTooltip from "react-tooltip";
 
 const tick = 1000;
 
@@ -26,7 +27,13 @@ export const Clock = ({ blockInterval, timeoutCallback }) => {
   ).padStart(2, "0");
 
   return (
-    <div className="clock-container">
+    <div
+      className="clock-container"
+      data-tip={
+        "This page will check the chain for a new block every 5 seconds"
+      }
+    >
+      <ReactTooltip className="tooltip" effect="solid" />
       <div className="clock-caption-container">
         <div className="clock-caption">New Block in:</div>
         <div className="clock-number">{stringRemaining}</div>

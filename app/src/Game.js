@@ -91,11 +91,11 @@ export const Game = () => {
         if (isPendingPlayer)
           return (
             <div>
-              WAITING
               <div>
                 {account.substring(0, 5)}...
                 {account.substring(38, 42)}
               </div>
+              WAITING
             </div>
           );
         else return <span>SPECTATOR</span>;
@@ -327,7 +327,11 @@ export const Game = () => {
         <div className="game-icons-container">
           <div className="game-icon-panel">
             <div className="background-pattern"></div>
-            <button className="game-button" onClick={joinGameHandler}>
+            <button
+              className="game-button"
+              onClick={joinGameHandler}
+              data-tip={"WARNING: Only join a game with players you trust"}
+            >
               <div>
                 Join{" "}
                 <div>
@@ -366,7 +370,7 @@ export const Game = () => {
               <h2>
                 <span
                   className="game-address"
-                  data-tip={"Game Address: " + gameAddress}
+                  data-tip={"Contract Address: " + gameAddress}
                 >
                   Game '
                   {gameAddress.substr(
@@ -395,8 +399,12 @@ export const Game = () => {
         <div className="player-details-panel panel">
           <div className="background-pattern"></div>
           <OrnateBorder></OrnateBorder>
-          <PlayerIcon address={account}></PlayerIcon>
-          <div className="PlayerID">{getPlayerName(account)}</div>
+          <div data-tip={"Your address: " + account}>
+            <PlayerIcon address={account}></PlayerIcon>
+          </div>
+          <div className="PlayerID" data-tip={"Your address: " + account}>
+            {getPlayerName(account)}{" "}
+          </div>
         </div>
       </div>
       <div className="vertical-panels-container">

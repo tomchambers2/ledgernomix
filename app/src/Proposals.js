@@ -7,6 +7,7 @@ import { default as GameContract } from "./contracts/Game.json";
 import { useParams } from "react-router-dom";
 import { ruleConfig } from "./ruleConfig";
 import ReactTooltip from "react-tooltip";
+import { PlayerIcon } from "./PlayerIcon";
 
 export const Proposals = ({
   rules,
@@ -37,6 +38,7 @@ export const Proposals = ({
   return (
     <>
       <h2>Proposals</h2>
+      <ReactTooltip className="tooltip" effect="solid" />
       {isPlayer &&
         pendingPlayers &&
         pendingPlayers
@@ -49,8 +51,10 @@ export const Proposals = ({
               key={i}
               className={classNames("item button")}
               onClick={() => admitPlayer(pendingPlayer.playerAddress)}
+              data-tip={"Only admit addresses you trust"}
             >
               <div>Admit new player</div>
+              <PlayerIcon address={pendingPlayer.playerAddress}></PlayerIcon>
               <div>
                 {" "}
                 {pendingPlayer.playerAddress.substring(0, 5)}...
