@@ -8,6 +8,7 @@ import { useParams } from "react-router-dom";
 import { ruleConfig } from "./ruleConfig";
 import ReactTooltip from "react-tooltip";
 import { PlayerIcon } from "./PlayerIcon";
+import { useEffect, useState } from "react";
 
 export const Proposals = ({
   rules,
@@ -26,6 +27,26 @@ export const Proposals = ({
 }) => {
   const { gameAddress } = useParams();
   const game = useContract(web3, GameContract.abi, gameAddress);
+  const [votePending, setVotePending] = useState(false);
+
+  const vote = async (proposalIndex, votePolarity) => {
+    setVotePending(true);
+    const result = await voteOnProposal(proposalIndex, votePolarity);
+    if (!result) {
+      setVotePending(false);
+    }
+  };
+
+  useEffect(() => {
+    console.log("latest proposal vote", proposals[proposals.length - 1].votes);
+    if (
+      proposals[proposals.length - 1].votes.some(
+        ({ playerAddress: voter }) => voter === playerAddress
+      )
+    ) {
+      setVotePending(false);
+    }
+  }, [playerAddress, proposals]);
 
   const createProposal = useContractFn(game, "createProposal", {
     from: account,
@@ -86,6 +107,11 @@ export const Proposals = ({
         .map((proposal, index) => ({ ...proposal, index }))
         .slice()
         .reverse()
+        .map((proposal, i) => ({
+          ...proposal,
+          votePending:
+            proposals.length - i - 1 === proposals.length - 1 && votePending,
+        }))
         .map((proposal, i) => (
           <div
             key={i}
@@ -116,21 +142,22 @@ export const Proposals = ({
 
             {(!proposal.feePaid && <div> but could not afford fee</div>) || (
               <div className="votes">
-                {proposal.pending && "Submitting vote..."}
+                {proposal.votePending && "Submitting vote..."}
                 <div className="vote-actions">
-                  {!proposal.pending && (
+                  {
                     <>
                       <div className="votes-column">
                         {((proposal.votes.some(
                           ({ playerAddress: voter }) => voter === playerAddress
                         ) ||
                           proposal.complete ||
-                          !isPlayer) && (
+                          !isPlayer ||
+                          proposal.votePending) && (
                           <div className="votes-column-header">Yes</div>
                         )) || (
                           <div
                             className="button"
-                            onClick={() => voteOnProposal(proposal.index, true)}
+                            onClick={() => vote(proposal.index, true)}
                           >
                             Yes
                           </div>
@@ -153,14 +180,13 @@ export const Proposals = ({
                           ({ playerAddress: voter }) => voter === playerAddress
                         ) ||
                           proposal.complete ||
-                          !isPlayer) && (
+                          !isPlayer ||
+                          proposal.votePending) && (
                           <div className="votes-column-header">No</div>
                         )) || (
                           <div
                             className="button"
-                            onClick={() =>
-                              voteOnProposal(proposal.index, false)
-                            }
+                            onClick={() => vote(proposal.index, false)}
                           >
                             No
                           </div>
@@ -176,7 +202,7 @@ export const Proposals = ({
                         </div>
                       </div>
                     </>
-                  )}
+                  }
                 </div>
               </div>
             )}

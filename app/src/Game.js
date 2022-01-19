@@ -60,9 +60,11 @@ export const Game = () => {
   }, [account, pendingPlayers]);
 
   const getRuleValue = useCallback(
-    (name) =>
-      rules &&
-      rules.find(({ name: ruleName }) => name === ruleName).value.toString(),
+    (name) => {
+      if (!rules) return;
+      const rule = rules.find(({ name: ruleName }) => name === ruleName);
+      if (rule) return rule.value.toString();
+    },
     [rules]
   );
 
@@ -272,12 +274,14 @@ export const Game = () => {
   }, [getValue]);
 
   const fetchData = useCallback(async () => {
+    // if (setupStatus !== "complete") return;
     await fetchRules();
     await fetchProposals();
     await fetchPlayers();
     await fetchPendingPlayers();
     await fetchGameEndTime();
   }, [
+    // setupStatus,
     fetchRules,
     fetchProposals,
     fetchPlayers,
@@ -302,14 +306,6 @@ export const Game = () => {
   const voteOnProposal = useContractFn(game, "voteOnProposal", {
     from: account,
   });
-  const voteOnProposalHandler = async (proposalIndex, vote) => {
-    const result = await voteOnProposal(proposalIndex, vote);
-    if (result) {
-      const updatedProposals = proposals.slice();
-      updatedProposals[proposalIndex].pending = true;
-      setProposals(updatedProposals);
-    }
-  };
 
   const gameActive = useGameActive(proposals, getRuleValue("Game length"));
 
@@ -323,7 +319,7 @@ export const Game = () => {
   return (
     <>
       <ReactTooltip className="tooltip" effect="solid" />
-      {gameActive && !isPlayer && !isPendingPlayer && (
+      {gameActive && !isPlayer && !isPendingPlayer && rules && (
         <div className="game-icons-container">
           <div className="game-icon-panel">
             <div className="background-pattern"></div>
@@ -445,7 +441,7 @@ export const Game = () => {
                 proposals={proposals}
                 rules={rules}
                 getPlayerName={getPlayerName}
-                voteOnProposal={voteOnProposalHandler}
+                voteOnProposal={voteOnProposal}
                 isPlayer={isPlayer}
                 isPendingPlayer={isPendingPlayer}
                 gameActive={gameActive}
