@@ -387,7 +387,8 @@ export const Game = () => {
               <div>Pot</div>
               <div className="join-line"></div>
               <div>
-                {weiToEth(gamePot).toFixed(2) || 0} {cryptocurrency}
+                {formatCurrency(weiToEth(gamePot).toFixed(2) || 0)}{" "}
+                {cryptocurrency}
               </div>
             </div>
           </div>

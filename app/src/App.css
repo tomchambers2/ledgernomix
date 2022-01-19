@@ -292,7 +292,7 @@ a.button:disabled {
 .vote-actions {
   display: flex;
   flex-direction: row;
-  margin-top: var(--game-border);
+  margin: var(--game-border) 0px;
 }
 
 .votes-column {
@@ -650,6 +650,11 @@ input {
 
 .paragraph a {
   color: var(--game-graphics-primary);
+}
+
+.proposal-number {
+  text-align: right;
+  margin-bottom: 10px;
 }
 
 .tag-circle {

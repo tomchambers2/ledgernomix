@@ -126,6 +126,7 @@ export const Proposals = ({
                   ruleConfig[rules[proposal.ruleIndex].name].description
                 }
               >
+                <div className="proposal-number">#{proposals.length - i}</div>
                 {getPlayerName(proposal.proposer)}{" "}
                 {proposal.complete
                   ? proposal.successful

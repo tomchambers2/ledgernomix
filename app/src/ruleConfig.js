@@ -32,7 +32,7 @@ export const ruleConfig = {
   Quorum: {
     name: "Quorum required",
     description:
-      "The proportion of players required to vote for a proposal to complete",
+      "The proportion of players required to vote on a proposal for it to complete",
     unit: "%",
   },
   "Game length": {
