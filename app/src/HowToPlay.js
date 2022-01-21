@@ -11,24 +11,27 @@ export const HowToPlay = () => {
         the list of games, you're ready!
       </div>
       <div className="paragraph">
-        We'd recommend playing with between 4 and 7 people, and you'll all need some xDAI cryptocurrency. But first, a warning: As
-        this is a game where the players can change the rules, it is very likely
-        that you can find ways to break the game and make your cryptocurrency
-        unrecoverable, or at least unrecoverable without the cooperation of a
-        particular player. If your money gets stuck in the game, it's just gone,
-        and nobody else has it. If you tell us about it, maybe we can close the
-        loophole for the next set of players, but we can't get you your money
-        back. Only play with amounts where you'd all be content to laugh off
-        such a loss.
+        We'd recommend playing with between 4 and 7 people, and you'll all need
+        some xDAI cryptocurrency. But first, a warning: As this is a game where
+        the players can change the rules, it is very likely that you can find
+        ways to break the game and make your cryptocurrency unrecoverable, or at
+        least unrecoverable without the cooperation of a particular player. If
+        your money gets stuck in the game, it's just gone, and nobody else has
+        it. If you tell us about it, maybe we can close the loophole for the
+        next set of players, but we can't get you your money back. Only play
+        with amounts where you'd all be content to laugh off such a loss.
       </div>
       <div className="paragraph">
         To get some xDAI, you could copy your address, which can be found under
         the account name near the top of the Metamask window, and send it to
-        someone who already has some xDAI, who can make a transfer to you.
-        Alternatively, you can buy xDAI using Ramp or Mt Pellerin. xDAI is
-        stablised to the dollar, so $1.00 = 1.00xDAI. We'd recommend a balance
-        of around 5.50xDAI to play - 5 for the game pot and 0.50 more to be sure of
-        covering all the transaction fees you're likely to incur as you play.
+        someone who already has some xDAI, who can make a transfer to you
+        instantly. Alternatively, you can buy xDAI (not to be confused with DAI)
+        using <a href="https://ramp.network/buy/">Ramp</a> or{" "}
+        <a href="https://www.mtpelerin.com/">Mt Pellerin</a>, but they might
+        take a few days to verify you. xDAI is stablised to the dollar, so $1.00
+        = 1.00xDAI. We'd recommend a balance of around 5.50xDAI for each player
+        - 5 for the game pot and 0.50 more to be sure of covering all the
+        transaction fees they might incur as you play.
       </div>
       <div className="paragraph">
         One player needs to create the game. This will generate a game name and
@@ -41,6 +44,7 @@ export const HowToPlay = () => {
         prospective player's address. Players should confirm their addresses.
         Check that you have the number of players you expect before you start
         making proposals.
+      </div>
       <div className="paragraph">
         You may find that you need to refresh a few times, close and re-open
         Metamask, or even sign in to Metamask again to get it to work. That's
