@@ -11,7 +11,7 @@ export const HowToPlay = () => {
         the list of games, you're ready!
       </div>
       <div className="paragraph">
-        Next, you'll need some xDAI cryptocurrency. But first, a warning: As
+        We'd recommend playing with between 4 and 7 people, and you'll all need some xDAI cryptocurrency. But first, a warning: As
         this is a game where the players can change the rules, it is very likely
         that you can find ways to break the game and make your cryptocurrency
         unrecoverable, or at least unrecoverable without the cooperation of a
@@ -27,7 +27,7 @@ export const HowToPlay = () => {
         someone who already has some xDAI, who can make a transfer to you.
         Alternatively, you can buy xDAI using Ramp or Mt Pellerin. xDAI is
         stablised to the dollar, so $1.00 = 1.00xDAI. We'd recommend a balance
-        of around 6.00xDAI to play - 5 for the game pot and 1 more to be sure of
+        of around 5.50xDAI to play - 5 for the game pot and 0.50 more to be sure of
         covering all the transaction fees you're likely to incur as you play.
       </div>
       <div className="paragraph">
@@ -41,7 +41,6 @@ export const HowToPlay = () => {
         prospective player's address. Players should confirm their addresses.
         Check that you have the number of players you expect before you start
         making proposals.
-      </div>
       <div className="paragraph">
         You may find that you need to refresh a few times, close and re-open
         Metamask, or even sign in to Metamask again to get it to work. That's

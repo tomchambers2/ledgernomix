@@ -12,7 +12,8 @@ export const About = () => {
       </div>
       <div className="paragraph">
         Play with your friends in real time, like a board game, or over a longer
-        time, like correspondence chess.
+        time, like correspondence chess. Either way, you'll need a minimum of 3
+        players, and ideally between 4 and 7
       </div>
       <div className="paragraph">
         Each game of Ledgernomix is a distributed autonomous organisation, or

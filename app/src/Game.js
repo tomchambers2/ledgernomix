@@ -422,7 +422,7 @@ export const Game = () => {
           </div>
         </div>
         <div className="column">
-          {!gameActive && isPlayer && (
+          {!gameActive && (
             <div className="payout panel">
               <div className="background-pattern"></div>
               <OrnateBorder></OrnateBorder>
@@ -431,6 +431,7 @@ export const Game = () => {
                 userPlayerAddress={account}
                 getPlayerName={getPlayerName}
                 gamePot={gamePot}
+                isPlayer={isPlayer}
               ></Payout>
             </div>
           )}
