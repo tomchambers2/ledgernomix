@@ -422,7 +422,7 @@ export const Game = () => {
           </div>
         </div>
         <div className="column">
-          {!gameActive && (
+          {!gameActive && isPlayer && (
             <div className="payout panel">
               <div className="background-pattern"></div>
               <OrnateBorder></OrnateBorder>
