@@ -29,9 +29,9 @@ export const HowToPlay = () => {
         using <a href="https://ramp.network/buy/">Ramp</a> or{" "}
         <a href="https://www.mtpelerin.com/">Mt Pellerin</a>, but they might
         take a few days to verify you. xDAI is stablised to the dollar, so $1.00
-        = 1.00xDAI. We'd recommend a balance of around 5.50xDAI for each player
-        - 5 for the game pot and 0.50 more to be sure of covering all the
-        transaction fees they might incur as you play.
+        = 1.00xDAI. Each player will need enough to cover the game stake ($0.05
+        in testing, but soon to be $5), and a few cents more to cover the
+        transasction fees they'll incur while playing.
       </div>
       <div className="paragraph">
         One player needs to create the game. This will generate a game name and
