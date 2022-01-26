@@ -38,13 +38,18 @@ export const Proposals = ({
   };
 
   useEffect(() => {
-    console.log("latest proposal vote", proposals[proposals.length - 1].votes);
-    if (
-      proposals[proposals.length - 1].votes.some(
-        ({ playerAddress: voter }) => voter === playerAddress
-      )
-    ) {
-      setVotePending(false);
+    if (proposals.length > 0) {
+      console.log(
+        "latest proposal vote",
+        proposals[proposals.length - 1].votes
+      );
+      if (
+        proposals[proposals.length - 1].votes.some(
+          ({ playerAddress: voter }) => voter === playerAddress
+        )
+      ) {
+        setVotePending(false);
+      }
     }
   }, [playerAddress, proposals]);
 
