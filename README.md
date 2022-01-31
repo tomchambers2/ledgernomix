@@ -1,8 +1,23 @@
 # Ledgernomix (nomDAO)
 
-Ledgernomix is a game based on Nomic games where players can change the rules to win the game. In our version the rules are based around changing numerical values, mostly based on token redistribution per turn. The turns are based around proposals - any player can make a proposal to change the rules, when the proposal is complete, the game moves on by one turn. When the number of proposals reaches the max, the game ends are and the tokens are divided up between the players.
+Ledgernomix is a game of political economy, played on a
+blockchain, with real cryptocurrency.
 
-Future ideas include turning each game into a token backed economy so players are able to buy into games they think are running well, and cash out if they want to leave. Because each game would be a separate token, players can choose to have fair redistribution and inflation or a more competitive, non-inflationary set of rules.
+Play with your friends in real time, like a board game, or
+over a longer time, like correspondence chess. Either way,
+you'll need a minimum of 3 players, or ideally between 4
+and 7.
+
+Each game of Ledgernomix is a distributed autonomous
+organisation, or DAO, governed by a contract that exists
+on the blockchain. You can also think of it as a
+self-contained model economy and model parliament, with
+you and your friends as the members.
+
+Ledgernomix is influenced by Peter Suber's game Nomic (1982) and Lizzie
+Magie's The Landlord's Game (AKA Monopoly). While it is intended to
+actually work as a game, it's also an art project about the potentials
+and pitfalls of decentralised systems.
 
 ## Backend
 
@@ -25,10 +40,4 @@ After running these you can now use the game in the browser at `http://localhost
 ```
 cd backend
 yarn test
-```
-
-## nGrok
-
-```
-ngrok start --all
 ```
