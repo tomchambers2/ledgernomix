@@ -2,6 +2,7 @@ import Web3 from "web3";
 import classNames from "classnames";
 import { gameConfig } from "./gameConfig";
 import { formatCurrency } from "./utils.js";
+import ReactTooltip from "react-tooltip";
 
 export const Scores = ({ players, getPlayerName }) => {
   if (!players) return <div>LOADING...</div>;
@@ -13,6 +14,7 @@ export const Scores = ({ players, getPlayerName }) => {
   return (
     <>
       <h2>Ledger</h2>
+      <ReactTooltip className="tooltip" effect="solid" />
       <div className="item">
         {players
           .slice()
@@ -23,7 +25,9 @@ export const Scores = ({ players, getPlayerName }) => {
               className={classNames("player", player.updated && "updated")}
             >
               <div className="player-score">
-                <div>{getPlayerName(player.playerAddress)}</div>
+                <div data-tip={"Player address: " + player.playerAddress}>
+                  {getPlayerName(player.playerAddress)}
+                </div>
                 <div>
                   {formatCurrency(Web3.utils.fromWei(player.balance))}{" "}
                   {gameConfig.gameCurrency}
