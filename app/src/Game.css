@@ -48,16 +48,15 @@
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
-  padding-right: 48px;
-  flex-basis: 22%;
+  padding-right: 20px;
+  flex-basis: 25%;
 }
 .game-metadata-item {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   border: 0 var(--game-line-width) solid black;
-  padding: var(--game-border);
-  margin: var(--game-border) 0 0 0;
+  padding: calc(var(--game-border) / 2);
   text-align: center;
 }
 

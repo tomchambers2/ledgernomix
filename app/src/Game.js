@@ -314,6 +314,13 @@ export const Game = () => {
       (pendingPlayers.length + 1) * getRuleValue("Entry fee")) ||
     0;
 
+  const totalPoints =
+    (players &&
+      players.reduce((previousValue, currentValue) => {
+        return previousValue + parseInt(currentValue.balance);
+      }, 0)) ||
+    0;
+
   if (setupStatus !== "complete") return <Setup />;
 
   return (
@@ -389,6 +396,21 @@ export const Game = () => {
               <div>
                 {formatCurrency(weiToEth(gamePot).toFixed(2) || 0)}{" "}
                 {cryptocurrency}
+              </div>
+            </div>
+            <div className="game-metadata-item">
+              <div>Point Supply</div>
+              <div className="join-line"></div>
+              <div>
+                {formatCurrency(weiToEth(totalPoints).toFixed(2) || 0)} pts
+              </div>
+            </div>
+            <div className="game-metadata-item">
+              <div>Rate</div>
+              <div className="join-line"></div>
+              <div>
+                {formatCurrency(1.0)} {cryptocurrency} =&nbsp;
+                {formatCurrency((totalPoints / gamePot).toFixed(2) || 0)} pts
               </div>
             </div>
           </div>
