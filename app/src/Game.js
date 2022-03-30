@@ -390,7 +390,10 @@ export const Game = () => {
               <div className="join-line"></div>
               <div>{(players && players.length) || 0}</div>
             </div>
-            <div className="game-metadata-item">
+            <div
+              className="game-metadata-item"
+              data-tip={"The amount of cryptocurrency in this game's pot"}
+            >
               <div>Pot</div>
               <div className="join-line"></div>
               <div>
@@ -398,14 +401,22 @@ export const Game = () => {
                 {cryptocurrency}
               </div>
             </div>
-            <div className="game-metadata-item">
-              <div>Point Supply</div>
+            <div
+              className="game-metadata-item"
+              data-tip={"Total amount of points in this game currently"}
+            >
+              <div>Supply</div>
               <div className="join-line"></div>
               <div>
                 {formatCurrency(weiToEth(totalPoints).toFixed(2) || 0)} pts
               </div>
             </div>
-            <div className="game-metadata-item">
+            <div
+              className="game-metadata-item"
+              data-tip={
+                "Current exchange rate between this game's points and xDAI"
+              }
+            >
               <div>Rate</div>
               <div className="join-line"></div>
               <div>

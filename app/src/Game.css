@@ -23,7 +23,7 @@
 }
 
 .game-timers-container {
-  flex-basis: 22%;
+  flex-basis: 18%;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -49,7 +49,7 @@
   flex-direction: column;
   justify-content: space-evenly;
   padding-right: 20px;
-  flex-basis: 25%;
+  flex-basis: 30%;
 }
 .game-metadata-item {
   display: flex;
