@@ -65,7 +65,7 @@ contract GameFactory {
                 0, //Poll Tax
                 0, //Wealth Tax
                 0, // Wealth Tax Threshold
-                0, //Proposal fee
+                350, //Proposal fee
                 0 // dividend
             )
         );
