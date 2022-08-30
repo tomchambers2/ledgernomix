@@ -14,7 +14,7 @@ export const gameConfig = {
           symbol: "xDai", // 2-6 characters long
           decimals: 18,
         },
-        rpcUrls: ["https://rpc.xdaichain.com/"],
+        rpcUrls: ["https://rpc.gnosischain.com/"],
         blockExplorerUrls: ["https://blockscout.com/xdai/mainnet/"],
       },
     },
