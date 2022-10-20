@@ -33,7 +33,10 @@ export const Web3Provider = ({ children }) => {
 
   useEffect(() => {
     const fn = async () => {
-      if (!window.ethereum) return setSetupStatus("install");
+      if (!window.ethereum) {
+        console.log("no window.ethereum changing setupStatus");
+        return setSetupStatus("install");
+      }
       const web3 = new Web3(window.ethereum);
       setWeb3(web3);
 

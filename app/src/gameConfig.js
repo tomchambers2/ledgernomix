@@ -8,10 +8,10 @@ export const gameConfig = {
       networkId: 100,
       params: {
         chainId: "0x64", // A 0x-prefixed hexadecimal string
-        chainName: "Gnosis Chain",
+        chainName: "Gnosis",
         nativeCurrency: {
-          name: "xDai",
-          symbol: "xDai", // 2-6 characters long
+          name: "xDAI",
+          symbol: "xDAI", // 2-6 characters long
           decimals: 18,
         },
         rpcUrls: ["https://rpc.gnosischain.com/"],
