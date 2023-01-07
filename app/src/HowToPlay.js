@@ -27,11 +27,10 @@ export const HowToPlay = () => {
         someone who already has some xDAI, who can make a transfer to you
         instantly. Alternatively, you can buy xDAI (not to be confused with DAI)
         using <a href="https://ramp.network/buy/">Ramp</a> or{" "}
-        <a href="https://www.mtpelerin.com/">Mt Pelerin</a>, but they might
-        take a few days to verify you. xDAI is stablised to the dollar, so $1.00
-        = 1.00xDAI. Each player will need enough to cover the game stake ($0.05
-        in testing, but soon to be $5), and a few cents more to cover the
-        transasction fees they'll incur while playing.
+        <a href="https://www.mtpelerin.com/">Mt Pelerin</a>, but they might take
+        a few days to verify you. xDAI is stablised to the dollar, so $1.00 =
+        1.00xDAI. Each player will need $5 to cover the game stake, and up to 5
+        cents more to cover the transasction fees they'll incur while playing.
       </div>
       <div className="paragraph">
         One player needs to create the game. This will generate a game name and
