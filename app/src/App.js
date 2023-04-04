@@ -99,10 +99,10 @@ function App() {
                   <div className="setup panel">
                     <div className="background-pattern"></div>
                     <OrnateBorder></OrnateBorder>
-                    <h1 className="logo">Playtest</h1>
+                    <h1 className="logo">Mailing List</h1>
                     <div className="paragraph">
-                      Enter your email below to join the mailing list for our
-                      playtest group who will help test and shape the game
+                      Enter your email below to join the mailing list and be
+                      notified when games are happening
                     </div>
                     <div id="mc_embed_signup" className="email-signup">
                       <form
