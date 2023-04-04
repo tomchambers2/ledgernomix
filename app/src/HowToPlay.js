@@ -72,7 +72,7 @@ export const HowToPlay = () => {
         to define how long a game might last. If you opt to play with your
         friends in real time, like a board game, either over video chat or in
         person, then it might take a couple of hours. You can also choose to
-        play over over a longer time, treating it like correspondence chess, and
+        play over a longer time, treating it like correspondence chess, and
         exchanging messages to discuss proposals.
       </div>
       <div className="paragraph">
