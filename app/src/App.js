@@ -3,6 +3,8 @@ import { Game } from "./Game";
 import { GameList } from "./GameList";
 import { OrnateBorder } from "./OrnateBorder";
 import theGameOfImage from "./backgrounds/TheGameOfTheRulesOf-Coin05.svg";
+import inPersonPlayPhotoA from "./backgrounds/LedgernomixInPersonPhotoATransparent.png";
+import inPersonPlayPhotoB from "./backgrounds/LedgernomixInPersonPhotoBTransparent.png";
 import { ToastContainer } from "react-toastify";
 import "./App.css";
 import { About } from "./About";
@@ -69,12 +71,22 @@ function App() {
                       Ledgernomix is a game of political economy, played on a
                       blockchain, with real cryptocurrency.
                     </div>
+                    <img
+                      className="play-photo"
+                      alt="People Playing Ledgernomix in Person"
+                      src={inPersonPlayPhotoA}
+                    ></img>
                     <div className="paragraph">
                       Play with your friends in real time, like a board game, or
                       over a longer time, like correspondence chess. Either way,
                       you'll need a minimum of 3 players, or ideally between 4
                       and 7.
                     </div>
+                    <img
+                      className="play-photo"
+                      alt="People Playing Ledgernomix in Person"
+                      src={inPersonPlayPhotoB}
+                    ></img>
                     <div className="paragraph">
                       Each game of Ledgernomix is a distributed autonomous
                       organisation, or DAO, governed by a contract that exists
