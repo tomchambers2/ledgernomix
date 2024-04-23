@@ -71,7 +71,7 @@ export const About = () => {
       </div>
       <div className="paragraph">
         Contact the creators at{" "}
-        <a href="mailto:ledgernomix@gmail.com">ledgernomix@gmail.com</a>
+        <a href="mailto:ledgernomix@gmail.com">ledgernomix@gmail.com</a> or find us at <a href="https://tomchambers.me">tomchambers.me</a> and <a href="https://joepatrickshellard.com"> joepatrickshellard.com</a>
       </div>
       <div className="paragraph">
         All the code can be viewed at{" "}
