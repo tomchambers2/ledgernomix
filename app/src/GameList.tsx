@@ -67,18 +67,18 @@ export const GameList = () => {
 
   useEffect(() => {
     if (!gameFactory) return;
-    const subscription = gameFactory.events.NewGame().on("data", (data) => {
+    const subscription = gameFactory.events.NewGame();
+    subscription.on("data", (data) => {
       fireNotification("New game created", "success");
       const updatedGamesList = gamesList.slice();
-      updatedGamesList[data.returnValues.gameIndex] =
+      updatedGamesList[data.returnValues.gameIndex as number] =
         data.returnValues.gameAddress;
       setGamesList(updatedGamesList);
     });
 
-    return () =>
-      subscription.unsubscribe((err) => {
-        if (err) console.error(err);
-      });
+    return () => {
+      subscription.unsubscribe();
+    }
   }, [gameFactory, gamesList]);
 
   const newGameHandler = (gameFee) => async () => {

@@ -4,12 +4,19 @@ import { gameConfig } from "./gameConfig";
 import { formatCurrency } from "./utils";
 import ReactTooltip from "react-tooltip";
 
-export const Scores = ({ players, getPlayerName }) => {
+export const Scores = ({
+  players,
+  getPlayerName,
+}) => {
   if (!players) return <div>LOADING...</div>;
 
-  const topScore = parseInt(Web3.utils.fromWei(
-    players.slice().sort((p1, p2) => p2.balance - p1.balance)[0].balance, "ether"
-  ), 10);
+  const topScoreWei = players.slice().sort((p1, p2) => {
+    const p1Balance = parseInt(Web3.utils.fromWei(p1.balance, "ether"));
+    const p2Balance = parseInt(Web3.utils.fromWei(p2.balance, "ether"));
+    return p2Balance - p1Balance;
+  })[0].balance;
+
+  const topScore = parseInt(Web3.utils.fromWei(topScoreWei, "ether"));
 
   return (
     <>
@@ -18,7 +25,11 @@ export const Scores = ({ players, getPlayerName }) => {
       <div className="item">
         {players
           .slice()
-          .sort((p1, p2) => p2.balance - p1.balance)
+          .sort((p1, p2) => {
+            const p1Balance = parseInt(Web3.utils.fromWei(p1.balance, "ether"));
+            const p2Balance = parseInt(Web3.utils.fromWei(p2.balance, "ether"));
+            return p2Balance - p1Balance;
+          })
           .map((player, i) => (
             <div
               key={i}
@@ -36,8 +47,11 @@ export const Scores = ({ players, getPlayerName }) => {
               <div
                 className="player-score-bar"
                 style={{
-                  width: `${(parseInt(Web3.utils.fromWei(player.balance, "ether"), 10) / topScore) * 100
-                    }%`,
+                  width: `${
+                    (parseInt(Web3.utils.fromWei(player.balance, "ether"), 10) /
+                      topScore) *
+                    100
+                  }%`,
                 }}
               ></div>
             </div>

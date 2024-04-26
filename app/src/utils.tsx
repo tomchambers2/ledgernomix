@@ -1,9 +1,16 @@
-export function weiToEth(wei) {
+export function weiToEth(wei: number | bigint) {
   //two steps avoids error where integers ended up like 0.999999999995
-  const decagwei = wei / 10000000000;
-  const eth = decagwei / 100000000;
-  // const eth = wei / 1000000000000000000;
-  return eth;
+  if (typeof wei === "bigint") {
+    const decagwei = wei / 10000000000n;
+    const eth = decagwei / 100000000n;
+    // const eth = wei / 1000000000000000000;
+    return Number(eth);
+  } else {
+    const decagwei = wei / 10000000000;
+    const eth = decagwei / 100000000;
+    // const eth = wei / 1000000000000000000;
+    return eth;
+  }
 }
 
 export function getNumberWithOrdinal(n) {

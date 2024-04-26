@@ -151,7 +151,7 @@ export const Game = () => {
     async (name) => {
       if (!game) return;
       try {
-        const value = await game.methods[name].call().call();
+        const value = await game.methods[name].call({}).call();
         return value;
       } catch (e) {
         fireNotification(`Failed to get ${name}`);
@@ -195,12 +195,12 @@ export const Game = () => {
     async (proposals) => {
       const updatedProposals = await Promise.all(
         proposals.slice().map(async (proposal, i) => {
-          const votesLength = await game.methods.getVotesLength(i).call();
+          const votesLength = await game.methods.getVotesLength(i).call() as number;
           proposal.votes = [];
           for (let voteIndex = 0; voteIndex < votesLength; voteIndex++) {
             const { playerAddress, vote } = await game.methods
               .getVote(i, voteIndex)
-              .call();
+              .call() as { playerAddress: string; vote: boolean };
             proposal.votes.push({ playerAddress, vote });
           }
           return proposal;
@@ -243,7 +243,7 @@ export const Game = () => {
   }, [game, mapEvent, players, proposals, rules]);
 
   const fetchGameEndTime = useCallback(async () => {
-    const gameEndTimestamp = await getValue("gameEndTime");
+    const gameEndTimestamp = Number(await getValue("gameEndTime"));
 
     var date = new Date(gameEndTimestamp * 1000);
 
@@ -467,7 +467,6 @@ export const Game = () => {
                 userPlayerAddress={account}
                 getPlayerName={getPlayerName}
                 gamePot={gamePot}
-                // isPlayer={isPlayer}
               ></Payout>
             </div>
           )}
@@ -504,9 +503,10 @@ export const Game = () => {
             {events
               .slice()
               .reverse()
-              .map((event) => (
-                <div className="item">{event}</div>
-              ))}
+              .map((event, i) => {
+                return <div key={i} className="item">{event}</div>;
+              }
+              )}
           </div>
         </div>
       </div>
