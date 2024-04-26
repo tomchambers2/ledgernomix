@@ -1,4 +1,4 @@
-import Web3 from "web3";
+import { Web3 } from 'web3';
 import { gameConfig } from "./gameConfig";
 import { getNumberWithOrdinal, formatCurrency } from "./utils";
 import "./Payout.css";
@@ -23,7 +23,7 @@ export const Payout = ({
   if (!players || !player) return <div>LOADING...</div>;
 
   const totalBalance = players.reduce(
-    (acc, { balance }) => acc + parseInt(Web3.utils.fromWei(balance)),
+    (acc, { balance }) => acc + parseInt(Web3.utils.fromWei(balance, "ether")),
     0
   );
 
@@ -38,7 +38,7 @@ export const Payout = ({
 
   if (!player) return <div></div>;
 
-  const playerBalance = Web3.utils.fromWei(player.balance);
+  const playerBalance = parseInt(Web3.utils.fromWei(player.balance, "ether"), 10);
 
   return (
     <div>
@@ -71,7 +71,7 @@ export const Payout = ({
             <div>Score</div>
             <div className="join-line"></div>
             <div>
-              {formatCurrency(Web3.utils.fromWei(player.balance))}{" "}
+              {formatCurrency(Web3.utils.fromWei(player.balance, "ether"))}{" "}
               {gameConfig.gameCurrency}
             </div>
           </div>
@@ -93,26 +93,26 @@ export const Payout = ({
               <div>
                 {formatCurrency(
                   (playerBalance / totalBalance) *
-                    Web3.utils.fromWei(String(gamePot))
+                  parseInt(Web3.utils.fromWei(String(gamePot), "ether"))
                 )}{" "}
                 {cryptocurrency}
               </div>
             </div>
           )) || (
-            <div className="split">
-              <div>Payout</div>
-              <div className="join-line">
-                <div className="join-line"></div>
+              <div className="split">
+                <div>Payout</div>
+                <div className="join-line">
+                  <div className="join-line"></div>
+                </div>
+                <div>
+                  {formatCurrency(
+                    (playerBalance / totalBalance) *
+                    parseInt(Web3.utils.fromWei(String(gamePot), "ether"), 10)
+                  )}{" "}
+                  {cryptocurrency}
+                </div>
               </div>
-              <div>
-                {formatCurrency(
-                  (playerBalance / totalBalance) *
-                    Web3.utils.fromWei(String(gamePot))
-                )}{" "}
-                {cryptocurrency}
-              </div>
-            </div>
-          )}
+            )}
         </div>
         <button
           className="navigator"

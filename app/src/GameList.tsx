@@ -10,7 +10,7 @@ import { useAccount } from "./useAccount";
 import { Redirect } from "react-router-dom";
 import { Setup } from "./Setup";
 import { gameConfig } from "./gameConfig";
-import { formatCurrency } from "./utils.js";
+import { formatCurrency } from "./utils";
 const { cryptoEntryFee } = gameConfig;
 
 const Web3 = require("web3");

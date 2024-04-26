@@ -41,3 +41,12 @@ After running these you can now use the game in the browser at `http://localhost
 cd backend
 yarn test
 ```
+
+## Deployment
+
+Set the `XDAI_PRIVATE_KEY` environment variable to the private key of the Gnosis chain account you want to use
+
+Run
+```
+yarn deploy:mainnet
+```

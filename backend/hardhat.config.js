@@ -20,7 +20,7 @@ module.exports = {
       // url: "http://127.0.0.1:8545",
     },
     dai: {
-      url: "https://dai.poa.network",
+      url: "https://rpc.gnosischain.com",
       chainId: 100,
       accounts: [process.env.XDAI_PRIVATE_KEY],
     },

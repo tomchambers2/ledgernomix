@@ -98,7 +98,6 @@ export const Proposals = ({
                 createProposal={createProposal}
                 isPlayer={isPlayer}
                 isPendingPlayer={isPendingPlayer}
-                gameActive={gameActive}
                 players={players}
                 proposals={proposals}
                 playerIndex={playerIndex}

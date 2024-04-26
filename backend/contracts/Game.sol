@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.1;
 
-import "hardhat/console.sol";
-
 library Calculations {
     function calculateQuorum(uint256 quorum, uint256 numPlayers)
         public

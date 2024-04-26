@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+        "target": "ES2021",
+        "jsx": "react-jsx",
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+    }
+}

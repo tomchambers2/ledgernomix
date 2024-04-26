@@ -1,28 +1,27 @@
 import { createContext, useState, useEffect } from "react";
 import { gameConfig } from "./gameConfig";
 
-const Web3 = require("web3");
+import { Web3 } from 'web3';
+import { RegisteredSubscription } from "web3/lib/commonjs/eth.exports";
 
-export const Web3Context = createContext();
+export const Web3Context = createContext<{
+  web3: Web3<RegisteredSubscription>;
+  setupStatus: string;
+  connect: () => Promise<void>;
+}>(null);
 
 const network = gameConfig.networks.gnosis;
 
-function connectToNetwork(web3) {
+async function connectToNetwork(web3) {
   const params = network.params;
 
-  web3.eth.requestAccounts((error, accounts) => {
-    window.ethereum
-      .request({
-        method: "wallet_addEthereumChain",
-        params: [params, accounts[0]],
-      })
-      .then((result) => {
-        console.log(result);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  });
+  const accounts = await web3.eth.requestAccounts();
+  await window.ethereum
+    .request({
+      method: "wallet_addEthereumChain",
+      params: [params, accounts[0]],
+    });
+
 }
 
 export const Web3Provider = ({ children }) => {
@@ -41,9 +40,9 @@ export const Web3Provider = ({ children }) => {
       setWeb3(web3);
 
       try {
-        const networkId = await web3.eth.net.getId();
+        const networkId = (await web3.eth.net.getId()).toString();
 
-        if (networkId !== network.networkId) {
+        if (networkId !== network.networkId.toString()) {
           console.log("wrong network");
           return setSetupStatus("setnetwork");
         }

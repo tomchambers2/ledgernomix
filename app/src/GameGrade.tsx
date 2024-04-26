@@ -92,7 +92,7 @@ export const GameGrade = ({ players, proposals }) => {
             "Graded on the proportion of proposals that were rejected",
         },
       ].map((statistic) => (
-        <Statistic key={statistic.title} {...statistic}></Statistic>
+        <Statistic {...statistic}></Statistic>
       ))}
     </>
   );

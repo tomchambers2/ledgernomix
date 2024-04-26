@@ -12,7 +12,7 @@ import { Proposals } from "./Proposals";
 import { Loader } from "./Loader";
 import { default as GameContract } from "./contracts/Game.json";
 import { useParams } from "react-router-dom";
-import { weiToEth, getNumberWithOrdinal, formatCurrency } from "./utils.js";
+import { weiToEth, getNumberWithOrdinal, formatCurrency } from "./utils";
 import { PlayerIcon } from "./PlayerIcon";
 import { Clock } from "./Clock";
 import { ProposalCounter } from "./ProposalCounter";
@@ -41,7 +41,7 @@ export const Game = () => {
   const [isPlayer, setIsPlayer] = useState(null);
   const [isPendingPlayer, setIsPendingPlayer] = useState(null);
   const [initialDataLoaded, setInitialDataLoaded] = useState(false);
-  const [gameEndTime, setGameEndTime] = useState(0);
+  const [gameEndTime, setGameEndTime] = useState<JSX.Element | number>(0);
 
   useEffect(() => {
     if (!account || !players) return;
@@ -212,12 +212,12 @@ export const Game = () => {
   );
 
   const fetchRules = useCallback(async () => {
-    const rules = await getArray("rules", setRules);
+    const rules = await getArray("rules");
     setRules(rules);
   }, [getArray]);
 
   const fetchProposals = useCallback(async () => {
-    const proposals = await getArray("proposals", setProposals);
+    const proposals = await getArray("proposals");
     if (proposals) {
       const proposalsWithVotes = await fetchVotes(proposals);
       setProposals(proposalsWithVotes);
@@ -225,12 +225,12 @@ export const Game = () => {
   }, [getArray, fetchVotes]);
 
   const fetchPlayers = useCallback(async () => {
-    const players = await getArray("players", setPlayers);
+    const players = await getArray("players");
     setPlayers(players);
   }, [getArray]);
 
   const fetchPendingPlayers = useCallback(async () => {
-    const pendingPlayers = await getArray("pendingPlayers", setPendingPlayers);
+    const pendingPlayers = await getArray("pendingPlayers");
     setPendingPlayers(pendingPlayers);
   }, [getArray]);
 
@@ -262,14 +262,15 @@ export const Game = () => {
       timeStyle: "short",
     });
 
+    const endTime = <>
+      <div>
+        {formattedDate} {formattedMonth}
+      </div>
+      <div>at</div>
+      <div>{formattedTime} UTC</div>
+    </>;
     setGameEndTime(
-      <>
-        <div>
-          {formattedDate} {formattedMonth}
-        </div>
-        <div>at</div>
-        <div>{formattedTime} UTC</div>
-      </>
+      endTime
     );
   }, [getValue]);
 
@@ -354,7 +355,9 @@ export const Game = () => {
           {(!gameActive && (
             <div className="game-ended-container">
               Game Finished
-              <div>{gameEndTime}</div>
+              <div>
+                {gameEndTime}
+              </div>
             </div>
           )) || (
             <div className="game-timers-container">
@@ -464,7 +467,7 @@ export const Game = () => {
                 userPlayerAddress={account}
                 getPlayerName={getPlayerName}
                 gamePot={gamePot}
-                isPlayer={isPlayer}
+                // isPlayer={isPlayer}
               ></Payout>
             </div>
           )}

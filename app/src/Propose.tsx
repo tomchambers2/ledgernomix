@@ -9,7 +9,6 @@ export const Propose = ({
   createProposal,
   isPlayer,
   isPendingPlayer,
-  gameActive,
   proposals,
   players,
   playerIndex,
@@ -27,7 +26,7 @@ export const Propose = ({
     .map((rule, i) => ({ value: i, label: rule.name }))
     .filter(({ label }) => !ruleConfig[label].unproposable);
   const customStyles = {
-    control: (provided, state) => ({
+    control: (provided) => ({
       ...provided,
       borderRadius: 0,
       borderWidth: 0,
@@ -35,12 +34,12 @@ export const Propose = ({
       color: "white",
       boxShadow: "none",
     }),
-    placeholder: (provided, state) => ({
+    placeholder: (provided) => ({
       ...provided,
       backgroundColor: "black",
       color: "white",
     }),
-    menu: (provided, state) => ({
+    menu: (provided) => ({
       ...provided,
       backgroundColor: "black",
       color: "white",
@@ -50,22 +49,22 @@ export const Propose = ({
       backgroundColor: state.isFocused ? "white" : "black",
       color: state.isFocused ? "black" : "white",
     }),
-    indicatorContainer: (provided, state) => ({
+    indicatorContainer: (provided) => ({
       ...provided,
       backgroundColor: "black",
       color: "white",
     }),
-    indicatorsContainer: (provided, state) => ({
+    indicatorsContainer: (provided) => ({
       ...provided,
       backgroundColor: "black",
       color: "white",
     }),
-    dropdownIndicator: (provided, state) => ({
+    dropdownIndicator: (provided) => ({
       ...provided,
       backgroundColor: "black",
       color: "white",
     }),
-    singleValue: (provided, state) => ({
+    singleValue: (provided) => ({
       ...provided,
       backgroundColor: "black",
       color: "white",
@@ -82,9 +81,9 @@ export const Propose = ({
       setProposedValueError(null);
     }
     if (
-      parseInt(proposedValue) >=
+      proposedValue >=
         parseInt(rules[proposedRuleOption.value].lowerBound) &&
-      parseInt(proposedValue) <=
+      proposedValue <=
         parseInt(rules[proposedRuleOption.value].upperBound)
     ) {
       return setProposedValueValid(true);
@@ -160,7 +159,7 @@ export const Propose = ({
               be changed to{" "}
               <div className="input-container">
                 <input
-                  onChange={({ target: { value } }) => setProposedValue(value)}
+                  onChange={({ target: { value } }) => setProposedValue(parseInt(value))}
                   type="text"
                   value={proposedValue}
                   disabled={!proposedRuleOption}

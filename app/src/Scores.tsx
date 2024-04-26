@@ -1,15 +1,15 @@
-import Web3 from "web3";
+import { Web3 } from "web3";
 import classNames from "classnames";
 import { gameConfig } from "./gameConfig";
-import { formatCurrency } from "./utils.js";
+import { formatCurrency } from "./utils";
 import ReactTooltip from "react-tooltip";
 
 export const Scores = ({ players, getPlayerName }) => {
   if (!players) return <div>LOADING...</div>;
 
-  const topScore = Web3.utils.fromWei(
-    players.slice().sort((p1, p2) => p2.balance - p1.balance)[0].balance
-  );
+  const topScore = parseInt(Web3.utils.fromWei(
+    players.slice().sort((p1, p2) => p2.balance - p1.balance)[0].balance, "ether"
+  ), 10);
 
   return (
     <>
@@ -29,16 +29,15 @@ export const Scores = ({ players, getPlayerName }) => {
                   {getPlayerName(player.playerAddress)}
                 </div>
                 <div>
-                  {formatCurrency(Web3.utils.fromWei(player.balance))}{" "}
+                  {formatCurrency(Web3.utils.fromWei(player.balance, "ether"))}{" "}
                   {gameConfig.gameCurrency}
                 </div>
               </div>
               <div
                 className="player-score-bar"
                 style={{
-                  width: `${
-                    (Web3.utils.fromWei(player.balance) / topScore) * 100
-                  }%`,
+                  width: `${(parseInt(Web3.utils.fromWei(player.balance, "ether"), 10) / topScore) * 100
+                    }%`,
                 }}
               ></div>
             </div>

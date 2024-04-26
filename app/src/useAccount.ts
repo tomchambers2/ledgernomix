@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
+import Web3 from "web3";
 
-export const useAccount = (web3) => {
-  const [account, setAccount] = useState(null);
+export const useAccount = (web3: Web3) => {
+  const [account, setAccount] = useState<string | null>(null);
 
   useEffect(() => {
     if (!web3) return;

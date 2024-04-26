@@ -1,7 +1,7 @@
 import "./Statistic.css";
 import ReactTooltip from "react-tooltip";
 
-export const Statistic = ({ title, number, avg, description }) => {
+export const Statistic = ({ title, number, description }) => {
   return (
     <>
       <ReactTooltip className="tooltip" effect="solid" html={true} />

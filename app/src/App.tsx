@@ -127,7 +127,7 @@ function App() {
                         noValidate
                       >
                         <div id="mc_embed_signup_scroll">
-                          <label for="mce-EMAIL">Email Address: </label>
+                          <label htmlFor="mce-EMAIL">Email Address: </label>
                           <div className="mc-field-group playtest-inputs">
                             <input
                               type="email"
@@ -156,7 +156,7 @@ function App() {
                             <input
                               type="text"
                               name="b_eb3bf72ef330a9ffb75f7e687_082ec84faf"
-                              tabIndex="-1"
+                              tabIndex={-1}
                             />
                           </div>
 

@@ -40,7 +40,6 @@ export const Setup = () => {
             <div className="paragraph"></div>
             <button
               className="button setup-button"
-              target="_blank"
               rel="noreferrer"
               onClick={connect}
             >
