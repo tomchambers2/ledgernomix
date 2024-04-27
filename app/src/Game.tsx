@@ -326,7 +326,7 @@ export const Game = () => {
 
   return (
     <>
-      <Tooltip id="join-warning" className="tooltip" />
+      <Tooltip id="game-tip" className="tooltip" />
       {gameActive && !isPlayer && !isPendingPlayer && rules && (
         <div className="game-icons-container">
           <div className="game-icon-panel">
@@ -334,7 +334,7 @@ export const Game = () => {
             <button
               className="game-button"
               onClick={joinGameHandler}
-              data-tooltip-id="join-warning"
+              data-tooltip-id="game-tip"
               data-tooltip-content={"WARNING: Only join a game with players you trust"}
             >
               <div>
@@ -377,7 +377,8 @@ export const Game = () => {
               <h2>
                 <span
                   className="game-address"
-                  data-tip={"Contract Address: " + gameAddress}
+                  data-tooltip-id="game-tip"
+                  data-tooltip-content={"Contract Address: " + gameAddress}
                 >
                   Game '
                   {gameAddress.substr(
@@ -396,7 +397,8 @@ export const Game = () => {
             </div>
             <div
               className="game-metadata-item"
-              data-tip={"The amount of cryptocurrency in this game's pot"}
+              data-tooltip-content={"The amount of cryptocurrency in this game's pot"}
+              data-tooltip-id="game-tip"
             >
               <div>Pot</div>
               <div className="join-line"></div>
@@ -407,7 +409,8 @@ export const Game = () => {
             </div>
             <div
               className="game-metadata-item"
-              data-tip={"Total amount of points in this game currently"}
+              data-tooltip-content={"Total amount of points in this game currently"}
+              data-tooltip-id="game-tip"
             >
               <div>Supply</div>
               <div className="join-line"></div>
@@ -417,9 +420,10 @@ export const Game = () => {
             </div>
             <div
               className="game-metadata-item"
-              data-tip={
+              data-tooltip-content={
                 "Current exchange rate between this game's points and xDAI"
               }
+              data-tooltip-id="game-tip"
             >
               <div>Rate</div>
               <div className="join-line"></div>
@@ -433,10 +437,10 @@ export const Game = () => {
         <div className="player-details-panel panel">
           <div className="background-pattern"></div>
           <OrnateBorder></OrnateBorder>
-          <div data-tip={"Your address: " + account}>
+          <div data-tooltip-content={"Your address: " + account} data-tooltip-id="game-tip">
             <PlayerIcon address={account}></PlayerIcon>
           </div>
-          <div className="PlayerID" data-tip={"Your address: " + account}>
+          <div className="PlayerID" data-tooltip-content={"Your address: " + account} data-tooltip-id="game-tip">
             {getPlayerName(account)}{" "}
           </div>
         </div>
