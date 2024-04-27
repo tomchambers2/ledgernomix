@@ -210,9 +210,9 @@ describe("Game", () => {
 
   describe("playerPermission", () => {
     describe("disallowed actions", () => {
-      it("should not allow a player to propose to join again if they are pending", async () => {});
+      it("should not allow a player to propose to join again if they are pending", async () => { });
 
-      it("should not allow a player to propose to join if they are a player", async () => {});
+      it("should not allow a player to propose to join if they are a player", async () => { });
 
       it("should not allow a player to propose if the player has not been admitted", async () => {
         await expect(
@@ -247,7 +247,7 @@ describe("Game", () => {
         await game.createProposal(0, 30);
       });
 
-      it.only("should allow a player in the game to admit a player", async () => {
+      it("should allow a player in the game to admit a player", async () => {
         await game.connect(players[1]).joinGame({
           value: "5000000000000000000",
         });

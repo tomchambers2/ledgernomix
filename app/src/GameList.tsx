@@ -11,9 +11,8 @@ import { Redirect } from "react-router-dom";
 import { Setup } from "./Setup";
 import { gameConfig } from "./gameConfig";
 import { formatCurrency } from "./utils";
+import { Web3 } from "web3";
 const { cryptoEntryFee } = gameConfig;
-
-const Web3 = require("web3");
 
 export const GameList = () => {
   const { web3, setupStatus } = useContext(Web3Context);
@@ -84,7 +83,7 @@ export const GameList = () => {
     try {
       const result = await contractFn(gameFactory, "newGame", {
         from: account,
-        value: Web3.utils.toWei(gameFee),
+        value: Web3.utils.toWei(gameFee, "ether"),
       });
 
       const newGameAddress = result.events.NewGame.returnValues.gameAddress;

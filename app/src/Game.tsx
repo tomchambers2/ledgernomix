@@ -47,7 +47,6 @@ export const Game = () => {
     if (!account || !players) return;
     const result = players.some(
       ({ playerAddress }) => {
-        console.log("playerAddress", playerAddress, "account", account, "result", playerAddress === account)
         return account === playerAddress
       }
     );
@@ -100,7 +99,7 @@ export const Game = () => {
                 {account.substring(0, 5)}...
                 {account.substring(38, 42)}
               </div>
-              WAITING
+              ON HOLD
             </div>
           );
         else return <span>SPECTATOR</span>;
