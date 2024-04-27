@@ -1,13 +1,13 @@
 import { ruleConfig } from "./ruleConfig";
 import classNames from "classnames";
 import "./Rules.css";
-import ReactTooltip from "react-tooltip";
+import { Tooltip } from "react-tooltip";
 
 export const Rules = ({ rules }) => {
   return (
     <>
       <h2>Rules</h2>
-      <ReactTooltip className="tooltip" effect="solid" />
+      <Tooltip className="tooltip" />
       {rules
         .map((rule) => ({ rule, ruleConfig: ruleConfig[rule.name] }))
         .filter(({ ruleConfig }) => !ruleConfig.hidden)

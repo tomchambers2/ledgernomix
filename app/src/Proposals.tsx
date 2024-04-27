@@ -6,7 +6,7 @@ import { useContractFn } from "./useContractFn";
 import { default as GameContract } from "./contracts/Game.json";
 import { useParams } from "react-router-dom";
 import { ruleConfig } from "./ruleConfig";
-import ReactTooltip from "react-tooltip";
+import { Tooltip } from "react-tooltip";
 import { PlayerIcon } from "./PlayerIcon";
 import { useEffect, useState } from "react";
 
@@ -64,7 +64,7 @@ export const Proposals = ({
   return (
     <>
       <h2>Proposals</h2>
-      <ReactTooltip className="tooltip" effect="solid" />
+      <Tooltip className="tooltip" />
       {isPlayer &&
         pendingPlayers &&
         pendingPlayers
@@ -124,7 +124,7 @@ export const Proposals = ({
             <div
               className={classNames("title", proposal.complete && "complete")}
             >
-              <ReactTooltip className="tooltip" effect="solid" />
+              <Tooltip className="tooltip" />
               <span
                 data-tip={
                   ruleConfig[rules[proposal.ruleIndex].name].description

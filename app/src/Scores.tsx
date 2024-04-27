@@ -2,7 +2,7 @@ import { Web3 } from "web3";
 import classNames from "classnames";
 import { gameConfig } from "./gameConfig";
 import { formatCurrency } from "./utils";
-import ReactTooltip from "react-tooltip";
+import { Tooltip } from "react-tooltip";
 
 export const Scores = ({
   players,
@@ -21,7 +21,7 @@ export const Scores = ({
   return (
     <>
       <h2>Ledger</h2>
-      <ReactTooltip className="tooltip" effect="solid" />
+      <Tooltip className="tooltip" />
       <div className="item">
         {players
           .slice()

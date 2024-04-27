@@ -1,10 +1,10 @@
 import "./Statistic.css";
-import ReactTooltip from "react-tooltip";
+import { Tooltip } from "react-tooltip";
 
 export const Statistic = ({ title, number, description }) => {
   return (
     <>
-      <ReactTooltip className="tooltip" effect="solid" html={true} />
+      <Tooltip className="tooltip" />
       <div className="statistic" data-tip={description}>
         <div className="data">
           <div>{title}</div>

@@ -13,6 +13,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import "./Toast.css";
 import "./playtest.css";
 import { Web3Provider } from "./web3context";
+import 'react-tooltip/dist/react-tooltip.css'
 
 function App() {
   return (

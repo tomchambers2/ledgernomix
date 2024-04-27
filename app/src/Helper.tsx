@@ -1,11 +1,11 @@
-import ReactTooltip from "react-tooltip";
+import { Tooltip } from "react-tooltip";
 
 import "./Helper.css";
 
 export const Helper = ({ text }) => {
   return (
     <>
-      <ReactTooltip className="tooltip" effect="solid" />
+      <Tooltip className="tooltip" />
       <span className="helper" data-tip={text}></span>
     </>
   );

@@ -20,7 +20,7 @@ import { OrnateBorder } from "./OrnateBorder";
 import { GameGrade } from "./GameGrade";
 import { Payout } from "./Payout";
 import { gameConfig } from "./gameConfig";
-import ReactTooltip from "react-tooltip";
+import { Tooltip } from "react-tooltip";
 import { Web3Context } from "./web3context";
 import { useAccount } from "./useAccount";
 import { Setup } from "./Setup";
@@ -326,7 +326,7 @@ export const Game = () => {
 
   return (
     <>
-      <ReactTooltip className="tooltip" effect="solid" />
+      <Tooltip className="tooltip" />
       {gameActive && !isPlayer && !isPendingPlayer && rules && (
         <div className="game-icons-container">
           <div className="game-icon-panel">

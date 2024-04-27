@@ -1,5 +1,5 @@
 import "./ProposalCounter.css";
-import ReactTooltip from "react-tooltip";
+import { Tooltip } from "react-tooltip";
 
 export const ProposalCounter = ({ completeProposals, maxProposals }) => {
   let proposalsRemaining = maxProposals;
@@ -12,7 +12,7 @@ export const ProposalCounter = ({ completeProposals, maxProposals }) => {
       className="proposal-counter-container"
       data-tip={"The game ends when the final proposal has completed"}
     >
-      <ReactTooltip className="tooltip" effect="solid" />
+      <Tooltip className="tooltip" />
       <div className="proposal-counter-caption-container">
         <div className="proposal-counter-caption">Proposals Left: </div>
         <div className="proposal-counter-numbers">
