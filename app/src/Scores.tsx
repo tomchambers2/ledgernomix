@@ -21,7 +21,7 @@ export const Scores = ({
   return (
     <>
       <h2>Ledger</h2>
-      <Tooltip className="tooltip" />
+      <Tooltip id="player-address-tip" className="tooltip" />
       <div className="item">
         {players
           .slice()
@@ -36,7 +36,7 @@ export const Scores = ({
               className={classNames("player", player.updated && "updated")}
             >
               <div className="player-score">
-                <div data-tip={"Player address: " + player.playerAddress}>
+                <div data-tooltip-content={"Player address: " + player.playerAddress} data-tooltip-id="player-address-tip">
                   {getPlayerName(player.playerAddress)}
                 </div>
                 <div>

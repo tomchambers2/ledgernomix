@@ -33,7 +33,6 @@ export const Web3Provider = ({ children }) => {
   useEffect(() => {
     const fn = async () => {
       if (!window.ethereum) {
-        console.log("no window.ethereum changing setupStatus");
         return setSetupStatus("install");
       }
       const web3 = new Web3(window.ethereum);
@@ -43,7 +42,6 @@ export const Web3Provider = ({ children }) => {
         const networkId = (await web3.eth.net.getId()).toString();
 
         if (networkId !== network.networkId.toString()) {
-          console.log("wrong network");
           return setSetupStatus("setnetwork");
         }
 

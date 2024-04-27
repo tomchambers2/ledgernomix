@@ -29,11 +29,12 @@ export const Clock = ({ blockInterval, timeoutCallback }) => {
   return (
     <div
       className="clock-container"
-      data-tip={
+      data-tooltip-content={
         "This page will check the chain for a new block every 5 seconds"
       }
+      data-tooltip-id="clock"
     >
-      <Tooltip className="tooltip" />
+      <Tooltip id="clock" className="tooltip" />
       <div className="clock-caption-container">
         <div className="clock-caption">New Block in:</div>
         <div className="clock-number">{stringRemaining}</div>

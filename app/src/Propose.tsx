@@ -113,7 +113,6 @@ export const Propose = ({
       setProposedValue(0);
       setProposedRuleOption(null);
     } else {
-      console.log("transaction cancelled, end submitting");
       setIsSubmitting(false);
     }
   };
@@ -124,7 +123,6 @@ export const Propose = ({
 
   useEffect(() => {
     if (!isPlayersTurn) {
-      console.log("turn off submitting, not players tur");
       setIsSubmitting(false);
     }
   }, [proposals, isPlayersTurn]);

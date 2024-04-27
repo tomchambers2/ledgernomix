@@ -1,3 +1,5 @@
 .tooltip {
   font-size: 20px !important;
+  z-index: 1;
+  opacity: 1 !important;
 }

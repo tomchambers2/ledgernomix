@@ -84,7 +84,7 @@ export const Game = () => {
 
   const getPlayerName = useCallback(
     (identifier) => {
-      if (!players) return "SPECTATOR";
+      if (!players) return "LOADING...";
       const index =
         typeof identifier === "number"
           ? identifier
@@ -326,7 +326,7 @@ export const Game = () => {
 
   return (
     <>
-      <Tooltip className="tooltip" />
+      <Tooltip id="join-warning" className="tooltip" />
       {gameActive && !isPlayer && !isPendingPlayer && rules && (
         <div className="game-icons-container">
           <div className="game-icon-panel">
@@ -334,7 +334,8 @@ export const Game = () => {
             <button
               className="game-button"
               onClick={joinGameHandler}
-              data-tip={"WARNING: Only join a game with players you trust"}
+              data-tooltip-id="join-warning"
+              data-tooltip-content={"WARNING: Only join a game with players you trust"}
             >
               <div>
                 Join{" "}

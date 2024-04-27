@@ -39,10 +39,6 @@ export const Proposals = ({
 
   useEffect(() => {
     if (proposals.length > 0) {
-      console.log(
-        "latest proposal vote",
-        proposals[proposals.length - 1].votes
-      );
       if (
         proposals[proposals.length - 1].votes.some(
           ({ playerAddress: voter }) => voter === playerAddress
@@ -64,7 +60,7 @@ export const Proposals = ({
   return (
     <>
       <h2>Proposals</h2>
-      <Tooltip className="tooltip" />
+      <Tooltip id="admit-player-tip" className="tooltip" />
       {isPlayer &&
         pendingPlayers &&
         pendingPlayers
@@ -77,7 +73,8 @@ export const Proposals = ({
               key={i}
               className={classNames("item button")}
               onClick={() => admitPlayer(pendingPlayer.playerAddress)}
-              data-tip={"Only admit addresses you trust"}
+              data-tooltip-id="admit-player-tip"
+              data-tooltip-content={"Only admit addresses you trust"}
             >
               <div>Admit new player</div>
               <PlayerIcon address={pendingPlayer.playerAddress}></PlayerIcon>
@@ -124,11 +121,13 @@ export const Proposals = ({
             <div
               className={classNames("title", proposal.complete && "complete")}
             >
-              <Tooltip className="tooltip" />
+              <Tooltip id="rule-description-tip" className="tooltip" />
               <span
-                data-tip={
+              data-tooltip-id="rule-description-tip"
+                data-tooltip-content={
                   ruleConfig[rules[proposal.ruleIndex].name].description
                 }
+                
               >
                 <div className="proposal-number">#{proposals.length - i}</div>
                 {getPlayerName(proposal.proposer)}{" "}
@@ -140,7 +139,7 @@ export const Proposals = ({
                     : "tried to propose"
                   : "proposes"}
                 :<br></br> "{rules[proposal.ruleIndex].name} should be{" "}
-                {proposal.value}
+                {parseInt(proposal.value)}
                 {ruleConfig[rules[proposal.ruleIndex].name].unit}"
               </span>
             </div>

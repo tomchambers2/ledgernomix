@@ -4,8 +4,8 @@ import { Tooltip } from "react-tooltip";
 export const Statistic = ({ title, number, description }) => {
   return (
     <>
-      <Tooltip className="tooltip" />
-      <div className="statistic" data-tip={description}>
+      <Tooltip id="statistic-tip" className="tooltip" />
+      <div className="statistic" data-tooltip-content={description} data-tooltip-id="statistic-tip">
         <div className="data">
           <div>{title}</div>
           <div>{number}</div>

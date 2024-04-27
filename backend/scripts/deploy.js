@@ -63,7 +63,7 @@ async function main() {
   copyAbi("Game");
   copyAbi("GameFactory");
 
-  console.log("game factory deployed to:", gameFactory.address);
+  console.info("game factory deployed to:", gameFactory.address);
 
   // fs.writeFileSync(
   //   path.join(__dirname, "..", "..", "app", "src", "config.js"),

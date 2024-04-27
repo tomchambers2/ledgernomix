@@ -59,7 +59,6 @@ export const GameList = () => {
       if (setupStatus !== "complete") return;
       if (!gameFactory) return;
       const gamesList = await getArray("games");
-      console.log(gamesList);
       setGamesList(gamesList);
     };
     fn();
@@ -83,7 +82,6 @@ export const GameList = () => {
 
   const newGameHandler = (gameFee) => async () => {
     try {
-      console.log("val", Web3.utils.toWei(gameFee));
       const result = await contractFn(gameFactory, "newGame", {
         from: account,
         value: Web3.utils.toWei(gameFee),

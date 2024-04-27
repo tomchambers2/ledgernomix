@@ -10,9 +10,10 @@ export const ProposalCounter = ({ completeProposals, maxProposals }) => {
   return (
     <div
       className="proposal-counter-container"
-      data-tip={"The game ends when the final proposal has completed"}
+      data-tooltip-id="proposal-counter-tip"
+      data-tooltip-content={"The game ends when the final proposal has completed"}
     >
-      <Tooltip className="tooltip" />
+      <Tooltip id="proposal-counter-tip" className="tooltip" />
       <div className="proposal-counter-caption-container">
         <div className="proposal-counter-caption">Proposals Left: </div>
         <div className="proposal-counter-numbers">
