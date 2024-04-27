@@ -24,13 +24,13 @@ and pitfalls of decentralised systems.
 Start Ganache blockchain
 
 ```
-yarn deploy
+npm deploy
 ```
 
 ## Frontend
 
 ```
-yarn start
+npm start
 ```
 
 After running these you can now use the game in the browser at `http://localhost:3000`
@@ -39,7 +39,7 @@ After running these you can now use the game in the browser at `http://localhost
 
 ```
 cd backend
-yarn test
+npm test
 ```
 
 ## Deployment
@@ -47,6 +47,7 @@ yarn test
 Set the `XDAI_PRIVATE_KEY` environment variable to the private key of the Gnosis chain account you want to use
 
 Run
+
 ```
-yarn deploy:mainnet
+npm deploy:mainnet
 ```

@@ -4,7 +4,7 @@
   "description": "## Frontend",
   "main": "index.js",
   "scripts": {
-    "test": "cd backend && yarn test",
+    "test": "cd backend && npm run test",
     "start": "cd app && npm start",
     "deploy": "cd backend && npx hardhat run scripts/deploy.js --network localhost",
     "deploy:mainnet": "cd backend && npx hardhat run scripts/deploy.js --network dai",
