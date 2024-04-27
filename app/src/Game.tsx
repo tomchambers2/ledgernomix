@@ -320,7 +320,7 @@ export const Game = () => {
   const totalPoints =
     (players &&
       players.reduce((previousValue, currentValue) => {
-        return previousValue + parseInt(currentValue.balance);
+        return previousValue + parseFloat(currentValue.balance);
       }, 0)) ||
     0;
 

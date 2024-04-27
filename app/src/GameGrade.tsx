@@ -6,7 +6,7 @@ const equality = (players) => {
   let intBalancesArray = [];
 
   for (let i = 0; i < players.length; i++) {
-    intBalancesArray.push(parseInt(players[i].balance));
+    intBalancesArray.push(parseFloat(players[i].balance));
   }
   const intBalancesArraySorted = intBalancesArray.sort((a, b) =>
     a > b ? 1 : -1
@@ -41,7 +41,7 @@ const vetocracy = (proposals) => {
 const inflation = (players) => {
   const totalStartGameBalance = gameConfig.startBalance * players.length;
   const totalEndGameBalanceWei = players.reduce(
-    (acc, { balance }) => acc + parseInt(balance),
+    (acc, { balance }) => acc + parseFloat(balance),
     0
   );
   const totalEndGameBalance = weiToEth(totalEndGameBalanceWei);

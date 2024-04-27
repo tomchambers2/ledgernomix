@@ -23,14 +23,18 @@ export const Payout = ({
   if (!players || !player) return <div>LOADING...</div>;
 
   const totalBalance = players.reduce(
-    (acc, { balance }) => acc + parseInt(Web3.utils.fromWei(balance, "ether")),
+    (acc, { balance }) => acc + parseFloat(Web3.utils.fromWei(balance, "ether")),
     0
   );
 
   const place =
     players
       .slice()
-      .sort((p1, p2) => p2.balance - p1.balance)
+      .sort((p1, p2) => {
+        const p1Balance = parseFloat(Web3.utils.fromWei(p1.balance, "ether"));
+        const p2Balance = parseFloat(Web3.utils.fromWei(p2.balance, "ether"));
+        return p2Balance - p1Balance;
+      })
       .findIndex(
         ({ playerAddress: otherPlayerAddress }) =>
           otherPlayerAddress === player.playerAddress
@@ -38,7 +42,9 @@ export const Payout = ({
 
   if (!player) return <div></div>;
 
-  const playerBalance = parseInt(Web3.utils.fromWei(player.balance, "ether"), 10);
+  const playerBalance = parseFloat(Web3.utils.fromWei(player.balance, "ether"));
+
+  console.log("playerBalance", playerBalance, totalBalance, parseFloat(Web3.utils.fromWei(String(gamePot), "ether")));
 
   return (
     <div>
@@ -93,7 +99,7 @@ export const Payout = ({
               <div>
                 {formatCurrency(
                   (playerBalance / totalBalance) *
-                  parseInt(Web3.utils.fromWei(String(gamePot), "ether"))
+                  parseFloat(Web3.utils.fromWei(String(gamePot), "ether"))
                 )}{" "}
                 {cryptocurrency}
               </div>
@@ -107,7 +113,7 @@ export const Payout = ({
                 <div>
                   {formatCurrency(
                     (playerBalance / totalBalance) *
-                    parseInt(Web3.utils.fromWei(String(gamePot), "ether"), 10)
+                    parseFloat(Web3.utils.fromWei(String(gamePot), "ether"))
                   )}{" "}
                   {cryptocurrency}
                 </div>

@@ -11,12 +11,12 @@ export const Scores = ({
   if (!players) return <div>LOADING...</div>;
 
   const topScoreWei = players.slice().sort((p1, p2) => {
-    const p1Balance = parseInt(Web3.utils.fromWei(p1.balance, "ether"));
-    const p2Balance = parseInt(Web3.utils.fromWei(p2.balance, "ether"));
+    const p1Balance = parseFloat(Web3.utils.fromWei(p1.balance, "ether"));
+    const p2Balance = parseFloat(Web3.utils.fromWei(p2.balance, "ether"));
     return p2Balance - p1Balance;
   })[0].balance;
 
-  const topScore = parseInt(Web3.utils.fromWei(topScoreWei, "ether"));
+  const topScore = parseFloat(Web3.utils.fromWei(topScoreWei, "ether"));
 
   return (
     <>
@@ -26,8 +26,8 @@ export const Scores = ({
         {players
           .slice()
           .sort((p1, p2) => {
-            const p1Balance = parseInt(Web3.utils.fromWei(p1.balance, "ether"));
-            const p2Balance = parseInt(Web3.utils.fromWei(p2.balance, "ether"));
+            const p1Balance = parseFloat(Web3.utils.fromWei(p1.balance, "ether"));
+            const p2Balance = parseFloat(Web3.utils.fromWei(p2.balance, "ether"));
             return p2Balance - p1Balance;
           })
           .map((player, i) => (
@@ -48,7 +48,7 @@ export const Scores = ({
                 className="player-score-bar"
                 style={{
                   width: `${
-                    (parseInt(Web3.utils.fromWei(player.balance, "ether"), 10) /
+                    (parseFloat(Web3.utils.fromWei(player.balance, "ether")) /
                       topScore) *
                     100
                   }%`,

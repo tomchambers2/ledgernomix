@@ -158,7 +158,7 @@ export const Propose = ({
               <div className="input-container">
                 <input
                   onChange={({ target: { value } }) => setProposedValue(parseInt(value))}
-                  type="text"
+                  type="number"
                   value={proposedValue}
                   disabled={!proposedRuleOption}
                 ></input>
