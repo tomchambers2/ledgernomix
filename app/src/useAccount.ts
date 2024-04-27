@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Web3 from "web3";
+import type { Web3 } from "web3";
 
 export const useAccount = (web3: Web3) => {
   const [account, setAccount] = useState<string | null>(null);
@@ -9,7 +9,9 @@ export const useAccount = (web3: Web3) => {
     async function fetchAccounts() {
       try {
         const accounts = await web3.eth.requestAccounts();
-        setAccount(accounts[0]);
+        // The address should be returned with a mixed case checksum, but it isn't so we do this manually here
+        const checksumAddress = web3.utils.toChecksumAddress(accounts[0]);
+        setAccount(checksumAddress);
       } catch (e) {
         console.error(`Failed getting accounts`);
       }

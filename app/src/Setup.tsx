@@ -18,7 +18,7 @@ export const Setup = () => {
               href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn"
               rel="noreferrer"
             >
-              First install Metamask browser extension
+              Install Metamask browser extension
             </a>
 
             <div className="paragraph">

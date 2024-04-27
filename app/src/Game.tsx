@@ -46,7 +46,10 @@ export const Game = () => {
   useEffect(() => {
     if (!account || !players) return;
     const result = players.some(
-      ({ playerAddress }) => account === playerAddress
+      ({ playerAddress }) => {
+        console.log("playerAddress", playerAddress, "account", account, "result", playerAddress === account)
+        return account === playerAddress
+      }
     );
     setIsPlayer(result);
   }, [account, players]);
