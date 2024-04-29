@@ -4,9 +4,18 @@ import { gameConfig } from "./gameConfig";
 import { formatCurrency } from "./utils";
 import { Tooltip } from "react-tooltip";
 
+interface Player {
+  playerAddress: string;
+  balance: string;
+  updated: boolean;
+}
+
 export const Scores = ({
   players,
   getPlayerName,
+}: {
+  players: Player[] | [];
+  getPlayerName: (playerAddress: string) => JSX.Element | string;
 }) => {
   if (!players) return <div>LOADING...</div>;
 
@@ -14,7 +23,7 @@ export const Scores = ({
     const p1Balance = parseFloat(Web3.utils.fromWei(p1.balance, "ether"));
     const p2Balance = parseFloat(Web3.utils.fromWei(p2.balance, "ether"));
     return p2Balance - p1Balance;
-  })[0].balance;
+  })[0]?.balance || 0;
 
   const topScore = parseFloat(Web3.utils.fromWei(topScoreWei, "ether"));
 
