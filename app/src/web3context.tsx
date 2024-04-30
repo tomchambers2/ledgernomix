@@ -33,6 +33,7 @@ export const Web3Provider = ({ children }) => {
   useEffect(() => {
     const fn = async () => {
       if (!window.ethereum) {
+        console.error("Browser does not have window.ethereum")
         return setSetupStatus("install");
       }
       const web3 = new Web3(window.ethereum);

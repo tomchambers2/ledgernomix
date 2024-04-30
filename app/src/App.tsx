@@ -15,6 +15,8 @@ import "./playtest.css";
 import { Web3Provider } from "./web3context";
 import 'react-tooltip/dist/react-tooltip.css'
 
+const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
 function App() {
   return (
     <Router>
@@ -22,7 +24,7 @@ function App() {
         <ToastContainer />
         <div className="app">
           <div className="ink-col-effect"></div>
-          <div className="background-gradient"></div>
+          <div className="background-gradient" style={{ zIndex: isSafari ? 0 : 90 }}></div>
           <div className="intro">
             <Link to="/">
               <h2 className="logo">
