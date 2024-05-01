@@ -70,7 +70,7 @@ async function main() {
   //   `export const config = { gameContract: { address: "${game.address}" } };`
   // );
   fs.writeFileSync(
-    path.join(__dirname, "..", "..", "app", "src", "config.js"),
+    path.join(__dirname, "..", "..", "app", "src", "config.ts"),
     `export const config = { gameFactoryContract: { address: "${gameFactory.address}" } };`
   );
 

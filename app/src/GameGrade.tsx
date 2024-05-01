@@ -1,3 +1,4 @@
+import { Fragment } from "react/jsx-runtime";
 import { Statistic } from "./Statistic";
 import { gameConfig } from "./gameConfig";
 import { weiToEth } from "./utils";
@@ -92,7 +93,9 @@ export const GameGrade = ({ players, proposals }) => {
             "Graded on the proportion of proposals that were rejected",
         },
       ].map((statistic) => (
-        <Statistic {...statistic}></Statistic>
+        <Fragment key={statistic.title}>
+          <Statistic {...statistic}></Statistic>
+        </Fragment>
       ))}
     </>
   );
