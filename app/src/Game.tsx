@@ -132,19 +132,22 @@ export const Game = () => {
         length = await game.methods[
           `get${name.slice(0, 1).toUpperCase()}${name.slice(1)}Length`
         ]().call();
-      } catch (e) {
-        fireNotification(`Failed to get ${name}`);
-      }
-      try {
+
+              try {
         for (let index = 0; index < length; index++) {
           const element = await game.methods[name](index).call();
           elements = [...elements, element];
         }
         return elements;
       } catch (e) {
-        fireNotification(`Failed to get ${name}`);
+        // fireNotification(`Failed to get ${name}`);
         console.error(`Failed to get ${name}: ${e.message}`);
       }
+      } catch (e) {
+        // fireNotification(`Failed to get ${name}`);
+        console.error("Failed to get length of " + name + ": " + e.message)
+      }
+
     },
     [game]
   );
@@ -156,7 +159,7 @@ export const Game = () => {
         const value = await game.methods[name].call({}).call();
         return value;
       } catch (e) {
-        fireNotification(`Failed to get ${name}`);
+        // fireNotification(`Failed to get ${name}`);
         console.error(`Failed to get ${name}: ${e.message}`);
       }
     },
