@@ -218,19 +218,23 @@ export const Game = () => {
 
   const fetchRules = useCallback(async () => {
     const rules = await getArray("rules");
+    if (!rules) return;
     setRules(rules);
   }, [getArray]);
 
   const fetchProposals = useCallback(async () => {
     const proposals = await getArray("proposals");
+    if (!proposals) return;
     if (proposals) {
       const proposalsWithVotes = await fetchVotes(proposals);
+      if (!proposalsWithVotes) return;
       setProposals(proposalsWithVotes);
     }
   }, [getArray, fetchVotes]);
 
   const fetchPlayers = useCallback(async () => {
     const players = await getArray("players");
+    if (!players) return;
     setPlayers(players);
   }, [getArray]);
 
@@ -240,7 +244,9 @@ export const Game = () => {
   }, [getArray]);
 
   const fetchEvents = useCallback(async () => {
-    if (!game || !players || !proposals || !rules) return;
+    if (!game || !players || !proposals || !rules) {
+      return;
+    }
     const pastEvents = await game.getPastEvents("allEvents", {
       fromBlock: "earliest",
     });
