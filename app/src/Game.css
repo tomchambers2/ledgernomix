@@ -67,3 +67,12 @@
   flex-direction: column;
   justify-content: space-evenly;
 }
+
+/* Mobile responsive styles */
+@media (max-width: 768px) {
+  .header-container {
+    flex-direction: column;
+    height: auto;
+  }
+  
+}

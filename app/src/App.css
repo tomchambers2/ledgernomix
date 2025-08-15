@@ -175,11 +175,7 @@ body {
   flex-direction: column;
 }
 
-@media (max-width: 900px) {
-  .container {
-    flex-direction: column;
-  }
-}
+
 
 .panel {
   margin: var(--game-border);
@@ -341,7 +337,14 @@ a.button:disabled {
   justify-content: space-between;
 }
 
-@media only screen and (max-width: 600px) {
+/* Mobile responsive styles */
+@media (max-width: 768px) {
+  /* Container layout */
+  .container {
+    flex-direction: column;
+  }
+  
+  /* Header/intro section */
   .intro {
     flex-direction: column;
   }
@@ -353,6 +356,13 @@ a.button:disabled {
 
   h1 {
     font-size: 50px;
+  }
+  
+  /* Game details panel - stack vertically on mobile */
+  .game-details-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
   }
 }
 
