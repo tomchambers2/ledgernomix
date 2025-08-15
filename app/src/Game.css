@@ -75,4 +75,39 @@
     height: auto;
   }
   
+  /* Reorder elements for mobile */
+  .game-name {
+    order: 1;  /* First */
+  }
+  
+  .game-metadata {
+    order: 2;  /* Second */
+  }
+  
+  .game-timers-container,
+  .game-ended-container {
+    order: 3;  /* Third */
+    margin-left: 0;  /* Remove left margin on mobile */
+  }
+
+  .game-ended-container {
+    border-left: 0;
+    border-right: 0;
+    border-top: var(--game-line-width) solid var(--game-graphics-primary);
+    border-bottom: var(--game-line-width) solid var(--game-graphics-primary);
+    margin-bottom: 25px; /*so it doesn't clash with ornate border */
+    width: calc(100% + (var(--game-border) * 2) + (var(--game-line-width) * 2));  /* Full width plus padding and borders */
+  }
+
+  .game-details-panel {
+    order: 2; 
+    width: auto;  /* Full width on mobile */
+    flex-direction: column;
+  }
+
+  .player-details-panel {
+    order: 1; 
+    width: auto;  /* Full width on mobile */
+  }
+
 }
