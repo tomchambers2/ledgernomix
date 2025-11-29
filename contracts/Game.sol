@@ -1,23 +1,26 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.1;
 
+// import "@openzeppelin/contracts/utils/EnumerableSet.sol";
+
 contract Game {
     address owner;
-    string public name;
-    mapping(address => uint256) balances;
-    uint256 numPlayers; // use EnumerableMapping?
+    string public name = "blahdtown";
+    mapping(address => uint256) public balances;
+    uint256 public numPlayers; // use EnumerableMapping?
 
-    uint8 constant maxPlayers = 8;
+    uint8 public constant maxPlayers = 1;
 
     // initial rules
-    uint256 playDirection = 1;
-    uint256 quorum = maxPlayers / 2;
-    mapping(address => uint256) vote_share;
-    uint256 reward = 1;
+    uint256 public playDirection = 1;
+    uint256 public quorum = maxPlayers / 2;
+    mapping(address => uint256) public vote_share;
+    uint256 public reward = 10;
 
-    uint256 constant entranceFee = 1000 wei;
+    uint256 public constant entranceFee = 1000 wei;
 
     event NewPlayer(address player);
+    event NewProposal(address proposer, uint256 quantity);
 
     struct Proposal {
         address proposer;
@@ -35,7 +38,11 @@ contract Game {
 
     // enum ProposalTypes {Quorum, PlayDirection, VoteShare}
 
-    Proposal[] proposals;
+    Proposal[] public proposals;
+
+    function getProposalsLength() external view returns (uint256) {
+        return proposals.length;
+    }
 
     constructor() {}
 
@@ -45,7 +52,7 @@ contract Game {
     }
 
     function joinGame() public payable {
-        require(numPlayers < maxPlayers);
+        require(numPlayers < maxPlayers, "Game is full");
         require(msg.value > entranceFee, "The stake is 1000 wei");
         numPlayers++;
         balances[msg.sender] = 100;
@@ -58,11 +65,12 @@ contract Game {
 
     function createProposal(uint256 quantity) public {
         require(numPlayers == maxPlayers, "Not enough people in game yet");
-
+        // require that user is a member of this game
+        emit NewProposal(msg.sender, quantity);
         Proposal storage nextProposal = proposals.push();
         nextProposal.proposer = msg.sender;
-        // nextProposal.proposalType = proposalType;
         nextProposal.quantity = quantity;
+        // nextProposal.proposalType = proposalType;
     }
 
     function countVotes(uint256 proposalIndex) internal view returns (bool) {
@@ -76,11 +84,15 @@ contract Game {
                 votesFor++;
             }
         }
+        console.log(votesFor)
+        // FIXME: quorum is total voters
         return votesFor >= quorum;
     }
 
     function voteOnProposal(uint256 proposalIndex, bool vote) public {
         require(proposals[proposalIndex].complete == false);
+        // FIXME: prevent users voting twice
+        // FIXME: prevent users from voting who are not in the game
         Vote memory v = Vote({voter: msg.sender, vote: vote});
         proposals[proposalIndex].votes.push(v);
 
@@ -114,5 +126,12 @@ contract Game {
         // }
     }
 
-    function endGame() public {}
+    function withdraw() external {
+        // allow withdraw if game hasn't started
+        // return stake to user
+        // remove from balances
+        // set num players
+    }
+
+    function endTheGame() public {}
 }

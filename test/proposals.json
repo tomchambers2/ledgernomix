@@ -1,0 +1,26 @@
+[
+  {
+    "0": "0x69ef6B604d29E26C65B0bA8DEb910f4fb1eB5156",
+    "1": "0",
+    "2": "25",
+    "3": true,
+    "4": false,
+    "proposer": "0x69ef6B604d29E26C65B0bA8DEb910f4fb1eB5156",
+    "proposalType": "0",
+    "quantity": "25",
+    "complete": true,
+    "successful": false
+  },
+  {
+    "0": "0x69ef6B604d29E26C65B0bA8DEb910f4fb1eB5156",
+    "1": "0",
+    "2": "99999",
+    "3": true,
+    "4": false,
+    "proposer": "0x69ef6B604d29E26C65B0bA8DEb910f4fb1eB5156",
+    "proposalType": "0",
+    "quantity": "99999",
+    "complete": true,
+    "successful": false
+  }
+]
