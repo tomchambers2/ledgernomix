@@ -1,0 +1,23 @@
+.chart {
+  margin-top: 8px;
+  border: 4px solid black;
+  height: 3px;
+  position: relative;
+}
+
+.data {
+  display: flex;
+  justify-content: space-between;
+}
+
+.position,
+.average {
+  position: absolute;
+  after: "X";
+  font-size: 150%;
+  top: -700%;
+}
+
+.average .text {
+  font-size: 50%;
+}

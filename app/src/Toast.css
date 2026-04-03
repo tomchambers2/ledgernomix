@@ -1,0 +1,38 @@
+.Toastify__toast {
+  border-radius: 0px;
+  font-family: eskapade-fraktur, serif;
+  font-weight: bold;
+  font-size: 30px;
+  font-feature-settings: var(--eskapade-fraktur-case),
+    var(--eskapade-fraktur-dlig), var(--eskapade-fraktur-dnom),
+    var(--eskapade-fraktur-frac), var(--eskapade-fraktur-lnum),
+    var(--eskapade-fraktur-numr), var(--eskapade-fraktur-onum),
+    var(--eskapade-fraktur-ordn), var(--eskapade-fraktur-pnum),
+    var(--eskapade-fraktur-salt), var(--eskapade-fraktur-sinf),
+    var(--eskapade-fraktur-ss01), var(--eskapade-fraktur-sups),
+    var(--eskapade-fraktur-tnum);
+  padding: 0px 10px 0px 10px;
+  color: var(--game-graphics-accent);
+  background: var(--game-graphics-primary);
+}
+
+.Toastify__progress-bar {
+  background: var(--game-graphics-accent);
+}
+
+.Toastify__close-button {
+  color: #ffffff;
+  background-color: transparent;
+  border: none;
+  /* background: #ff0000; */
+}
+
+/* .Toastify__close-button > svg {
+  fill: #ffffff;
+} */
+.Toastify__close-button:hover,
+.Toastify__close-button:focus {
+  color: #ffffff;
+  background-color: transparent;
+  border: none;
+}
