@@ -14,7 +14,7 @@ module.exports = {
   // },
   networks: {
     localhost: {
-      url: "http://127.0.0.1:7545",
+      url: "http://127.0.0.1:8545",
     },
     hardhat: {
       // url: "http://127.0.0.1:8545",
@@ -22,7 +22,7 @@ module.exports = {
     dai: {
       url: "https://rpc.gnosischain.com",
       chainId: 100,
-      accounts: [process.env.XDAI_PRIVATE_KEY],
+      ...(process.env.XDAI_PRIVATE_KEY && { accounts: [process.env.XDAI_PRIVATE_KEY] }),
     },
   },
   solidity: "0.8.1",

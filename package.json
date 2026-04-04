@@ -6,6 +6,8 @@
   "scripts": {
     "test": "cd backend && npm run test",
     "start": "cd app && npm start",
+    "start:local": "cd app && REACT_APP_NETWORK=local npm start",
+    "node": "cd backend && npx hardhat node --hostname 127.0.0.1",
     "deploy": "cd backend && npx hardhat run scripts/deploy.js --network localhost",
     "deploy:mainnet": "cd backend && npx hardhat run scripts/deploy.js --network dai",
     "public": "ngrok start ledgergame ledgerblockchain"

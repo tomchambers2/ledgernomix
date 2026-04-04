@@ -19,16 +19,16 @@ export const gameConfig = {
       },
     },
     local: {
-      networkId: 5777,
+      networkId: 31337,
       params: {
-        chainId: "0x539", // A 0x-prefixed hexadecimal string
+        chainId: "0x7a69", // A 0x-prefixed hexadecimal string
         chainName: "Local Chain",
         nativeCurrency: {
           name: "LOCAL",
           symbol: "LOCAL", // 2-6 characters long
           decimals: 18,
         },
-        rpcUrls: ["https://127.0.0.1:7545"],
+        rpcUrls: ["http://127.0.0.1:8545"],
       },
     },
   },

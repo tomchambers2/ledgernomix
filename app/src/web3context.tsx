@@ -10,7 +10,9 @@ export const Web3Context = createContext<{
   connect: () => Promise<void>;
 }>(null);
 
-const network = gameConfig.networks.gnosis;
+const network = process.env.REACT_APP_NETWORK === "local"
+  ? gameConfig.networks.local
+  : gameConfig.networks.gnosis;
 
 async function connectToNetwork(web3) {
   const params = network.params;
