@@ -3,7 +3,7 @@ import { useContract } from "./useContract";
 import { Web3Context } from "./web3context";
 import { useState, useEffect, useContext, useCallback } from "react";
 import { default as GameFactoryContract } from "./contracts/GameFactory.json";
-import { config } from "./config";
+import { config as allConfigs } from "./config";
 import { contractFn } from "./useContractFn";
 import { fireNotification } from "./fireNotification";
 import { useAccount } from "./useAccount";
@@ -12,6 +12,7 @@ import { Setup } from "./Setup";
 import { gameConfig } from "./gameConfig";
 import { formatCurrency } from "./utils";
 import { Web3 } from "web3";
+const config = allConfigs[process.env.REACT_APP_NETWORK === "local" ? "local" : "gnosis"];
 const { cryptoEntryFee } = gameConfig;
 
 export const GameList = () => {

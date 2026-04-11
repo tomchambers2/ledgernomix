@@ -15,15 +15,27 @@ const network = process.env.REACT_APP_NETWORK === "local"
   : gameConfig.networks.gnosis;
 
 async function connectToNetwork(web3) {
-  const params = network.params;
-
-  const accounts = await web3.eth.requestAccounts();
-  await window.ethereum
-    .request({
-      method: "wallet_addEthereumChain",
-      params: [params, accounts[0]],
+  await web3.eth.requestAccounts();
+  try {
+    // Prefer wallet_switchEthereumChain over wallet_addEthereumChain for networks
+    // MetaMask already knows about. wallet_addEthereumChain fails if the user has
+    // the network stored with different params (e.g. a different nativeCurrency
+    // symbol from a previous version of the app or a MetaMask built-in entry).
+    await window.ethereum.request({
+      method: "wallet_switchEthereumChain",
+      params: [{ chainId: network.params.chainId }],
     });
-
+  } catch (e: any) {
+    // Error 4902 means the chain isn't in MetaMask yet — add it.
+    if (e.code === 4902) {
+      await window.ethereum.request({
+        method: "wallet_addEthereumChain",
+        params: [network.params],
+      });
+    } else {
+      throw e;
+    }
+  }
 }
 
 export const Web3Provider = ({ children }) => {

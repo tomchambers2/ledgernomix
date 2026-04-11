@@ -69,10 +69,14 @@ async function main() {
   //   path.join(__dirname, "..", "..", "app", "src", "config.js"),
   //   `export const config = { gameContract: { address: "${game.address}" } };`
   // );
-  fs.writeFileSync(
-    path.join(__dirname, "..", "..", "app", "src", "config.ts"),
-    `export const config = { gameFactoryContract: { address: "${gameFactory.address}" } };`
+  const configPath = path.join(__dirname, "..", "..", "app", "src", "config.ts");
+  const existing = fs.readFileSync(configPath, "utf8");
+  const network = hre.network.name === "localhost" ? "local" : hre.network.name;
+  const updated = existing.replace(
+    new RegExp(`(${network}:\\s*\\{\\s*gameFactoryContract:\\s*\\{\\s*address:\\s*")[^"]*("\\s*\\}\\s*\\})`),
+    `$1${gameFactory.address}$2`
   );
+  fs.writeFileSync(configPath, updated);
 
   const artifact = await deployments.getArtifact("Game");
 
