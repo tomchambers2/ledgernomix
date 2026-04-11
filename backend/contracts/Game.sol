@@ -60,7 +60,7 @@ contract GameFactory {
                 50, //Majority
                 65, //Quorum
                 30, //Game length
-                0, //Poll Tax
+                100, //Poll Tax
                 0, //Wealth Tax
                 0, // Wealth Tax Threshold
                 350, //Proposal fee
