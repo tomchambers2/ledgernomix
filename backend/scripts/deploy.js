@@ -71,7 +71,8 @@ async function main() {
   // );
   const configPath = path.join(__dirname, "..", "..", "app", "src", "config.ts");
   const existing = fs.readFileSync(configPath, "utf8");
-  const network = hre.network.name === "localhost" ? "local" : hre.network.name;
+  const networkNameMap = { localhost: "local", dai: "gnosis" };
+  const network = networkNameMap[hre.network.name] || hre.network.name;
   const updated = existing.replace(
     new RegExp(`(${network}:\\s*\\{\\s*gameFactoryContract:\\s*\\{\\s*address:\\s*")[^"]*("\\s*\\}\\s*\\})`),
     `$1${gameFactory.address}$2`
