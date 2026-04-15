@@ -169,8 +169,8 @@ contract Game {
         rules.push(Rule("Majority", gameParams.majority, 0, 100));
         rules.push(Rule("Quorum", gameParams.quorum, 0, 100));
         rules.push(Rule("Game length", gameParams.maxProposals, 1, 100));
-        rules.push(Rule("Poll tax", gameParams.pollTax, 1, 1000000000));
-        rules.push(Rule("Wealth tax", gameParams.wealthTax, 1, 100));
+        rules.push(Rule("Poll tax", gameParams.pollTax, 0, 1000000000));
+        rules.push(Rule("Wealth tax", gameParams.wealthTax, 0, 100));
         rules.push(
             Rule(
                 "Wealth tax threshold",
