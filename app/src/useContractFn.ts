@@ -3,11 +3,20 @@ import { fireNotification } from "./fireNotification";
 import Web3, { Contract } from "web3";
 import Game from "./contracts/Game.json";
 
+const revertMessages: Record<string, string> = {
+  // Shown when a player's vote transaction is submitted but another player's
+  // vote already reached quorum and completed the proposal first.
+  "Cannot vote on completed proposal": "This proposal was completed by another player's vote before your vote went through",
+};
+
 const parseError = (error) => {
   const err = error.message.match(
     /VM Exception while processing transaction: revert ([\w ]+)/
   );
-  if (err) return err[1];
+  if (err) {
+    const contractMessage = err[1];
+    return revertMessages[contractMessage] ?? contractMessage;
+  }
   return "You cancelled the transaction";
 };
 
