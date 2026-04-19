@@ -76,10 +76,8 @@ npm test
 
 ## Deployment
 
-Set the `XDAI_PRIVATE_KEY` environment variable to the private key of the Gnosis chain account you want to use
-
-Run
+Set the `XDAI_PRIVATE_KEY` environment variable to the private key of the Gnosis chain account you want to use, and run deploy:mainnet
 
 ```
-npm deploy:mainnet
+XDAI_PRIVATE_KEY=0xyourkey npm run deploy:mainnet
 ```
