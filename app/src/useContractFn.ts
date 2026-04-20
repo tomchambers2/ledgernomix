@@ -6,17 +6,31 @@ import Game from "./contracts/Game.json";
 const revertMessages: Record<string, string> = {
   // Shown when a player's vote transaction is submitted but another player's
   // vote already reached quorum and completed the proposal first.
-  "Cannot vote on completed proposal": "This proposal was completed by another player's vote before your vote went through",
+  "Cannot vote on completed proposal": "Your vote was too late, another player's vote completed the proposal",
 };
 
 const parseError = (error) => {
-  const err = error.message.match(
+  // Hardhat local network format
+  const hardhatMatch = error.message?.match(
     /VM Exception while processing transaction: revert ([\w ]+)/
   );
-  if (err) {
-    const contractMessage = err[1];
+  if (hardhatMatch) {
+    const contractMessage = hardhatMatch[1];
     return revertMessages[contractMessage] ?? contractMessage;
   }
+
+  // Mainnet format: revert reason is ABI-encoded in error.data.data
+  // 0x08c379a0 is the selector for Error(string)
+  const abiEncodedReason = error.data?.data;
+  if (abiEncodedReason?.startsWith("0x08c379a0")) {
+    try {
+      const contractMessage = Web3.utils.hexToUtf8(
+        "0x" + abiEncodedReason.slice(138)
+      ).replace(/\0/g, "").trim();
+      return revertMessages[contractMessage] ?? contractMessage;
+    } catch {}
+  }
+
   return "You cancelled the transaction";
 };
 
@@ -44,10 +58,19 @@ export const contractFn = async (contract, name, options, ...args) => {
       gasPrice: Web3.utils.toWei(15, 'gwei')
     });
     return result;
-  } catch (e) {
+  } catch (e: any) {
     console.error(e);
-    const msg = parseError(e);
-    fireNotification(`${msg}`, "error");
+    // On mainnet the reverted receipt contains no reason string. Re-simulate
+    // with eth_call to get the ABI-encoded revert reason from the RPC.
+    if (e.message?.includes("Transaction has been reverted by the EVM")) {
+      try {
+        await contract.methods[name](...args).call(options);
+      } catch (callError) {
+        fireNotification(parseError(callError), "error");
+        return false;
+      }
+    }
+    fireNotification(parseError(e), "error");
     return false;
   }
 };
