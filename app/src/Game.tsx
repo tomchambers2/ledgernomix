@@ -3,7 +3,7 @@ import "./Game.css";
 import "./eskapade-fraktur-wakamaifondue.css";
 import { useContract } from "./useContract";
 import { useContractFn } from "./useContractFn";
-import { useState, useEffect, useCallback, useContext } from "react";
+import { useState, useEffect, useCallback, useContext, useRef } from "react";
 import { useGameActive } from "./useGameActive";
 import { fireNotification } from "./fireNotification";
 import { Scores } from "./Scores";
@@ -42,6 +42,14 @@ export const Game = () => {
   const [isPendingPlayer, setIsPendingPlayer] = useState(null);
   const [initialDataLoaded, setInitialDataLoaded] = useState(false);
   const [gameEndTime, setGameEndTime] = useState<JSX.Element | number>(0);
+  const panelsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!panelsRef.current) return;
+    if (window.innerWidth >= 1000) return;
+    const columnWidth = panelsRef.current.scrollWidth / 3;
+    panelsRef.current.scrollLeft = columnWidth;
+  }, []);
 
   useEffect(() => {
     if (!account || !players) return;
@@ -456,7 +464,7 @@ export const Game = () => {
           </div>
         </div>
       </div>
-      <div className="vertical-panels-container">
+      <div className="vertical-panels-container" ref={panelsRef}>
         <div className="column">
           {!gameActive && (
             <div className="game-grade panel">

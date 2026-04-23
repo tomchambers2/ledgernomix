@@ -69,10 +69,11 @@
 }
 
 /* Mobile responsive styles */
-@media (max-width: 768px) {
+@media (max-width: 1000px) {
   .header-container {
     flex-direction: column;
     height: auto;
+    margin-top: 100px;
   }
   
   /* Reorder elements for mobile */
@@ -100,14 +101,20 @@
   }
 
   .game-details-panel {
-    order: 2; 
-    width: auto;  /* Full width on mobile */
     flex-direction: column;
   }
 
   .player-details-panel {
-    order: 1; 
-    width: auto;  /* Full width on mobile */
+    position: fixed;
+    top: 30px;
+    right: 10px;
+    width: 200px;
+    z-index: 95;
+  }
+
+  /* Prevent the panel hover lift from jumping the fixed element */
+  .player-details-panel.panel:hover {
+    top: 30px;
   }
 
 }

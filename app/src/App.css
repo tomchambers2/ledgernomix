@@ -669,7 +669,7 @@ input {
 
 
 /* Mobile responsive styles */
-@media (max-width: 768px) {
+@media (max-width: 1000px) {
   /* Container layout */
   .container {
     flex-direction: column;
@@ -681,8 +681,7 @@ input {
   }
 
   .links {
-    display: flex;
-    justify-content: space-between;
+    text-align: left;
   }
 
   h1 {
@@ -705,22 +704,23 @@ input {
   }
 
   .vertical-panels-container {
-    /* Scroll-snap carousel — peek at the next column to signal swipeability */
-    width: 100%;
+    /* Break out of the max-width parent to span the full viewport */
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
     overflow-x: scroll;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
     display: flex;
-    /* Right padding creates the peek gap; box-sizing keeps it outside the scroll area */
+    /* Right padding creates the peek gap into the next column */
     padding-right: 40px;
     box-sizing: border-box;
   }
 
   .column {
-    /* Each column fills the visible area minus the peek gap */
-    min-width: calc(100% - 40px);
-    width: calc(100% - 40px);
-    scroll-snap-align: start;
+    /* 100% of the container content area (after padding-right) = viewport - 40px */
+    min-width: 100%;
+    width: 100%;
+    scroll-snap-align: center;
     flex-shrink: 0;
   }
   
