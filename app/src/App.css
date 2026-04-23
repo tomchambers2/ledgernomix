@@ -253,7 +253,11 @@ a.button,
 }
 
 .game-list-button {
-  padding: calc(2 * var(--game-line-width)) 150px;
+  display: block;
+  width: 75%;
+  box-sizing: border-box;
+  text-align: center;
+  padding: calc(2 * var(--game-line-width)) 16px;
 }
 
 button:hover,
@@ -545,6 +549,8 @@ input {
 
 .game-list-item {
   margin: var(--game-border) 0;
+  display: flex;
+  justify-content: center;
 }
 
 .split {
@@ -687,8 +693,35 @@ input {
     width: auto;
   }
 
-  .vertical-panels-container{
-    width: 300%
+  .game-list {
+    width: auto;
+    padding: 16px;
+  }
+
+  .game-list-button {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .vertical-panels-container {
+    /* Scroll-snap carousel — peek at the next column to signal swipeability */
+    width: 100%;
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    display: flex;
+    /* Right padding creates the peek gap; box-sizing keeps it outside the scroll area */
+    padding-right: 40px;
+    box-sizing: border-box;
+  }
+
+  .column {
+    /* Each column fills the visible area minus the peek gap */
+    min-width: calc(100% - 40px);
+    width: calc(100% - 40px);
+    scroll-snap-align: start;
+    flex-shrink: 0;
   }
   
 }
