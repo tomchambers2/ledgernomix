@@ -106,9 +106,9 @@
 
   .player-details-panel {
     position: fixed;
-    top: 30px;
+    top: 70px;
     right: 10px;
-    width: 200px;
+    width: 100px;
     z-index: 95;
   }
 
